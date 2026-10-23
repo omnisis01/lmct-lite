@@ -1,0 +1,636 @@
+<!doctype html>
+<!-- 이투스247 웹 방문자용 1분 학습진단(LMCT 라이트)과 응답 로그 전송 -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>이투스247 LMCT 학습진단</title>
+<meta name="description" content="취약점 1분 진단. 나만의 취약단원에 맞는 학습 유형과 추천 교재, 인강을 바로 확인하세요.">
+<style>
+@font-face { font-family: 'Pretendard'; src: url('fonts/PretendardVariable.woff2') format('woff2-variations'), url('fonts/PretendardVariable.woff2') format('woff2'); font-weight: 45 920; font-display: swap; }
+/* 이천기숙 LMCT(/quick)와 같은 BI: 청록에서 연두로 이어지는 그라데이션, 흰 카드, 모바일 우선 */
+:root {
+  color-scheme: light;
+  --teal-deep: #0A5F5C; --teal: #0E7C77; --teal-bright: #13A89E; --green: #7CC242; --lime: #A5D34A;
+  --ink: #1F2325; --ink-soft: #1F2325; --ink-mute: #1F2325;
+  --line: #E4EBE8; --line-soft: #EFF4F1; --paper: #F6F8F7;
+  --grad-bi: linear-gradient(135deg, #0E7C77 0%, #13A89E 45%, #7CC242 100%);
+  --grad-bi-soft: linear-gradient(135deg, #EAF6F4 0%, #F1F9EC 100%);
+  --grad-dark: linear-gradient(150deg, #0A5F5C 0%, #0E7C77 55%, #127F6E 100%);
+  --sh-sm: 0 1px 3px rgba(10, 40, 38, .05); --sh-md: 0 4px 16px rgba(10, 60, 56, .07); --sh-lg: 0 14px 38px rgba(10, 60, 56, .11);
+  --font: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; background: var(--paper); color: var(--ink); font-family: var(--font); font-size: 19px; line-height: 1.5; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; word-break: keep-all; overflow-wrap: break-word; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid rgba(14, 124, 119, .35); outline-offset: 2px; }
+
+.shell { max-width: 600px; margin: 0 auto; padding: 0 16px 48px; }
+.topbar { position: sticky; top: 0; z-index: 40; background: rgba(255, 255, 255, .92); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); margin: 0 -16px; padding: 11px 16px; display: flex; align-items: center; gap: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.brand .logo { display: flex; align-items: baseline; gap: 5px; font-weight: 900; letter-spacing: -.5px; }
+.brand .logo b { font-size: 25px; color: var(--ink); }
+.brand .logo span { font-size: 16px; color: var(--teal); }
+.brand .sys { font-size: 12px; font-weight: 800; color: var(--ink-mute); line-height: 1.25; white-space: nowrap; border-left: 1px solid var(--line); padding-left: 10px; }
+.brand .sys b { display: block; color: var(--teal); font-weight: 900; }
+.back { border: 1px solid var(--line); background: #fff; color: var(--ink-soft); border-radius: 9px; padding: 7px 12px; font-size: 15px; font-weight: 700; white-space: nowrap; }
+.back:hover { border-color: var(--teal); color: var(--teal); }
+
+.screen { animation: rise .3s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .screen, .spinner { animation: none !important; } }
+
+.hero { position: relative; overflow: hidden; background: var(--grad-dark); border-radius: 24px; margin: 18px 0 14px; padding: 28px 22px 24px; color: #fff; box-shadow: var(--sh-lg); }
+.hero::before { content: ""; position: absolute; right: -70px; top: -80px; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(124, 194, 66, .55) 0%, rgba(124, 194, 66, 0) 68%); }
+.hero::after { content: ""; position: absolute; left: -50px; bottom: -100px; width: 210px; height: 210px; border-radius: 50%; background: radial-gradient(circle, rgba(19, 168, 158, .5) 0%, rgba(19, 168, 158, 0) 70%); }
+.hero > * { position: relative; z-index: 1; }
+.kicker { display: inline-flex; align-items: center; gap: 7px; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .24); border-radius: 999px; padding: 6px 14px; font-size: 14.5px; font-weight: 800; letter-spacing: .02em; margin-bottom: 16px; }
+.kicker::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); }
+.hero h1 { font-size: 33px; font-weight: 900; line-height: 1.28; letter-spacing: -.9px; margin: 0 0 10px; }
+.hero h1 em, .res-hero h2 em { font-style: normal; background: linear-gradient(120deg, #C6F07E 0%, #7CC242 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p { font-size: 17.5px; line-height: 1.62; opacity: .88; margin: 0; }
+
+.card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 20px 18px; margin-bottom: 13px; box-shadow: var(--sh-sm); }
+.card-head { display: flex; align-items: center; gap: 9px; font-size: 19px; font-weight: 900; color: var(--teal-deep); letter-spacing: -.35px; margin: 0 0 3px; }
+.card-sub { font-size: 15px; color: var(--ink-mute); margin: 0 0 15px; line-height: 1.55; }
+.values { display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; }
+.value { display: grid; grid-template-columns: 48px 1fr; gap: 12px; align-items: center; background: var(--grad-bi-soft); border: 1px solid #DCEDE4; border-radius: 14px; padding: 13px 14px; }
+.value .ico { width: 48px; height: 48px; border-radius: 12px; background: var(--grad-bi); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 900; box-shadow: 0 4px 12px rgba(14, 124, 119, .28); }
+.value h3 { font-size: 17px; font-weight: 900; margin: 0 0 2px; letter-spacing: -.25px; }
+.value p { font-size: 14.5px; color: var(--ink-soft); margin: 0; line-height: 1.48; }
+.value p b { color: var(--teal); font-weight: 900; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 13px; padding: 15px 22px; font-size: 19px; font-weight: 900; letter-spacing: -.2px; text-decoration: none; transition: transform .09s, box-shadow .16s, opacity .15s; width: 100%; }
+.btn:active { transform: scale(.985); }
+.btn-primary { background: var(--grad-bi); color: #fff; box-shadow: 0 8px 22px rgba(14, 124, 119, .3); }
+.btn-ghost { background: #fff; color: var(--ink-soft); border: 1.5px solid var(--line); }
+.btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+.btn:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+.hint { display: flex; align-items: flex-start; gap: 7px; font-size: 14.5px; color: var(--ink-mute); line-height: 1.55; margin: 12px 0 0; }
+.hint::before { content: "i"; flex: none; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid currentColor; font-size: 11px; font-weight: 900; display: grid; place-items: center; margin-top: 2px; }
+.foot { text-align: center; font-size: 14px; color: var(--ink-mute); line-height: 1.7; margin-top: 22px; }
+.foot b { color: var(--teal-deep); }
+
+.progress { padding: 16px 0 6px; }
+.progress-top { display: flex; justify-content: space-between; align-items: center; font-size: 14.5px; font-weight: 800; color: var(--ink-mute); margin-bottom: 8px; }
+.progress-top b { color: var(--teal); font-size: 16px; }
+.progress-bar { height: 7px; background: #E6EDEA; border-radius: 999px; overflow: hidden; }
+.progress-bar span { display: block; height: 100%; border-radius: 999px; background: var(--grad-bi); transition: width .34s cubic-bezier(.4, 0, .2, 1); }
+.stage { padding: 14px 0 0; }
+.phase { display: inline-flex; align-items: center; gap: 6px; background: var(--grad-bi-soft); border: 1px solid #DCEDE4; color: var(--teal); border-radius: 999px; padding: 5px 13px; font-size: 14px; font-weight: 900; margin-bottom: 14px; }
+.q-text { font-size: 26px; font-weight: 900; line-height: 1.44; letter-spacing: -.6px; margin: 0 0 6px; color: var(--ink); }
+.q-desc { font-size: 15.5px; color: var(--ink-mute); margin: 0 0 22px; }
+.scale { display: flex; flex-direction: column; gap: 8px; }
+.opt { display: flex; align-items: center; gap: 13px; border: 1.5px solid var(--line); border-radius: 14px; background: #fff; padding: 14px 16px; text-align: left; transition: all .13s; }
+.opt:hover { border-color: #BFD8D2; background: #FCFEFD; }
+.opt:active { transform: scale(.99); }
+.opt .num { flex: 0 0 36px; height: 36px; border-radius: 50%; border: 2px solid #D5DFDC; color: var(--ink-mute); display: flex; align-items: center; justify-content: center; font-size: 15.5px; font-weight: 900; transition: all .13s; }
+.opt .lb { font-size: 17.5px; font-weight: 700; color: var(--ink-soft); letter-spacing: -.2px; }
+.opt[aria-pressed="true"] { border-color: var(--teal); background: #F0F9F7; box-shadow: 0 3px 14px rgba(14, 124, 119, .13); }
+.opt[aria-pressed="true"] .num { background: var(--grad-bi); border-color: transparent; color: #fff; }
+.opt[aria-pressed="true"] .lb { color: var(--teal-deep); font-weight: 900; }
+
+.loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 70px 20px; text-align: center; color: var(--ink-mute); font-size: 16px; font-weight: 600; }
+.spinner { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--teal); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.res-hero { position: relative; overflow: hidden; background: var(--grad-dark); border-radius: 22px; padding: 24px 22px; color: #fff; margin: 14px 0 13px; box-shadow: var(--sh-lg); }
+.res-hero::before { content: ""; position: absolute; right: -60px; top: -70px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(124, 194, 66, .5) 0%, rgba(124, 194, 66, 0) 70%); }
+.res-hero > * { position: relative; z-index: 1; }
+.res-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 13px; font-weight: 900; letter-spacing: .1em; opacity: .8; }
+.res-top span:last-child { letter-spacing: 0; font-weight: 600; opacity: .8; }
+.res-hero .kind { font-size: 16px; font-weight: 800; opacity: .9; margin-bottom: 4px; }
+.res-hero h2 { font-size: 32px; font-weight: 900; line-height: 1.3; letter-spacing: -.7px; margin: 0 0 6px; }
+.res-hero .one { font-size: 15.5px; opacity: .84; margin: 0 0 16px; line-height: 1.5; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .24); border-radius: 999px; padding: 6px 13px; font-size: 14.5px; font-weight: 800; }
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--lime); }
+.axis { margin-top: 16px; }
+.axis-labels { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 900; margin-bottom: 5px; }
+.axis-labels .pct { font-size: 12.5px; color: var(--teal-deep); background: var(--lime); border-radius: 999px; padding: 1px 8px; }
+.axis-track { position: relative; height: 7px; background: rgba(255, 255, 255, .18); border-radius: 999px; }
+.axis-track span { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, rgba(255, 255, 255, .5), var(--lime)); }
+
+.course-box { background: linear-gradient(150deg, #F2FAF7 0%, #F7FCF3 100%); border: 1.5px solid #D9EDE3; border-radius: 16px; padding: 16px; }
+.course-top { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.badge { background: var(--grad-bi); color: #fff; border-radius: 999px; padding: 6px 16px; font-size: 15.5px; font-weight: 900; letter-spacing: -.2px; box-shadow: 0 4px 12px rgba(14, 124, 119, .28); }
+.badge-soft { background: #fff; border: 1px solid #DCEDE4; color: var(--teal-deep); border-radius: 999px; padding: 5px 13px; font-size: 14.5px; font-weight: 900; }
+.course-desc { font-size: 15.5px; color: var(--ink-soft); margin: 0 0 10px; }
+.reasons { display: flex; flex-direction: column; gap: 5px; }
+.reason { display: flex; align-items: flex-start; gap: 7px; font-size: 14.5px; color: var(--ink-soft); line-height: 1.5; background: rgba(255, 255, 255, .7); border-radius: 9px; padding: 8px 11px; }
+.reason::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-top: 6px; }
+
+.reco { display: flex; flex-direction: column; gap: 8px; }
+.reco-row { display: grid; grid-template-columns: 88px 1fr; gap: 10px; align-items: start; background: rgba(255, 255, 255, .7); border-radius: 9px; padding: 9px 11px; }
+.reco-k { font-size: 14px; font-weight: 900; color: var(--teal); padding-top: 2px; }
+.reco-v { font-size: 15.5px; font-weight: 800; color: var(--ink); line-height: 1.5; display: flex; flex-direction: column; gap: 2px; }
+.reco-v.tip { font-weight: 600; color: var(--ink-soft); }
+.reco-v small { font-size: 14px; font-weight: 600; color: var(--ink-mute); }
+.locked { position: relative; overflow: hidden; }
+.locked .blur { filter: blur(6px); opacity: .6; pointer-events: none; user-select: none; display: grid; gap: 12px; padding: 10px 0 4px; }
+.locked .blur div { height: 18px; border-radius: 7px; background: var(--grad-bi); opacity: .5; }
+.locked .over { position: absolute; left: 0; right: 0; top: 48px; bottom: 0; display: grid; place-content: center; gap: 5px; text-align: center; padding: 16px; }
+.locked .over b { font-size: 17.5px; color: var(--teal-deep); }
+.locked .over span { font-size: 15px; color: var(--ink-soft); }
+
+.actions { display: flex; flex-direction: column; gap: 9px; }
+.actions .two { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.note { margin: 0; font-size: 14.5px; color: var(--ink-mute); text-align: center; line-height: 1.55; }
+
+.form { display: flex; flex-direction: column; gap: 11px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label, .field .lbl { font-size: 15px; font-weight: 800; color: var(--ink-soft); }
+.input { width: 100%; border: 1.5px solid var(--line); border-radius: 13px; padding: 14px; font-size: 18px; background: #fff; color: var(--ink); transition: border-color .15s, box-shadow .15s; }
+.input::placeholder { color: #B5BFC2; }
+.input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3.5px rgba(14, 124, 119, .1); }
+.seg { display: flex; gap: 6px; }
+.seg button { flex: 1; min-width: 56px; border: 1.5px solid var(--line); border-radius: 11px; padding: 11px 4px; background: #fff; font-size: 15.5px; font-weight: 800; color: var(--ink-soft); text-align: center; transition: all .13s; }
+.seg button[aria-pressed="true"] { border-color: var(--teal); background: var(--teal); color: #fff; box-shadow: 0 4px 12px rgba(14, 124, 119, .26); }
+.consent { padding: 12px 14px; border-radius: 12px; background: #F7FAF9; border: 1px solid var(--line-soft); font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; }
+.consent summary { cursor: pointer; font-weight: 800; color: var(--teal-deep); }
+.consent ul { margin: 8px 0 0; padding-left: 16px; }
+.check { display: flex; gap: 9px; align-items: flex-start; font-size: 16px; font-weight: 700; color: var(--ink); }
+.check input { width: 20px; height: 20px; margin-top: 1px; accent-color: var(--teal); flex: none; }
+.err { margin: 0; font-size: 15.5px; font-weight: 800; color: #B23A2A; }
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); padding: 11px 18px; border-radius: 999px; background: rgba(46, 50, 51, .92); color: #fff; font-size: 16px; font-weight: 700; z-index: 50; max-width: calc(100% - 32px); }
+/* 보조 글씨도 회색 대신 검정으로 진하고 굵게 (사용자 요청) */
+.card-sub, .hint, .q-desc, .value p, .reco-v.tip, .reco-v small, .course-desc, .reason, .note, .foot, .consent, .consent summary, .field label, .field .lbl, .opt .lb, .opt .num, .brand .sys, .progress-top, .loading, .locked .over span, .badge-soft { color: var(--ink); font-weight: 700; }
+.value p b, .reco-v, .card-head, .q-text, .opt[aria-pressed="true"] .lb { font-weight: 900; }
+.hint::before { border-width: 2px; }
+/* 추천 카드 (인강, 교재, 모의고사) */
+.rcards { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+.rcard { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; padding: 12px; border-radius: 16px; background: #fff; border: 1.5px solid #D9EDE3; box-shadow: var(--sh-sm); text-decoration: none; color: var(--ink); transition: transform .12s, box-shadow .16s; }
+.rcard:active { transform: scale(.985); }
+.rcard:hover { border-color: var(--teal); box-shadow: var(--sh-md); }
+.thumb { width: 64px; height: 64px; border-radius: 14px; overflow: hidden; background: var(--grad-bi-soft); border: 1px solid #DCEDE4; display: grid; place-items: center; flex: none; }
+.thumb.round { border-radius: 50%; }
+.thumb.book { width: 64px; height: 84px; border-radius: 8px; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb .ph { font-size: 13px; font-weight: 900; color: var(--teal); }
+.rbody { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.rtag { font-size: 12px; font-weight: 900; color: var(--teal); }
+.rbody b { font-size: 16px; font-weight: 900; line-height: 1.35; word-break: keep-all; }
+.rsub { font-size: 12.5px; font-weight: 700; color: var(--ink); opacity: .8; }
+.go { font-size: 12.5px; font-weight: 900; color: #fff; background: var(--grad-bi); border-radius: 999px; padding: 7px 11px; white-space: nowrap; }
+@media (max-width: 360px) { .rcard { grid-template-columns: 56px 1fr; } .go { grid-column: 2; justify-self: start; } }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo"><b>ETOOS</b><span>247</span></div>
+      <div class="sys">이투스247학원<b>LMCT 학습진단</b></div>
+    </div>
+    <button class="back" id="back" type="button" hidden>이전</button>
+  </header>
+  <main id="app" aria-live="polite"></main>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // 구글 시트 Apps Script 웹 앱 주소. 비워 두면 콘솔에만 기록한다.
+  var LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwdIfbCHCem_QpL1WsPuMxjh4QYKFEhRxXnq7P4NBnTeb5Pdwq6BGfYbihjGDpkKuaE/exec';
+  var VERSION = 'lite-2';
+  var HOME_URL = 'https://247.etoos.com/index.do';
+
+  // 과목별 취약 단원 선택지. 단원 묶음은 V1.1 단원표(04_대시보드/engine.js)를 라이트용으로 줄인 것
+  var UNITS = {
+    kor: [['kor_read', '독서 (비문학 지문)'], ['kor_poem', '현대시와 고전시가'], ['kor_novel', '현대소설과 고전소설'], ['kor_gram', '언어(문법)와 화법, 작문'], ['kor_na', '잘 모르겠어요']],
+    math: [['math_su1', '수학Ⅰ (지수로그, 삼각함수, 수열)'], ['math_su2', '수학Ⅱ (극한, 미분, 적분)'], ['math_prob', '확률과 통계'], ['math_calc', '미적분, 기하 (선택과목)'], ['math_na', '잘 모르겠어요']],
+    eng: [['eng_vocab', '어휘와 숙어'], ['eng_gram', '어법'], ['eng_blank', '빈칸 추론'], ['eng_order', '글의 순서와 문장 넣기'], ['eng_topic', '주제, 요지 찾기와 듣기'], ['eng_na', '잘 모르겠어요']],
+    inq: [['inq_soc_concept', '사회탐구 개념 암기'], ['inq_soc_data', '사회탐구 자료, 도표 분석'], ['inq_sci_concept', '과학탐구 개념 이해'], ['inq_sci_calc', '과학탐구 계산과 그래프'], ['inq_na', '잘 모르겠어요']]
+  };
+  // 이투스 진단 체계의 처방(기획안 p.6 과목별 3유형, 재설계안 Ⅳ-3 Level 처방)을 최근 등급에 맞춰 적용한다.
+  var METHOD = {
+    '12': { type: '자기주도형', tools: '자습과 인강 중심', how: '약점 단원만 골라 기출로 보완하고, 막히는 부분만 인강으로 확인해요. 전과목 질의응답으로 충분해요.' },
+    '34': { type: '균형관리형', tools: '인강과 현강 중심', how: '인강으로 개념을 정립하고 현장 강의에서 바로 질문해요. 학습법은 1:1 상담으로 점검해요.' },
+    '56': { type: '균형관리형', tools: '인강과 현강 중심', how: '개념 정립이 먼저예요. 인강과 현장 강의를 병행하고, 이 단원은 1:1 클리닉(코칭픽) 후보로 올려요.' },
+    '79': { type: '밀착관리형', tools: '현강과 1:1 클리닉 중심', how: '기초부터 현장 강의로 쌓고, 이 단원은 1:1 클리닉(코칭픽)으로 매주 점검해요.' },
+    'na': { type: '균형관리형', tools: '인강과 현강 중심', how: '먼저 기출 한 회로 지금 위치를 확인하고, 개념은 인강으로, 질문은 현장 강의에서 해결해요.' }
+  };
+  // 강사 사진은 img/instructors/(강사코드).png (이투스 강사 페이지 사진 300x300 사본). 강사 페이지는 teacher_id로 연다.
+  var TEACHER = { '김민경': '200535', '김민정': '200209', '박광일': '200532', '정승제': '200180', '김동하': '200536', '김범구': '200481', '주혜연': '200439', '이지영': '200391', '김현수': '200482', '안성진': '200431', '이승후': '200490', '조윤호': '200521', '양서현': '200504', '엄영대': '200530' };
+  var LECTURE_URL = 'https://www.etoos.com/lecture/LectureDetailN.asp?LECTURE_ID=';
+  var BOOK_URL = 'https://etoos.com/bookstore/book/books/view.asp?BOOK_ID=';
+  var ASAP_URL = 'https://www.etoos.com/bookstore/past_exam/asap/';
+  // 이투스북 모의고사 상품 (2026-10-23 이투스북 메인 목록 기준). 표지는 이투스북에서 받아 img/books/에 둔 사본
+  var MOCK = {
+    fit_kor: { n: '2027 수능 the Fittest 국어 3회분', id: 'B34702', img: 'img/books/B34702.jpg' },
+    fit_math: { n: '2027 수능 the Fittest 수학 3회분', id: 'B34704', img: 'img/books/B34704.jpg' },
+    fit_eng: { n: '2027 수능 the Fittest 영어 3회분', id: 'B34703', img: 'img/books/B34703.jpg' },
+    fit_samun: { n: '2027 수능 the Fittest 사회문화 3회분', id: 'B34705', img: 'img/books/B34705.jpg' },
+    fit_saeyun: { n: '2027 수능 the Fittest 생활과 윤리 3회분', id: 'B34706', img: 'img/books/B34706.jpg' },
+    fit_bio: { n: '2027 수능 the Fittest 생명과학1 3회분', id: 'B34707', img: 'img/books/B34707.jpg' },
+    fit_earth: { n: '2027 수능 the Fittest 지구과학1 3회분', id: 'B34708', img: 'img/books/B34708.jpg' },
+    m15_read: { n: '15분 모의고사 국어 독서', id: 'B26885', img: 'img/books/B26885.jpg' },
+    m15_lit: { n: '15분 모의고사 국어 문학', id: 'B26886', img: 'img/books/B26886.jpg' },
+    m15_hwajak: { n: '15분 모의고사 국어 화법과 작문', id: 'B27247', img: 'img/books/B27247.jpg' },
+    m15_eonmae: { n: '15분 모의고사 국어 언어와 매체', id: 'B27894', img: 'img/books/B27894.jpg' },
+    m15_topic: { n: '영어 빈출 주제 15분 모의고사 (영어독해 20회)', id: 'B24826', img: 'img/books/B24826.jpg' },
+    m15_allclear: { n: 'All Clear 올 클리어 유형 15분 모의고사', id: 'B25478', img: 'img/books/B25478.jpg' },
+    m15_killer: { n: 'Killer 킬러 유형 15분 모의고사 (영어독해 18회)', id: 'B19515', img: 'img/books/B19515.jpg' },
+    gojaengi_su1: { n: '실전+수능고쟁이 수학Ⅰ', id: 'B29531', img: 'img/books/B29531.jpg' },
+    gojaengi_su2: { n: '실전+수능고쟁이 수학Ⅱ', id: 'B29532', img: 'img/books/B29532.jpg' },
+    gojaengi_prob: { n: '실전+수능고쟁이 확률과 통계', id: 'B29533', img: 'img/books/B29533.jpg' },
+    gojaengi_calc: { n: '실전+수능고쟁이 미적분', id: 'B29534', img: 'img/books/B29534.jpg' },
+    n3020: { n: 'N수학 3020 모의고사 공통+선택', id: 'B33436', img: 'img/books/B33436.jpg' },
+    eosam: { n: '어삼쉬사 실전모의고사 수학Ⅰ.Ⅱ', id: 'B28571', img: 'img/books/B28571.jpg' },
+    listening20: { n: '리스닝마스터 영어듣기 모의고사 20회', id: 'B27381', img: 'img/books/B27381.jpg' },
+    asap_kor: { n: '2027 아삽 시즌1 국어', asap: true }, asap_math: { n: '2027 아삽 시즌1 수학', asap: true }, asap_eng: { n: '2027 아삽 시즌1 영어', asap: true },
+    asap_soc: { n: '2027 아삽 시즌1 사회탐구 (사문, 생윤, 정법, 윤사, 한지, 세지)', asap: true }, asap_sci: { n: '2027 아삽 시즌1 과학탐구 (물1, 화1, 생1, 지1)', asap: true }, asap_inq: { n: '2027 아삽 시즌1 탐구 (선택과목별)', asap: true }
+  };
+  // 단원별 추천. 인강과 교재는 이투스 강좌 마스터(2026-10-05 수집, 월구독 포함 강좌 1,657개)에서 수강평이 많은 개념 강좌와 그 주교재,
+  // 모의고사는 이투스북 판매 목록에서 골랐다. 검수용 사본은 07_라이트버전/추천_교재_인강표_초안.md
+  // lectures: [강사, 강좌명, 강좌코드, (과목 표시)], book: [교재명, 교재를 볼 수 있는 강좌코드], mocks: MOCK 키
+  var RECO = {
+    kor_read: { lectures: [['김민경', 'New 2027 독서머리 개념 편', 'L70856']], book: ['New 2027 독서머리 개념 편 (문제책+해설책)', 'L70856'], mocks: ['m15_read', 'fit_kor'], point: '하루 지문 3개를 시간 재고 풀고, 틀린 문항은 근거 문장을 지문에서 찾아 표시해요.' },
+    kor_poem: { lectures: [['김민정', '민정샘이 떠먹여주는 고전문학', 'L64312']], book: ['[김민정T] 민정샘이 떠먹여주는 고전문학', 'L64312'], mocks: ['m15_lit', 'fit_kor'], point: '화자, 상황, 정서 세 가지를 먼저 잡고 선지를 판단해요.' },
+    kor_novel: { lectures: [['김민정', '민정샘이 떠먹여주는 현대문학', 'L64581'], ['박광일', 'New 2027 [문학] 훈련도감', 'L70824']], book: ['New 2027 훈련도감 [문학]', 'L70824'], mocks: ['m15_lit', 'fit_kor'], point: '인물 관계도를 그리고 서술자 시점이 바뀌는 지점을 표시하며 읽어요.' },
+    kor_gram: { lectures: [['김민정', 'New 2027 문법압축 PACK', 'L71191']], book: ['[김민정T] 2027 문법압축 PACK', 'L71191'], mocks: ['m15_eonmae', 'm15_hwajak'], point: '음운, 형태소, 문장 성분을 표로 정리한 뒤 기출로 확인해요. 화작은 선지 소거 연습이 핵심이에요.' },
+    kor_na: { lectures: [['김민정', 'New 2027 단 1%만 아는 비밀 [공통]', 'L70574']], book: ['[김민정T] 2027 단 1%만 아는 비밀 [공통]', 'L70574'], mocks: ['fit_kor', 'asap_kor'], point: '최근 모의고사 오답을 독서, 문학, 문법으로 나눠 세어 보면 약한 영역이 바로 보여요.' },
+    math_su1: { lectures: [['정승제', '개념의 神 수학Ⅰ', 'L58888']], book: ['개념의 神 수학Ⅰ', 'L58888'], mocks: ['gojaengi_su1', 'fit_math'], point: '지수로그 식 변형과 삼각함수 그래프를 손으로 그리는 연습부터 해요.' },
+    math_su2: { lectures: [['정승제', '개념의 神 수학Ⅱ', 'L60234']], book: ['개념의 神 수학Ⅱ', 'L60234'], mocks: ['gojaengi_su2', 'eosam'], point: '극한과 미분 정의를 말로 설명할 수 있을 때까지 반복하고, 그다음 3점 기출을 풀어요.' },
+    math_prob: { lectures: [['정승제', '개념의 神 확률과통계', 'L61443']], book: ['개념의 神 확률과 통계', 'L61443'], mocks: ['gojaengi_prob', 'n3020'], point: '경우의 수 문제를 유형별로 분류해 풀이 틀을 외우면 정확도가 올라가요.' },
+    math_calc: { lectures: [['정승제', '개념의 神 미적분', 'L61984', '미적분'], ['정승제', '개념의 神 기하', 'L63708', '기하']], book: ['개념의 神 미적분 또는 개념의 神 기하', 'L61984'], mocks: ['gojaengi_calc', 'n3020'], point: '수학Ⅱ 미분, 적분이 흔들리면 선택과목도 같이 흔들려요. 기본 개념부터 점검해요.' },
+    math_na: { lectures: [['정승제', 'New 2027 개념때려잡기 수학Ⅰ', 'L70654'], ['정승제', 'New 2027 개념때려잡기 수학Ⅱ', 'L70655']], book: ['New 2027 개념때려잡기+혼자서때려잡기', 'L70654'], mocks: ['fit_math', 'asap_math'], point: '모의고사 틀린 문항의 단원을 적어 보면 어디서 점수가 새는지 보여요.' },
+    eng_vocab: { lectures: [['김동하', 'New 2027 김동하 VOCA', 'L71155']], book: ['New 2027 김동하 단어장', 'L71155'], mocks: ['fit_eng'], point: '하루 50개씩 보고, 다음 날 아침에 어제 단어를 다시 확인하는 식으로 돌려요.' },
+    eng_gram: { lectures: [['김동하', 'New 2027 김동하 영문법', 'L70821']], book: ['New 2027 김동하 영문법', 'L70821'], mocks: ['m15_allclear'], point: '수능 어법 출제 포인트는 20개 안쪽이에요. 포인트별로 예문을 모아 정리해요.' },
+    eng_blank: { lectures: [['김동하', 'New 2027 김동하 CORE 빈칸', 'L71138']], book: ['New 2027 김동하 CORE 빈칸', 'L71138'], mocks: ['m15_killer'], point: '빈칸 앞뒤 문장의 연결어와 반복되는 핵심어를 먼저 찾는 습관을 들여요.' },
+    eng_order: { lectures: [['김범구', 'Luminous 평가원 기출 분석 [순서삽입편]', 'L70024'], ['김동하', 'New 2027 김동하 CORE 순서삽입', 'L71176']], book: ['루미너스 순서삽입편', 'L70024'], mocks: ['m15_killer'], point: '대명사, 연결어, 관사로 문장 사이 연결 고리를 찾는 연습을 해요.' },
+    eng_topic: { lectures: [['주혜연', 'NEW 2027 한줄독해 기본편', 'L70711'], ['김범구', 'NEW 2027 Roger That! 듣기 만점 전략', 'L70720']], book: ['2027 주혜연 한줄독해 [기본편]', 'L70711'], mocks: ['listening20', 'm15_topic'], point: '첫 문장과 마지막 문장을 먼저 읽고 글의 방향을 잡아요. 듣기는 매일 한 회 받아쓰기로 잡아요.' },
+    eng_na: { lectures: [['김동하', 'New 2027 김동하 독해', 'L70889']], book: ['New 2027 김동하 독해 Package', 'L70889'], mocks: ['fit_eng', 'asap_eng'], point: '어휘가 부족하면 모든 유형이 흔들려요. 단어부터 점검하는 게 빠른 길이에요.' },
+    inq_soc_concept: { lectures: [['이지영', 'New 2027 출제자의 눈, 개념완성', 'L70790', '생활과 윤리'], ['이지영', 'New 2027 출제자의 눈, 개념완성', 'L70791', '사회문화']], book: ['이지영의 출제자의 눈, 개념완성 (선택과목별)', 'L70790'], mocks: ['fit_saeyun', 'fit_samun'], point: '단원마다 핵심 개념 10개를 뽑아 빈칸 채우기로 반복해요.' },
+    inq_soc_data: { lectures: [['이지영', 'New 2027 심.기.일.전 도표특강', 'L71059', '사회문화'], ['김현수', 'New 2027 KILL THE KILLER 도표의 실마리', 'L70966', '사회문화']], book: ['[사회문화] New 2027 KILL THE KILLER', 'L70966'], mocks: ['asap_soc'], point: '도표 문제는 축과 단위를 먼저 읽고, 선지를 자료에 대입해 하나씩 지워요.' },
+    inq_sci_concept: { lectures: [['안성진', 'NEW 2027 VEGA 개념완성', 'L70668', '지구과학Ⅰ'], ['이승후', 'GT 개념 CELL', 'L69589', '생명과학Ⅰ'], ['조윤호', 'New 2027 Vortex 개념완성', 'L70708', '물리학Ⅰ'], ['양서현', 'Sense of 개념', 'L69588', '화학Ⅰ']], book: ['고른 과목의 개념완성 주교재', 'L70668'], mocks: ['fit_bio', 'fit_earth'], point: '그림과 그래프를 직접 그려 보며 개념을 설명하는 연습이 효과가 커요.' },
+    inq_sci_calc: { lectures: [['이승후', 'NEW 2027 GT 심화 SKILL', 'L70667', '생명과학Ⅰ'], ['엄영대', '엄-피셜 자료분석', 'L70030', '지구과학Ⅰ'], ['조윤호', 'New 2027 Hertz 실력향상 스킬셋', 'L71489', '물리학Ⅰ']], book: ['NEW 2027 GT DATA BREAKER, 엄-메이징 최우수 N제', 'L70667'], mocks: ['asap_sci'], point: '계산 문제는 공식 암기보다 단위와 비례 관계로 접근하면 실수가 줄어요.' },
+    inq_na: { lectures: [['이지영', 'New 2027 출제자의 눈, 개념완성', 'L70790', '사회탐구'], ['안성진', 'NEW 2027 VEGA 개념완성', 'L70668', '과학탐구']], book: ['선택과목 개념완성 주교재 1권', 'L70790'], mocks: ['asap_inq'], point: '선택과목 기출 한 회를 풀고 틀린 문항이 개념인지 자료 해석인지 나눠 보세요.' }
+  };
+
+  var QUESTIONS = [
+    { id: 'status', phase: '기본 정보', text: '지금 나는?', opts: [['g3', '고3'], ['n1', '재수생'], ['n2', 'N수생 (삼수 이상)'], ['half', '반수 준비 중인 대학생'], ['g12', '고1, 고2']] },
+    { id: 'grade', phase: '기본 정보', text: '최근 모의고사 국어, 수학, 영어 평균 등급은?', hint: '대략적으로 골라도 괜찮아요.', opts: [['12', '1~2등급'], ['34', '3~4등급'], ['56', '5~6등급'], ['79', '7등급 이하'], ['na', '잘 모르겠어요']] },
+    { id: 'weak', phase: '취약 과목', text: '요즘 가장 발목 잡는 과목은?', opts: [['kor', '국어'], ['math', '수학'], ['eng', '영어'], ['inq', '탐구']] },
+    { id: 'unit', phase: '취약 단원', text: function (a) { return SUBJECT[a.weak] + '에서 가장 약한 부분은?'; }, hint: '가장 자주 틀리는 곳 하나만 골라 주세요.', opts: function (a) { return UNITS[a.weak] || UNITS.kor; } },
+    { id: 'style', phase: '학습 성향', text: '새로운 개념, 어떻게 배울 때 머리에 제일 잘 들어오나요?', opts: [['live', '선생님 현장 강의로'], ['online', '인강으로 내 속도에 맞춰'], ['self', '혼자 교재 보며 정리하며']] },
+    { id: 'plan', phase: '실행력', text: '공부 계획을 세우면 끝까지 지키는 편인가요?', opts: [['4', '거의 항상 지켜요'], ['3', '대체로 지켜요'], ['2', '반쯤 지켜요'], ['1', '자주 무너져요']] },
+    { id: 'start', phase: '실행력', text: '아무도 시키지 않아도 아침에 바로 공부를 시작하나요?', opts: [['4', '네, 늘 그래요'], ['3', '대체로 그래요'], ['2', '가끔 그래요'], ['1', '거의 못 해요']] }
+  ];
+
+  var TYPES = {
+    self: { name: '자율주행형', one: '계획부터 실행까지 스스로 굴러가는 타입', traits: ['내 속도로 공부할 때 효율이 가장 높아요', '자습 시간에 몰입이 잘 돼요', '방향만 잘 잡으면 성적이 빠르게 올라요'], course: 0, why: '자습 비중을 높이고, 코칭으로 방향만 점검하면 충분해요.' },
+    spark: { name: '몰아치기형', one: '이해력은 좋은데 루틴이 흔들리는 타입', traits: ['혼자서도 개념은 잘 잡아요', '컨디션에 따라 공부량 차이가 커요', '정해진 시간표가 생기면 실력이 확 살아나요'], course: 1, why: '정해진 시간표와 순공 관리로 루틴부터 고정하는 게 핵심이에요.' },
+    pace: { name: '페이스메이커형', one: '설명을 들으면 쭉쭉 따라가는 성실 타입', traits: ['현장 강의에서 흡수력이 가장 좋아요', '세운 계획은 꾸준히 지켜요', '질문할 곳이 가까이 있으면 더 빨라져요'], course: 1, why: '강의로 흡수하고 바로 질문할 수 있는 환경에서 성실함이 성적으로 이어져요.' },
+    care: { name: '풀케어형', one: '옆에서 잡아 주면 확 달라지는 타입', traits: ['설명을 들을 때 이해가 가장 잘 돼요', '혼자 두면 계획이 자주 무너져요', '담임이 매일 챙기면 공부량이 크게 늘어요'], course: 2, why: '현장 강의 위주에 담임 밀착 관리로 공부량부터 확보해야 해요.' }
+  };
+  var COURSES = [
+    { name: '기본코스', desc: '현장 강의는 꼭 필요한 만큼, 자습 중심' },
+    { name: '표준코스', desc: '현장 강의와 자습의 균형' },
+    { name: '밀착코스', desc: '현장 강의 위주에 담임 밀착 관리' }
+  ];
+  var SUBJECT = { kor: '국어', math: '수학', eng: '영어', inq: '탐구' };
+  var CLASS_BY_STATUS = {
+    g3: '윈터스쿨, 재수조기선발반', n1: '재수정규반', n2: '재수정규반',
+    half: '프리반수반, 반수성공반', g12: '윈터스쿨'
+  };
+  var REGIONS = ['서울', '인천/경기', '대전/세종/충청', '강원', '부산/대구/경상', '광주/전라', '제주', '아직 모름'];
+
+  // 채점 규칙은 LMCT_라이트_문항_채점명세.md 3절과 같다.
+  function score(a) {
+    var independent = a.style === 'online' || a.style === 'self';
+    var sdl = Number(a.plan) + Number(a.start);
+    var strong = sdl >= 6;
+    var type = independent ? (strong ? 'self' : 'spark') : (strong ? 'pace' : 'care');
+    var course = TYPES[type].course;
+    var lowGrade = a.grade === '56' || a.grade === '79';
+    if (lowGrade) course = Math.min(2, course + 1);
+    return { type: type, course: course, sdl: sdl, bumped: lowGrade && course !== TYPES[type].course };
+  }
+
+  // ---- 로그 ----
+  var params = new URLSearchParams(location.search);
+  var sid = makeSid();
+  var t0 = Date.now();
+  var common = {
+    v: VERSION, sid: sid, page: location.href.split('#')[0].slice(0, 300),
+    utm_source: params.get('utm_source') || '', utm_medium: params.get('utm_medium') || '', utm_campaign: params.get('utm_campaign') || '',
+    ref: document.referrer.slice(0, 300), embed: window.self !== window.top,
+    mobile: /Mobi|Android|iPhone/i.test(navigator.userAgent), sw: window.screen ? window.screen.width : 0
+  };
+
+  function makeSid() {
+    var key = 'lmct-lite-sid';
+    try { var saved = sessionStorage.getItem(key); if (saved) return saved; } catch (e) {}
+    var id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+    try { sessionStorage.setItem(key, id); } catch (e) {}
+    return id;
+  }
+
+  function log(event, data) {
+    var payload = Object.assign({}, common, { event: event, ts: new Date().toISOString(), t_ms: Date.now() - t0 }, data || {});
+    if (!LOG_ENDPOINT) { console.info('[LMCT-lite log]', payload); return; }
+    // text/plain이라야 Apps Script로 보낼 때 CORS 사전 요청이 생기지 않는다.
+    var body = JSON.stringify(payload);
+    var sent = false;
+    try { sent = navigator.sendBeacon && navigator.sendBeacon(LOG_ENDPOINT, new Blob([body], { type: 'text/plain;charset=utf-8' })); } catch (e) {}
+    if (!sent) {
+      try { fetch(LOG_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body }); } catch (e) {}
+    }
+  }
+
+  // ---- 화면 ----
+  var app = document.getElementById('app');
+  var backBtn = document.getElementById('back');
+  var answers = {};
+  var step = -1;
+  var result = null;
+  var leadSent = false;
+
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === 'on') Object.keys(attrs.on).forEach(function (ev) { el.addEventListener(ev, attrs.on[ev]); });
+      else if (k === 'html') el.innerHTML = attrs.html;
+      else el.setAttribute(k, attrs[k]);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      if (c == null || c === false) continue;
+      (Array.isArray(c) ? c : [c]).forEach(function (cc) { el.appendChild(typeof cc === 'string' ? document.createTextNode(cc) : cc); });
+    }
+    return el;
+  }
+
+  function show(node) {
+    app.replaceChildren(node);
+    window.scrollTo(0, 0);
+    postHeight();
+  }
+
+  function postHeight() {
+    if (!common.embed) return;
+    requestAnimationFrame(function () {
+      try { window.parent.postMessage({ type: 'lmct-lite:height', height: document.documentElement.scrollHeight }, '*'); } catch (e) {}
+    });
+  }
+
+  function toast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(function () { t.hidden = true; }, 2200);
+  }
+
+  function today() {
+    var d = new Date();
+    return d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function renderIntro() {
+    step = -1; backBtn.hidden = true;
+    show(h('section', { class: 'screen' },
+      h('div', { class: 'hero' },
+        h('span', { class: 'kicker' }, '취약점 LMCT 1분 진단'),
+        h('h1', { html: '나에게 맞는<br><em>이투스247 학습 코스</em>를 찾아봅니다' }),
+        h('p', null, '나만의 취약단원에 꼭 맞는 학습 유형과 추천 교재 & 인강을 바로 확인해보세요')),
+      h('div', { class: 'card' },
+        h('h2', { class: 'card-head' }, '이런걸 알려드려요!'),
+        h('p', { class: 'card-sub' }, '이름이나 연락처 없이 바로 시작합니다.'),
+        h('div', { class: 'values' },
+          h('div', { class: 'value' }, h('div', { class: 'ico' }, '1'), h('div', null, h('h3', null, '나의 취약 단원'), h('p', { html: '먼저 잡아야 할 <b>취약 과목과 단원</b>을 짚어 드립니다' }))),
+          h('div', { class: 'value' }, h('div', { class: 'ico' }, '2'), h('div', null, h('h3', null, '나의 학습 유형'), h('p', { html: '학습 방식과 실행력으로 <b>4가지 유형</b> 중 하나를 알려 드립니다' }))),
+          h('div', { class: 'value' }, h('div', { class: 'ico' }, '3'), h('div', null, h('h3', null, '추천 교재 & 인강'), h('p', { html: '취약 단원에 맞는 <b>학습 방법과 이투스 인강, 교재</b>를 추천합니다' })))),
+        h('button', { class: 'btn btn-primary', type: 'button', on: { click: function () { log('start'); goTo(0); } } }, '진단 시작하기 →'),
+        h('p', { class: 'hint' }, '최대한 솔직하게 골라주셔야 결과의 정확도가 상승돼요.')),
+      h('p', { class: 'foot' }, h('b', null, '이투스247학원'), ' LMCT 학습진단', h('br'), 'LMCT진단 기반 247 콘텐츠 추천 시스템')
+    ));
+  }
+
+  function goTo(i) {
+    step = i;
+    backBtn.hidden = false;
+    var q = QUESTIONS[i];
+    var qText = typeof q.text === 'function' ? q.text(answers) : q.text;
+    var qOpts = typeof q.opts === 'function' ? q.opts(answers) : q.opts;
+    var opts = qOpts.map(function (o, idx) {
+      return h('button', { class: 'opt', type: 'button', 'aria-pressed': String(answers[q.id] === o[0]), on: { click: function (ev) { choose(q, o[0], ev.currentTarget); } } },
+        h('span', { class: 'num' }, String(idx + 1)), h('span', { class: 'lb' }, o[1]));
+    });
+    show(h('section', { class: 'screen' },
+      h('div', { class: 'progress', 'aria-label': '진행률' },
+        h('div', { class: 'progress-top' }, h('span', null, '문항 ', h('b', null, String(i + 1)), ' / ' + QUESTIONS.length), h('span', null, Math.round((i + 1) / QUESTIONS.length * 100) + '%')),
+        h('div', { class: 'progress-bar' }, h('span', { style: 'width:' + Math.round((i + 1) / QUESTIONS.length * 100) + '%' }))),
+      h('div', { class: 'stage' },
+        h('span', { class: 'phase' }, q.phase),
+        h('h2', { class: 'q-text' }, qText),
+        h('p', { class: 'q-desc' }, q.hint || '하나만 골라 주세요.'),
+        h('div', { class: 'scale', role: 'group', 'aria-label': qText }, opts))
+    ));
+  }
+
+  var choosing = false;
+  function choose(q, value, btn) {
+    if (choosing) return;
+    choosing = true;
+    answers[q.id] = value;
+    // 취약 과목을 바꾸면 이전에 고른 단원은 맞지 않으므로 지운다.
+    if (q.id === 'weak' && answers.unit && answers.unit.indexOf(value + '_') !== 0) delete answers.unit;
+    btn.parentNode.querySelectorAll('.opt').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+    log('answer', { qid: q.id, value: value, q_no: step + 1 });
+    setTimeout(function () {
+      choosing = false;
+      if (step < QUESTIONS.length - 1) goTo(step + 1); else finish();
+    }, 220);
+  }
+
+  backBtn.addEventListener('click', function () {
+    if (step === QUESTIONS.length + 1) { backBtn.hidden = true; renderResult(); }
+    else if (step > 0) goTo(step - 1);
+    else renderIntro();
+  });
+
+  function finish() {
+    step = QUESTIONS.length;
+    backBtn.hidden = true;
+    result = score(answers);
+    log('complete', { answers: Object.assign({}, answers), type: result.type, course: COURSES[result.course].name, sdl: result.sdl });
+    show(h('section', { class: 'loading screen' },
+      h('div', { class: 'spinner', 'aria-hidden': 'true' }),
+      h('span', null, '답변을 분석하고 있어요')));
+    setTimeout(renderResult, 1300);
+  }
+
+  function renderResult() {
+    var t = TYPES[result.type];
+    var c = COURSES[result.course];
+    var weak = SUBJECT[answers.weak];
+    var sdlPct = Math.round((result.sdl - 2) / 6 * 100);
+    var unitId = answers.unit || (answers.weak + '_na');
+    var unitRow = (UNITS[answers.weak] || []).filter(function (u) { return u[0] === unitId; })[0];
+    var unitName = unitRow ? unitRow[1] : weak + ' 전반';
+    var reco = RECO[unitId] || RECO[answers.weak + '_na'];
+    var method = METHOD[answers.grade] || METHOD.na;
+    var reasons = [t.why, weak + (hasBatchim(weak) ? '은' : '는') + ' 1:1 코칭(주 30분)으로 먼저 잡는 걸 추천해요.'];
+    if (result.bumped) reasons.push('최근 등급을 고려해 관리 강도를 한 단계 올렸어요.');
+
+    show(h('section', { class: 'screen' },
+      h('div', { class: 'res-hero' },
+        h('div', { class: 'res-top' }, h('span', null, 'LMCT 학습진단'), h('span', null, today())),
+        h('div', { class: 'kind' }, '나의 학습 유형은'),
+        h('h2', { html: '<em>' + t.name + '</em>' }),
+        h('p', { class: 'one' }, t.one),
+        h('div', { class: 'pills' }, t.traits.map(function (s) { return h('span', { class: 'pill' }, s); })),
+        h('div', { class: 'axis' },
+          h('div', { class: 'axis-labels' }, h('span', null, '스스로 공부하는 힘'), h('span', { class: 'pct' }, sdlPct + '%')),
+          h('div', { class: 'axis-track' }, h('span', { style: 'width:' + Math.max(6, sdlPct) + '%' })))),
+      h('div', { class: 'card' },
+        h('h3', { class: 'card-head' }, '나에게 맞는 관리 코스'),
+        h('p', { class: 'card-sub' }, '학습 방식과 실행력, 최근 등급으로 정했습니다.'),
+        h('div', { class: 'course-box' },
+          h('div', { class: 'course-top' }, h('span', { class: 'badge' }, c.name), h('span', { class: 'badge-soft' }, weak + ' 1:1 코칭'), h('span', { class: 'badge-soft' }, CLASS_BY_STATUS[answers.status])),
+          h('p', { class: 'course-desc' }, c.desc),
+          h('div', { class: 'reasons' }, reasons.map(function (s) { return h('div', { class: 'reason' }, s); }))),
+        h('p', { class: 'hint' }, '개강 일정은 지점마다 다를 수 있어요.')),
+      h('div', { class: 'card' },
+        h('h3', { class: 'card-head' }, weak + ' 취약 단원 처방'),
+        h('p', { class: 'card-sub' }, '이투스247 진단 체계의 ' + method.type + ' 처방이에요. ' + method.tools + '으로 잡아요.'),
+        h('div', { class: 'course-top' }, h('span', { class: 'badge' }, unitName), h('span', { class: 'badge-soft' }, method.type)),
+        h('div', { class: 'reco-row' }, h('span', { class: 'reco-k' }, '학습 방법'), h('div', { class: 'reco-v tip' }, method.how)),
+        h('div', { class: 'rcards' },
+          reco.lectures.slice(0, 4).map(function (l) {
+            var code = TEACHER[l[0]];
+            return h('a', { class: 'rcard', href: LECTURE_URL + l[2], target: '_blank', rel: 'noopener', on: { click: function () { log('cta', { value: 'lecture:' + l[2] }); } } },
+              h('div', { class: 'thumb round' }, code ? h('img', { src: 'img/instructors/' + code + '.png', alt: l[0] + ' 선생님', loading: 'lazy' }) : h('span', { class: 'ph' }, '강')),
+              h('div', { class: 'rbody' }, h('span', { class: 'rtag' }, '추천 인강' + (l[3] ? ' (' + l[3] + ')' : '')), h('b', null, l[1]), h('span', { class: 'rsub' }, l[0] + ' 선생님, 이투스 월구독 포함')),
+              h('span', { class: 'go' }, '강좌 보기'));
+          }),
+          h('a', { class: 'rcard', href: LECTURE_URL + reco.book[1], target: '_blank', rel: 'noopener', on: { click: function () { log('cta', { value: 'book:' + reco.book[1] }); } } },
+            h('div', { class: 'thumb book' }, h('img', { src: 'img/books/' + reco.book[1] + '.jpg', alt: reco.book[0], loading: 'lazy', on: { error: function (ev) { ev.currentTarget.replaceWith(h('span', { class: 'ph' }, '교재')); } } })),
+            h('div', { class: 'rbody' }, h('span', { class: 'rtag' }, '추천 교재'), h('b', null, reco.book[0]), h('span', { class: 'rsub' }, '강좌 교재, 마켓ECI에서 학원으로 무료배송')),
+            h('span', { class: 'go' }, '교재 보기')),
+          reco.mocks.map(function (k) {
+            var m = MOCK[k];
+            var href = m.asap ? ASAP_URL : BOOK_URL + m.id;
+            return h('a', { class: 'rcard', href: href, target: '_blank', rel: 'noopener', on: { click: function () { log('cta', { value: 'mock:' + (m.id || k) }); } } },
+              h('div', { class: 'thumb book' }, m.img ? h('img', { src: m.img, alt: m.n, loading: 'lazy', on: { error: function (ev) { ev.currentTarget.replaceWith(h('span', { class: 'ph' }, '모의')); } } }) : h('span', { class: 'ph' }, '아삽')),
+              h('div', { class: 'rbody' }, h('span', { class: 'rtag' }, '추천 모의고사'), h('b', null, m.n), h('span', { class: 'rsub' }, '이투스북')),
+              h('span', { class: 'go' }, '이투스북 보기'));
+          })),
+        h('div', { class: 'reco-row' }, h('span', { class: 'reco-k' }, '단원 포인트'), h('div', { class: 'reco-v tip' }, reco.point))),
+      h('div', { class: 'card locked' },
+        h('h3', { class: 'card-head' }, weak + ' 단원별 약점 지도와 주간 시간표'),
+        h('div', { class: 'blur', 'aria-hidden': 'true' }, h('div', { style: 'width:92%' }), h('div', { style: 'width:70%' }), h('div', { style: 'width:84%' })),
+        h('div', { class: 'over' }, h('b', null, '정밀진단에서 열려요'), h('span', null, '상담을 신청하면 전 단원 약점 지도와 주간 학습시간까지 알려 드려요.'))),
+      h('div', { class: 'actions' },
+        h('button', { class: 'btn btn-primary', type: 'button', on: { click: function () { log('cta', { value: 'consult' }); renderLead(); } } }, leadSent ? '상담 신청 완료' : '무료 상담 신청하고 정밀진단 받기'),
+        h('div', { class: 'two' },
+          h('button', { class: 'btn btn-ghost', type: 'button', on: { click: share } }, '결과 공유하기'),
+          h('a', { class: 'btn btn-ghost', href: HOME_URL, target: '_top', rel: 'noopener', on: { click: function () { log('cta', { value: 'home' }); } } }, '247 둘러보기')),
+        h('button', { class: 'btn btn-ghost', type: 'button', on: { click: function () { log('cta', { value: 'retry' }); answers = {}; t0 = Date.now(); renderIntro(); } } }, '다시 하기')),
+      h('p', { class: 'foot' }, '더 정확한 코스안내는 가까운 247 지점 상담과 정밀진단(LMTI, LMAT)를 이용해 보세요.')
+    ));
+    if (leadSent) app.querySelector('.btn-primary').disabled = true;
+  }
+
+  function hasBatchim(word) {
+    var code = word.charCodeAt(word.length - 1) - 0xac00;
+    return code >= 0 && code <= 11171 && code % 28 !== 0;
+  }
+
+  function share() {
+    log('cta', { value: 'share' });
+    var url = HOME_URL;
+    try { var u = new URL(location.href); u.search = ''; u.searchParams.set('utm_source', 'share'); url = u.toString(); } catch (e) {}
+    var text = '나는 ' + TYPES[result.type].name + '! 이투스247 LMCT 학습진단으로 나에게 맞는 코스 찾기';
+    if (navigator.share) { navigator.share({ title: '이투스247 LMCT 학습진단', text: text, url: url }).catch(function () {}); return; }
+    var done = function () { toast('링크를 복사했어요'); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text + ' ' + url).then(done, function () { toast('복사하지 못했어요'); });
+    else toast('복사하지 못했어요');
+  }
+
+  function renderLead() {
+    backBtn.hidden = false;
+    step = QUESTIONS.length + 1;
+    var mode = '';
+    var name = h('input', { class: 'input', type: 'text', id: 'f-name', autocomplete: 'name', maxlength: '20', placeholder: '학생 이름' });
+    var phone = h('input', { class: 'input', type: 'tel', id: 'f-phone', autocomplete: 'tel', inputmode: 'numeric', maxlength: '13', placeholder: '010-0000-0000' });
+    var region = h('select', { class: 'input', id: 'f-region' }, h('option', { value: '' }, '희망 지역을 골라 주세요'), REGIONS.map(function (r) { return h('option', { value: r }, r); }));
+    var segBtns = ['통학', '기숙', '아직 모름'].map(function (m) {
+      return h('button', { type: 'button', 'aria-pressed': 'false', on: { click: function (ev) {
+        mode = m; segBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b === ev.currentTarget)); });
+      } } }, m);
+    });
+    var agree = h('input', { type: 'checkbox', id: 'f-agree' });
+    var err = h('p', { class: 'err', role: 'alert', hidden: '' });
+    var submit = h('button', { class: 'btn btn-primary', type: 'submit' }, '상담 신청하기 →');
+
+    phone.addEventListener('input', function () {
+      var d = phone.value.replace(/\D/g, '').slice(0, 11);
+      phone.value = d.length > 7 ? d.slice(0, 3) + '-' + d.slice(3, d.length - 4) + '-' + d.slice(-4) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d;
+    });
+
+    var form = h('form', { class: 'form', novalidate: '', on: { submit: function (ev) {
+      ev.preventDefault();
+      var digits = phone.value.replace(/\D/g, '');
+      var msg = !name.value.trim() ? '이름을 적어 주세요.'
+        : !/^01[016789]\d{7,8}$/.test(digits) ? '휴대폰 번호를 확인해 주세요.'
+        : !region.value ? '희망 지역을 골라 주세요.'
+        : !agree.checked ? '개인정보 수집과 이용에 동의해 주세요.' : '';
+      if (msg) { err.textContent = msg; err.hidden = false; postHeight(); return; }
+      submit.disabled = true;
+      log('lead', { name: name.value.trim(), phone: digits, region: region.value, mode: mode || '아직 모름', consent: true, type: result.type, course: COURSES[result.course].name });
+      leadSent = true;
+      renderThanks();
+    } } },
+      h('div', { class: 'field' }, h('label', { for: 'f-name' }, '이름'), name),
+      h('div', { class: 'field' }, h('label', { for: 'f-phone' }, '휴대폰 번호'), phone),
+      h('div', { class: 'field' }, h('label', { for: 'f-region' }, '희망 지역'), region),
+      h('div', { class: 'field' }, h('span', { class: 'lbl' }, '희망 형태'), h('div', { class: 'seg' }, segBtns)),
+      h('details', { class: 'consent' },
+        h('summary', null, '개인정보 수집과 이용 안내 (필수)'),
+        h('ul', null,
+          h('li', null, '수집 항목: 이름, 휴대폰 번호, 희망 지역과 형태, 진단 응답'),
+          h('li', null, '목적: 학습 상담 연락과 정밀진단 안내'),
+          h('li', null, '보유 기간: 상담 완료 후 1년, 이후 파기'),
+          h('li', null, '동의하지 않을 수 있으며, 이 경우 상담 신청이 어려워요.'))),
+      h('label', { class: 'check', for: 'f-agree' }, agree, '개인정보 수집과 이용에 동의합니다.'),
+      err,
+      submit);
+
+    show(h('section', { class: 'screen' },
+      h('div', { class: 'card', style: 'margin-top:14px' },
+        h('span', { class: 'phase' }, TYPES[result.type].name + ', ' + COURSES[result.course].name),
+        h('h2', { class: 'card-head', style: 'font-size:21px' }, '무료 상담 신청'),
+        h('p', { class: 'card-sub' }, '가까운 이투스247학원에서 연락드려 취약 단원에 맞는 교재, 인강과 맞춤 코스를 안내해 드려요.'),
+        form)
+    ));
+  }
+
+  function renderThanks() {
+    backBtn.hidden = true;
+    step = QUESTIONS.length + 2;
+    show(h('section', { class: 'screen' },
+      h('div', { class: 'card', style: 'margin-top:14px' },
+        h('span', { class: 'phase' }, '신청 완료'),
+        h('h2', { class: 'card-head', style: 'font-size:21px' }, '상담 신청이 접수됐어요'),
+        h('p', { class: 'card-sub' }, '영업일 기준 1~2일 안에 연락드릴게요. 그동안 이투스247학원을 둘러보세요.'),
+        h('div', { class: 'actions' },
+          h('a', { class: 'btn btn-primary', href: HOME_URL, target: '_top', rel: 'noopener', on: { click: function () { log('cta', { value: 'home' }); } } }, '이투스247 홈으로'),
+          h('button', { class: 'btn btn-ghost', type: 'button', on: { click: renderResult } }, '내 결과 다시 보기')))
+    ));
+  }
+
+  window.addEventListener('resize', postHeight);
+  window.LMCTLite = { score: score, QUESTIONS: QUESTIONS, TYPES: TYPES, COURSES: COURSES, UNITS: UNITS, RECO: RECO, METHOD: METHOD, MOCK: MOCK, TEACHER: TEACHER };
+  log('view');
+  renderIntro();
+})();
+</script>
+</body>
+</html>
