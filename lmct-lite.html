@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>이투스247 LMCT 학습진단</title>
-<meta name="description" content="공부 빈틈 1분 진단. 나만의 공백 단원에 맞는 학습 유형과 추천 교재, 인강을 바로 확인하세요.">
+<meta name="description" content="공부 빈틈 3분 진단. 2028 수능에서 새로 공부할 부분과 나에게 맞는 학습 방법을 바로 확인하세요.">
 <style>
 @font-face { font-family: 'Pretendard'; src: url('fonts/PretendardVariable.woff2') format('woff2-variations'), url('fonts/PretendardVariable.woff2') format('woff2'); font-weight: 45 920; font-display: swap; }
 /* 이천기숙 LMCT(/quick)와 같은 BI: 청록에서 연두로 이어지는 그라데이션, 흰 카드, 모바일 우선 */
@@ -160,22 +160,21 @@ button { cursor: pointer; }
 .card-sub, .hint, .q-desc, .value p, .reco-v.tip, .reco-v small, .course-desc, .reason, .note, .foot, .consent, .consent summary, .field label, .field .lbl, .opt .lb, .opt .num, .brand .sys, .progress-top, .loading, .locked .over span, .badge-soft { color: var(--ink); font-weight: 700; }
 .value p b, .reco-v, .card-head, .q-text, .opt[aria-pressed="true"] .lb { font-weight: 900; }
 .hint::before { border-width: 2px; }
-/* 추천 카드 (인강, 교재, 모의고사) */
-.rcards { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
-.rcard { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; padding: 12px; border-radius: 16px; background: #fff; border: 1.5px solid #D9EDE3; box-shadow: var(--sh-sm); text-decoration: none; color: var(--ink); transition: transform .12s, box-shadow .16s; }
-.rcard:active { transform: scale(.985); }
-.rcard:hover { border-color: var(--teal); box-shadow: var(--sh-md); }
-.thumb { width: 64px; height: 64px; border-radius: 14px; overflow: hidden; background: var(--grad-bi-soft); border: 1px solid #DCEDE4; display: grid; place-items: center; flex: none; }
-.thumb.round { border-radius: 50%; }
-.thumb.book { width: 64px; height: 84px; border-radius: 8px; }
-.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.thumb .ph { font-size: 13px; font-weight: 900; color: var(--teal); }
-.rbody { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.rtag { font-size: 12px; font-weight: 900; color: var(--teal); }
-.rbody b { font-size: 16px; font-weight: 900; line-height: 1.35; word-break: keep-all; }
-.rsub { font-size: 12.5px; font-weight: 700; color: var(--ink); opacity: .8; }
-.go { font-size: 12.5px; font-weight: 900; color: #fff; background: var(--grad-bi); border-radius: 999px; padding: 7px 11px; white-space: nowrap; }
-@media (max-width: 360px) { .rcard { grid-template-columns: 56px 1fr; } .go { grid-column: 2; justify-self: start; } }
+.sechead { margin: 22px 0 10px; display: flex; flex-direction: column; gap: 8px; }
+.sechead h3 { margin: 0; font-size: 22px; font-weight: 900; letter-spacing: -.5px; line-height: 1.3; }
+.kicker.dark { background: var(--grad-bi); border: 0; color: #fff; margin: 0; align-self: flex-start; }
+.gapcard { border-color: #F0E4B8; background: linear-gradient(160deg, #FFFDF3 0%, #fff 60%); }
+.gap { padding: 12px 0 4px; border-top: 1px solid var(--line-soft); }
+.gap:first-of-type { border-top: 0; }
+.basis { margin: 14px 0 0; font-size: 13px; line-height: 1.5; opacity: .9; }
+.why { margin: 6px 0 0; font-size: 15px; line-height: 1.6; font-weight: 700; }
+.why.strong { color: var(--teal-deep); }
+.steps { margin: 10px 0 4px; padding-left: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 8px; }
+.steps li { counter-increment: s; position: relative; padding: 10px 12px 10px 42px; border-radius: 12px; background: rgba(255, 255, 255, .8); border: 1px solid #F0E4B8; font-size: 15px; line-height: 1.55; font-weight: 700; }
+.steps li::before { content: counter(s); position: absolute; left: 12px; top: 10px; width: 22px; height: 22px; border-radius: 50%; background: var(--grad-bi); color: #fff; font-size: 12px; font-weight: 900; display: grid; place-items: center; }
+.subjlist { display: flex; flex-direction: column; gap: 10px; }
+.subj { padding: 12px 14px; border-radius: 14px; border: 1.5px solid var(--line); background: #fff; }
+.subj.weak { border-color: #D9EDE3; background: linear-gradient(150deg, #F2FAF7 0%, #F7FCF3 100%); }
 </style>
 </head>
 <body>
@@ -197,121 +196,191 @@ button { cursor: pointer; }
 
   // 구글 시트 Apps Script 웹 앱 주소. 비워 두면 콘솔에만 기록한다.
   var LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwdIfbCHCem_QpL1WsPuMxjh4QYKFEhRxXnq7P4NBnTeb5Pdwq6BGfYbihjGDpkKuaE/exec';
-  var VERSION = 'lite-2';
+  var VERSION = 'lite-5';
   var HOME_URL = 'https://247.etoos.com/index.do';
 
-  // 과목별 취약 단원 선택지. 단원 묶음은 V1.1 단원표(04_대시보드/engine.js)를 라이트용으로 줄인 것
+  // 대상은 모두 N수생: 2027 수능(2015 교육과정)을 봤고, 2028 수능(2022 개정 교육과정)을 다시 본다.
+  var SUBJECT = { kor: '국어', math: '수학', eng: '영어', inq: '탐구' };
+  var GRADE_OPTS = [['12', '1~2등급'], ['34', '3~4등급'], ['56', '5~6등급'], ['79', '7등급 이하'], ['na', '잘 모르겠어요']];
+  var GRADE_LABEL = { '12': '1~2등급', '34': '3~4등급', '56': '5~6등급', '79': '7등급 이하', 'na': '등급 모름' };
+  var TOOL_OPTS = [['self', '혼자 공부'], ['online', '인강'], ['offline', '현장 강의'], ['tutoring', '1:1 클리닉']];
+  var TOOL_LABEL = { self: '혼자 공부', online: '인강', offline: '현장 강의', tutoring: '1:1 클리닉' };
+  var SDL_IDS = ['sdl1', 'sdl2', 'sdl3', 'sdl4', 'sdl5'];
+  var SDL_OPTS = [['5', '5점 매우 그렇다'], ['4', '4점 그렇다'], ['3', '3점 보통이다'], ['2', '2점 아니다'], ['1', '1점 전혀 아니다']];
+
+  // 과목별 빈틈 단원 선택지. 단원 묶음은 V1.1 단원표(04_대시보드/engine.js)를 라이트용으로 줄인 것
   var UNITS = {
     kor: [['kor_read', '독서 (비문학 지문)'], ['kor_poem', '현대시와 고전시가'], ['kor_novel', '현대소설과 고전소설'], ['kor_gram', '언어(문법)와 화법, 작문'], ['kor_na', '잘 모르겠어요']],
     math: [['math_su1', '수학Ⅰ (지수로그, 삼각함수, 수열)'], ['math_su2', '수학Ⅱ (극한, 미분, 적분)'], ['math_prob', '확률과 통계'], ['math_calc', '미적분, 기하 (선택과목)'], ['math_na', '잘 모르겠어요']],
     eng: [['eng_vocab', '어휘와 숙어'], ['eng_gram', '어법'], ['eng_blank', '빈칸 추론'], ['eng_order', '글의 순서와 문장 넣기'], ['eng_topic', '주제, 요지 찾기와 듣기'], ['eng_na', '잘 모르겠어요']],
     inq: [['inq_soc_concept', '사회탐구 개념 암기'], ['inq_soc_data', '사회탐구 자료, 도표 분석'], ['inq_sci_concept', '과학탐구 개념 이해'], ['inq_sci_calc', '과학탐구 계산과 그래프'], ['inq_na', '잘 모르겠어요']]
   };
-  // 이투스 진단 체계의 처방(기획안 p.6 과목별 3유형, 재설계안 Ⅳ-3 Level 처방)을 최근 등급에 맞춰 적용한다.
-  var METHOD = {
-    '12': { type: '자기주도형', tools: '자습과 인강 중심', how: '빈틈 단원만 골라 기출로 메우고, 막히는 부분만 인강으로 확인해요. 전과목 질의응답으로 충분해요.' },
-    '34': { type: '균형관리형', tools: '인강과 현강 중심', how: '인강으로 개념을 정립하고 현장 강의에서 바로 질문해요. 학습법은 1:1 상담으로 점검해요.' },
-    '56': { type: '균형관리형', tools: '인강과 현강 중심', how: '개념 정립이 먼저예요. 인강과 현장 강의를 병행하고, 이 단원은 1:1 클리닉(코칭픽) 후보로 올려요.' },
-    '79': { type: '밀착관리형', tools: '현강과 1:1 클리닉 중심', how: '기초부터 현장 강의로 쌓고, 이 단원은 1:1 클리닉(코칭픽)으로 매주 점검해요.' },
-    'na': { type: '균형관리형', tools: '인강과 현강 중심', how: '먼저 기출 한 회로 지금 위치를 확인하고, 개념은 인강으로, 질문은 현장 강의에서 해결해요.' }
+  // 빈틈 단원별 학습 포인트 한 줄
+  var UNIT_POINT = {
+    kor_read: '하루 지문 3개를 시간 재고 풀고, 틀린 문항은 근거 문장을 지문에서 찾아 표시해요.',
+    kor_poem: '화자, 상황, 정서 세 가지를 먼저 잡고 선지를 판단해요.',
+    kor_novel: '인물 관계도를 그리고 서술자 시점이 바뀌는 지점을 표시하며 읽어요.',
+    kor_gram: '음운, 형태소, 문장 성분을 표로 정리한 뒤 기출로 확인해요. 화작은 선지 소거 연습이 핵심이에요.',
+    kor_na: '최근 모의고사 오답을 독서, 문학, 문법으로 나눠 세어 보면 빈틈이 바로 보여요.',
+    math_su1: '지수로그 식 변형과 삼각함수 그래프를 손으로 그리는 연습부터 해요. 2028 수능에서는 대수 범위예요.',
+    math_su2: '극한과 미분 정의를 말로 설명할 수 있을 때까지 반복하고, 그다음 3점 기출을 풀어요. 2028 수능에서는 미적분Ⅰ 범위예요.',
+    math_prob: '경우의 수 문제를 유형별로 분류해 풀이 틀을 외우면 정확도가 올라가요. 2028 수능에서는 공통 범위예요.',
+    math_calc: '2028 수능 수학은 선택과목이 없어요. 미적분, 기하보다 대수, 미적분Ⅰ, 확률과 통계에 시간을 쓰세요.',
+    math_na: '모의고사 틀린 문항의 단원을 적어 보면 어디서 점수가 새는지 보여요.',
+    eng_vocab: '하루 50개씩 보고, 다음 날 아침에 어제 단어를 다시 확인하는 식으로 돌려요.',
+    eng_gram: '수능 어법 출제 포인트는 20개 안쪽이에요. 포인트별로 예문을 모아 정리해요.',
+    eng_blank: '빈칸 앞뒤 문장의 연결어와 반복되는 핵심어를 먼저 찾는 습관을 들여요.',
+    eng_order: '대명사, 연결어, 관사로 문장 사이 연결 고리를 찾는 연습을 해요.',
+    eng_topic: '첫 문장과 마지막 문장을 먼저 읽고 글의 방향을 잡아요. 듣기는 매일 한 회 받아쓰기로 잡아요.',
+    eng_na: '어휘가 부족하면 모든 유형이 흔들려요. 단어부터 점검하는 게 빠른 길이에요.',
+    inq_soc_concept: '단원마다 핵심 개념 10개를 뽑아 빈칸 채우기로 반복해요. 2028 수능 통합사회에서도 같은 방식이 통해요.',
+    inq_soc_data: '도표 문제는 축과 단위를 먼저 읽고, 선지를 자료에 대입해 하나씩 지워요.',
+    inq_sci_concept: '그림과 그래프를 직접 그려 보며 개념을 설명하는 연습이 효과가 커요. 통합과학도 같은 방식이에요.',
+    inq_sci_calc: '계산 문제는 공식 암기보다 단위와 비례 관계로 접근하면 실수가 줄어요.',
+    inq_na: '선택과목 기출 한 회를 풀고 틀린 문항이 개념인지 자료 해석인지 나눠 보세요.'
   };
-  // 강사 사진은 img/instructors/(강사코드).png (이투스 강사 페이지 사진 300x300 사본). 강사 페이지는 teacher_id로 연다.
-  var TEACHER = { '김민경': '200535', '김민정': '200209', '박광일': '200532', '정승제': '200180', '김동하': '200536', '김범구': '200481', '주혜연': '200439', '이지영': '200391', '김현수': '200482', '안성진': '200431', '이승후': '200490', '조윤호': '200521', '양서현': '200504', '엄영대': '200530' };
-  var LECTURE_URL = 'https://www.etoos.com/lecture/LectureDetailN.asp?LECTURE_ID=';
-  var BOOK_URL = 'https://etoos.com/bookstore/book/books/view.asp?BOOK_ID=';
-  var ASAP_URL = 'https://www.etoos.com/bookstore/past_exam/asap/';
-  // 이투스북 모의고사 상품 (2026-10-23 이투스북 메인 목록 기준). 표지는 이투스북에서 받아 img/books/에 둔 사본
-  var MOCK = {
-    fit_kor: { n: '2027 수능 the Fittest 국어 3회분', id: 'B34702', img: 'img/books/B34702.jpg' },
-    fit_math: { n: '2027 수능 the Fittest 수학 3회분', id: 'B34704', img: 'img/books/B34704.jpg' },
-    fit_eng: { n: '2027 수능 the Fittest 영어 3회분', id: 'B34703', img: 'img/books/B34703.jpg' },
-    fit_samun: { n: '2027 수능 the Fittest 사회문화 3회분', id: 'B34705', img: 'img/books/B34705.jpg' },
-    fit_saeyun: { n: '2027 수능 the Fittest 생활과 윤리 3회분', id: 'B34706', img: 'img/books/B34706.jpg' },
-    fit_bio: { n: '2027 수능 the Fittest 생명과학1 3회분', id: 'B34707', img: 'img/books/B34707.jpg' },
-    fit_earth: { n: '2027 수능 the Fittest 지구과학1 3회분', id: 'B34708', img: 'img/books/B34708.jpg' },
-    m15_read: { n: '15분 모의고사 국어 독서', id: 'B26885', img: 'img/books/B26885.jpg' },
-    m15_lit: { n: '15분 모의고사 국어 문학', id: 'B26886', img: 'img/books/B26886.jpg' },
-    m15_hwajak: { n: '15분 모의고사 국어 화법과 작문', id: 'B27247', img: 'img/books/B27247.jpg' },
-    m15_eonmae: { n: '15분 모의고사 국어 언어와 매체', id: 'B27894', img: 'img/books/B27894.jpg' },
-    m15_topic: { n: '영어 빈출 주제 15분 모의고사 (영어독해 20회)', id: 'B24826', img: 'img/books/B24826.jpg' },
-    m15_allclear: { n: 'All Clear 올 클리어 유형 15분 모의고사', id: 'B25478', img: 'img/books/B25478.jpg' },
-    m15_killer: { n: 'Killer 킬러 유형 15분 모의고사 (영어독해 18회)', id: 'B19515', img: 'img/books/B19515.jpg' },
-    gojaengi_su1: { n: '실전+수능고쟁이 수학Ⅰ', id: 'B29531', img: 'img/books/B29531.jpg' },
-    gojaengi_su2: { n: '실전+수능고쟁이 수학Ⅱ', id: 'B29532', img: 'img/books/B29532.jpg' },
-    gojaengi_prob: { n: '실전+수능고쟁이 확률과 통계', id: 'B29533', img: 'img/books/B29533.jpg' },
-    gojaengi_calc: { n: '실전+수능고쟁이 미적분', id: 'B29534', img: 'img/books/B29534.jpg' },
-    n3020: { n: 'N수학 3020 모의고사 공통+선택', id: 'B33436', img: 'img/books/B33436.jpg' },
-    eosam: { n: '어삼쉬사 실전모의고사 수학Ⅰ.Ⅱ', id: 'B28571', img: 'img/books/B28571.jpg' },
-    listening20: { n: '리스닝마스터 영어듣기 모의고사 20회', id: 'B27381', img: 'img/books/B27381.jpg' },
-    asap_kor: { n: '2027 아삽 시즌1 국어', asap: true }, asap_math: { n: '2027 아삽 시즌1 수학', asap: true }, asap_eng: { n: '2027 아삽 시즌1 영어', asap: true },
-    asap_soc: { n: '2027 아삽 시즌1 사회탐구 (사문, 생윤, 정법, 윤사, 한지, 세지)', asap: true }, asap_sci: { n: '2027 아삽 시즌1 과학탐구 (물1, 화1, 생1, 지1)', asap: true }, asap_inq: { n: '2027 아삽 시즌1 탐구 (선택과목별)', asap: true }
-  };
-  // 단원별 추천. 인강과 교재는 이투스 강좌 마스터(2026-10-05 수집, 월구독 포함 강좌 1,657개)에서 수강평이 많은 개념 강좌와 그 주교재,
-  // 모의고사는 이투스북 판매 목록에서 골랐다. 검수용 사본은 07_라이트버전/추천_교재_인강표_초안.md
-  // lectures: [강사, 강좌명, 강좌코드, (과목 표시)], book: [교재명, 교재를 볼 수 있는 강좌코드], mocks: MOCK 키
-  var RECO = {
-    kor_read: { lectures: [['김민경', 'New 2027 독서머리 개념 편', 'L70856']], book: ['New 2027 독서머리 개념 편 (문제책+해설책)', 'L70856'], mocks: ['m15_read', 'fit_kor'], point: '하루 지문 3개를 시간 재고 풀고, 틀린 문항은 근거 문장을 지문에서 찾아 표시해요.' },
-    kor_poem: { lectures: [['김민정', '민정샘이 떠먹여주는 고전문학', 'L64312']], book: ['[김민정T] 민정샘이 떠먹여주는 고전문학', 'L64312'], mocks: ['m15_lit', 'fit_kor'], point: '화자, 상황, 정서 세 가지를 먼저 잡고 선지를 판단해요.' },
-    kor_novel: { lectures: [['김민정', '민정샘이 떠먹여주는 현대문학', 'L64581'], ['박광일', 'New 2027 [문학] 훈련도감', 'L70824']], book: ['New 2027 훈련도감 [문학]', 'L70824'], mocks: ['m15_lit', 'fit_kor'], point: '인물 관계도를 그리고 서술자 시점이 바뀌는 지점을 표시하며 읽어요.' },
-    kor_gram: { lectures: [['김민정', 'New 2027 문법압축 PACK', 'L71191']], book: ['[김민정T] 2027 문법압축 PACK', 'L71191'], mocks: ['m15_eonmae', 'm15_hwajak'], point: '음운, 형태소, 문장 성분을 표로 정리한 뒤 기출로 확인해요. 화작은 선지 소거 연습이 핵심이에요.' },
-    kor_na: { lectures: [['김민정', 'New 2027 단 1%만 아는 비밀 [공통]', 'L70574']], book: ['[김민정T] 2027 단 1%만 아는 비밀 [공통]', 'L70574'], mocks: ['fit_kor', 'asap_kor'], point: '최근 모의고사 오답을 독서, 문학, 문법으로 나눠 세어 보면 약한 영역이 바로 보여요.' },
-    math_su1: { lectures: [['정승제', '개념의 神 수학Ⅰ', 'L58888']], book: ['개념의 神 수학Ⅰ', 'L58888'], mocks: ['gojaengi_su1', 'fit_math'], point: '지수로그 식 변형과 삼각함수 그래프를 손으로 그리는 연습부터 해요.' },
-    math_su2: { lectures: [['정승제', '개념의 神 수학Ⅱ', 'L60234']], book: ['개념의 神 수학Ⅱ', 'L60234'], mocks: ['gojaengi_su2', 'eosam'], point: '극한과 미분 정의를 말로 설명할 수 있을 때까지 반복하고, 그다음 3점 기출을 풀어요.' },
-    math_prob: { lectures: [['정승제', '개념의 神 확률과통계', 'L61443']], book: ['개념의 神 확률과 통계', 'L61443'], mocks: ['gojaengi_prob', 'n3020'], point: '경우의 수 문제를 유형별로 분류해 풀이 틀을 외우면 정확도가 올라가요.' },
-    math_calc: { lectures: [['정승제', '개념의 神 미적분', 'L61984', '미적분'], ['정승제', '개념의 神 기하', 'L63708', '기하']], book: ['개념의 神 미적분 또는 개념의 神 기하', 'L61984'], mocks: ['gojaengi_calc', 'n3020'], point: '수학Ⅱ 미분, 적분이 흔들리면 선택과목도 같이 흔들려요. 기본 개념부터 점검해요.' },
-    math_na: { lectures: [['정승제', 'New 2027 개념때려잡기 수학Ⅰ', 'L70654'], ['정승제', 'New 2027 개념때려잡기 수학Ⅱ', 'L70655']], book: ['New 2027 개념때려잡기+혼자서때려잡기', 'L70654'], mocks: ['fit_math', 'asap_math'], point: '모의고사 틀린 문항의 단원을 적어 보면 어디서 점수가 새는지 보여요.' },
-    eng_vocab: { lectures: [['김동하', 'New 2027 김동하 VOCA', 'L71155']], book: ['New 2027 김동하 단어장', 'L71155'], mocks: ['fit_eng'], point: '하루 50개씩 보고, 다음 날 아침에 어제 단어를 다시 확인하는 식으로 돌려요.' },
-    eng_gram: { lectures: [['김동하', 'New 2027 김동하 영문법', 'L70821']], book: ['New 2027 김동하 영문법', 'L70821'], mocks: ['m15_allclear'], point: '수능 어법 출제 포인트는 20개 안쪽이에요. 포인트별로 예문을 모아 정리해요.' },
-    eng_blank: { lectures: [['김동하', 'New 2027 김동하 CORE 빈칸', 'L71138']], book: ['New 2027 김동하 CORE 빈칸', 'L71138'], mocks: ['m15_killer'], point: '빈칸 앞뒤 문장의 연결어와 반복되는 핵심어를 먼저 찾는 습관을 들여요.' },
-    eng_order: { lectures: [['김범구', 'Luminous 평가원 기출 분석 [순서삽입편]', 'L70024'], ['김동하', 'New 2027 김동하 CORE 순서삽입', 'L71176']], book: ['루미너스 순서삽입편', 'L70024'], mocks: ['m15_killer'], point: '대명사, 연결어, 관사로 문장 사이 연결 고리를 찾는 연습을 해요.' },
-    eng_topic: { lectures: [['주혜연', 'NEW 2027 한줄독해 기본편', 'L70711'], ['김범구', 'NEW 2027 Roger That! 듣기 만점 전략', 'L70720']], book: ['2027 주혜연 한줄독해 [기본편]', 'L70711'], mocks: ['listening20', 'm15_topic'], point: '첫 문장과 마지막 문장을 먼저 읽고 글의 방향을 잡아요. 듣기는 매일 한 회 받아쓰기로 잡아요.' },
-    eng_na: { lectures: [['김동하', 'New 2027 김동하 독해', 'L70889']], book: ['New 2027 김동하 독해 Package', 'L70889'], mocks: ['fit_eng', 'asap_eng'], point: '어휘가 부족하면 모든 유형이 흔들려요. 단어부터 점검하는 게 빠른 길이에요.' },
-    inq_soc_concept: { lectures: [['이지영', 'New 2027 출제자의 눈, 개념완성', 'L70790', '생활과 윤리'], ['이지영', 'New 2027 출제자의 눈, 개념완성', 'L70791', '사회문화']], book: ['이지영의 출제자의 눈, 개념완성 (선택과목별)', 'L70790'], mocks: ['fit_saeyun', 'fit_samun'], point: '단원마다 핵심 개념 10개를 뽑아 빈칸 채우기로 반복해요.' },
-    inq_soc_data: { lectures: [['이지영', 'New 2027 심.기.일.전 도표특강', 'L71059', '사회문화'], ['김현수', 'New 2027 KILL THE KILLER 도표의 실마리', 'L70966', '사회문화']], book: ['[사회문화] New 2027 KILL THE KILLER', 'L70966'], mocks: ['asap_soc'], point: '도표 문제는 축과 단위를 먼저 읽고, 선지를 자료에 대입해 하나씩 지워요.' },
-    inq_sci_concept: { lectures: [['안성진', 'NEW 2027 VEGA 개념완성', 'L70668', '지구과학Ⅰ'], ['이승후', 'GT 개념 CELL', 'L69589', '생명과학Ⅰ'], ['조윤호', 'New 2027 Vortex 개념완성', 'L70708', '물리학Ⅰ'], ['양서현', 'Sense of 개념', 'L69588', '화학Ⅰ']], book: ['고른 과목의 개념완성 주교재', 'L70668'], mocks: ['fit_bio', 'fit_earth'], point: '그림과 그래프를 직접 그려 보며 개념을 설명하는 연습이 효과가 커요.' },
-    inq_sci_calc: { lectures: [['이승후', 'NEW 2027 GT 심화 SKILL', 'L70667', '생명과학Ⅰ'], ['엄영대', '엄-피셜 자료분석', 'L70030', '지구과학Ⅰ'], ['조윤호', 'New 2027 Hertz 실력향상 스킬셋', 'L71489', '물리학Ⅰ']], book: ['NEW 2027 GT DATA BREAKER, 엄-메이징 최우수 N제', 'L70667'], mocks: ['asap_sci'], point: '계산 문제는 공식 암기보다 단위와 비례 관계로 접근하면 실수가 줄어요.' },
-    inq_na: { lectures: [['이지영', 'New 2027 출제자의 눈, 개념완성', 'L70790', '사회탐구'], ['안성진', 'NEW 2027 VEGA 개념완성', 'L70668', '과학탐구']], book: ['선택과목 개념완성 주교재 1권', 'L70790'], mocks: ['asap_inq'], point: '선택과목 기출 한 회를 풀고 틀린 문항이 개념인지 자료 해석인지 나눠 보세요.' }
-  };
+
+  // 작년(2027 수능, 2015 교육과정) 탐구 과목과 그 과목이 덮는 통합사회, 통합과학 영역
+  var TAMGU = [
+    ['saeyun', '생활과 윤리', 'soc', '윤리'], ['yunsa', '윤리와 사상', 'soc', '윤리'], ['hanji', '한국지리', 'soc', '지리'], ['seji', '세계지리', 'soc', '지리'],
+    ['dongasa', '동아시아사', 'soc', '역사'], ['sesa', '세계사', 'soc', '역사'], ['gyeongje', '경제', 'soc', '경제'], ['jeongbeop', '정치와 법', 'soc', '정치와 법'], ['samun', '사회문화', 'soc', '사회문화'],
+    ['phy1', '물리학Ⅰ', 'sci', '물리'], ['chem1', '화학Ⅰ', 'sci', '화학'], ['bio1', '생명과학Ⅰ', 'sci', '생명'], ['earth1', '지구과학Ⅰ', 'sci', '지구'],
+    ['phy2', '물리학Ⅱ', 'sci', '물리'], ['chem2', '화학Ⅱ', 'sci', '화학'], ['bio2', '생명과학Ⅱ', 'sci', '생명'], ['earth2', '지구과학Ⅱ', 'sci', '지구']
+  ];
+  var TAMGU_BY = {}; TAMGU.forEach(function (r) { TAMGU_BY[r[0]] = r; });
+  var TAMGU_OPTS = TAMGU.map(function (r) { return [r[0], r[1]]; }).concat([['none', '탐구는 안 봤어요'], ['na', '잘 모르겠어요']]);
+  // 통합과학 영역별 대단원(2022 개정 통합과학1, 2)
+  var SCI_AREAS = { '물리': ['시스템과 상호작용의 역학 시스템', '환경과 에너지의 발전과 신재생 에너지'], '화학': ['물질과 규칙성의 원소와 화학 결합', '변화와 다양성의 산화 환원과 산 염기'], '생명': ['시스템과 상호작용의 생명 시스템', '변화와 다양성의 진화와 생물 다양성'], '지구': ['물질과 규칙성의 우주와 지구의 원소', '시스템과 상호작용의 지구 시스템', '환경과 에너지의 기후 변화'] };
+  // 통합사회 영역별 대단원(2022 개정 통합사회1, 2)
+  var SOC_AREAS = { '윤리': ['인간, 사회, 환경과 행복', '사회 정의와 불평등(정의론)'], '지리': ['자연환경과 인간', '생활공간과 사회'], '사회문화': ['문화와 다양성', '사회 정의와 불평등(불평등 현상)'], '정치와 법': ['인권 보장과 헌법'], '경제': ['시장 경제와 지속 가능 발전'], '역사': ['세계화와 평화'] };
 
   var QUESTIONS = [
-    { id: 'status', phase: '기본 정보', text: '지금 나는?', opts: [['g3', '고3'], ['n1', '재수생'], ['n2', 'N수생 (삼수 이상)'], ['half', '반수 준비 중인 대학생'], ['g12', '고1, 고2']] },
-    { id: 'grade', phase: '기본 정보', text: '최근 모의고사 국어, 수학, 영어 평균 등급은?', hint: '대략적으로 골라도 괜찮아요.', opts: [['12', '1~2등급'], ['34', '3~4등급'], ['56', '5~6등급'], ['79', '7등급 이하'], ['na', '잘 모르겠어요']] },
+    { id: 'kor_sel', phase: '작년에 본 선택과목', text: '작년 수능이나 마지막 모의고사에서 국어는 어떤 선택과목으로 봤나요?', hint: '2028 수능에서 새로 공부할 범위를 찾는 데 써요.', opts: [['hwajak', '화법과 작문'], ['eonmae', '언어와 매체'], ['na', '잘 모르겠어요']] },
+    { id: 'math_sel', phase: '작년에 본 선택과목', text: '수학은 어떤 선택과목으로 봤나요?', opts: [['prob', '확률과 통계'], ['calc', '미적분'], ['geo', '기하'], ['na', '잘 모르겠어요']] },
+    { id: 'inq_subj', phase: '작년에 본 선택과목', multi: true, max: 2, text: '탐구는 어떤 과목으로 봤나요?', hint: '최대 2과목을 고르고 다음을 누르세요. 안 봤거나 모르면 맨 아래에서 골라요.', opts: TAMGU_OPTS },
+    { id: 'grade_kor', phase: '최근 등급', text: '최근 시험에서 국어 등급은?', hint: '대략적으로 골라도 괜찮아요.', opts: GRADE_OPTS },
+    { id: 'grade_math', phase: '최근 등급', text: '수학 등급은?', opts: GRADE_OPTS },
+    { id: 'grade_eng', phase: '최근 등급', text: '영어 등급은?', opts: GRADE_OPTS },
+    { id: 'grade_inq', phase: '최근 등급', when: function (a) { return !(a.inq_subj && a.inq_subj[0] === 'none'); }, text: '탐구 등급은? (두 과목이면 평균)', opts: GRADE_OPTS },
     { id: 'weak', phase: '빈틈 과목', text: '요즘 가장 큰 공백이 느껴지는 과목은?', opts: [['kor', '국어'], ['math', '수학'], ['eng', '영어'], ['inq', '탐구']] },
     { id: 'unit', phase: '빈틈 단원', text: function (a) { return SUBJECT[a.weak] + '에서 가장 큰 빈틈은 어디인가요?'; }, hint: '가장 자주 틀리는 곳 하나만 골라 주세요.', opts: function (a) { return UNITS[a.weak] || UNITS.kor; } },
-    { id: 'style', phase: '학습 성향', text: '새로운 개념, 어떻게 배울 때 머리에 제일 잘 들어오나요?', opts: [['live', '선생님 현장 강의로'], ['online', '인강으로 내 속도에 맞춰'], ['self', '혼자 교재 보며 정리하며']] },
-    { id: 'plan', phase: '실행력', text: '공부 계획을 세우면 끝까지 지키는 편인가요?', opts: [['4', '거의 항상 지켜요'], ['3', '대체로 지켜요'], ['2', '반쯤 지켜요'], ['1', '자주 무너져요']] },
-    { id: 'start', phase: '실행력', text: '아무도 시키지 않아도 아침에 바로 공부를 시작하나요?', opts: [['4', '네, 늘 그래요'], ['3', '대체로 그래요'], ['2', '가끔 그래요'], ['1', '거의 못 해요']] }
+    { id: 'tool_kor', phase: '공부 방법', text: '국어 공부는 어떤 방법이 가장 효과가 좋았나요?', opts: TOOL_OPTS },
+    { id: 'tool_math', phase: '공부 방법', text: '수학 공부는 어떤 방법이 가장 효과가 좋았나요?', opts: TOOL_OPTS },
+    { id: 'tool_eng', phase: '공부 방법', text: '영어 공부는 어떤 방법이 가장 효과가 좋았나요?', opts: TOOL_OPTS },
+    { id: 'tool_inq', phase: '공부 방법', text: '탐구 공부는 어떤 방법이 가장 효과가 좋았나요?', opts: TOOL_OPTS },
+    { id: 'style', phase: '공부 방법', text: '새 단원을 공부할 때 나에게 가장 잘 맞는 방식은 무엇인가요?', opts: [['concept', '개념부터 이해하기'], ['problem', '문제부터 풀어 보기'], ['error', '틀린 문제 다시 보기'], ['memor', '외우고 반복하기']] },
+    { id: 'sdl1', phase: '스스로 공부하는 힘', text: '나는 학습 목표를 스스로 세우고 그에 맞춰 계획을 짠다.', hint: '1은 전혀 아니다, 5는 매우 그렇다예요.', opts: SDL_OPTS },
+    { id: 'sdl2', phase: '스스로 공부하는 힘', text: '나는 세운 계획을 대체로 지켜서 실천한다.', opts: SDL_OPTS },
+    { id: 'sdl3', phase: '스스로 공부하는 힘', text: '나는 공부한 결과를 스스로 점검하고 다음 계획에 반영한다.', opts: SDL_OPTS },
+    { id: 'sdl4', phase: '스스로 공부하는 힘', text: '나는 휴대폰이나 SNS 같은 유혹을 스스로 참을 수 있다.', opts: SDL_OPTS },
+    { id: 'sdl5', phase: '스스로 공부하는 힘', text: '나는 틀린 문제를 정리하고 같은 실수를 줄이려고 노력한다.', opts: SDL_OPTS }
   ];
+  function applies(q, a) { return !q.when || q.when(a); }
+  function activeQuestions(a) { return QUESTIONS.filter(function (q) { return applies(q, a); }); }
 
-  var TYPES = {
-    self: { name: '자율주행형', one: '계획부터 실행까지 스스로 굴러가는 타입', traits: ['내 속도로 공부할 때 효율이 가장 높아요', '자습 시간에 몰입이 잘 돼요', '방향만 잘 잡으면 성적이 빠르게 올라요'], course: 0, why: '자습 비중을 높이고, 코칭으로 방향만 점검하면 충분해요.' },
-    spark: { name: '몰아치기형', one: '이해력은 좋은데 루틴이 흔들리는 타입', traits: ['혼자서도 개념은 잘 잡아요', '컨디션에 따라 공부량 차이가 커요', '정해진 시간표가 생기면 실력이 확 살아나요'], course: 1, why: '정해진 시간표와 순공 관리로 루틴부터 고정하는 게 핵심이에요.' },
-    pace: { name: '페이스메이커형', one: '설명을 들으면 쭉쭉 따라가는 성실 타입', traits: ['현장 강의에서 흡수력이 가장 좋아요', '세운 계획은 꾸준히 지켜요', '질문할 곳이 가까이 있으면 더 빨라져요'], course: 1, why: '강의로 흡수하고 바로 질문할 수 있는 환경에서 성실함이 성적으로 이어져요.' },
-    care: { name: '풀케어형', one: '옆에서 잡아 주면 확 달라지는 타입', traits: ['설명을 들을 때 이해가 가장 잘 돼요', '혼자 두면 계획이 자주 무너져요', '담임이 매일 챙기면 공부량이 크게 늘어요'], course: 2, why: '현장 강의 위주에 담임 밀착 관리로 공부량부터 확보해야 해요.' }
-  };
-  var COURSES = [
-    { name: '기본코스', desc: '현장 강의는 꼭 필요한 만큼, 자습 중심' },
-    { name: '표준코스', desc: '현장 강의와 자습의 균형' },
-    { name: '밀착코스', desc: '현장 강의 위주에 담임 밀착 관리' }
-  ];
-  var SUBJECT = { kor: '국어', math: '수학', eng: '영어', inq: '탐구' };
-  var CLASS_BY_STATUS = {
-    g3: '윈터스쿨, 재수조기선발반', n1: '재수정규반', n2: '재수정규반',
-    half: '프리반수반, 반수성공반', g12: '윈터스쿨'
-  };
-  var REGIONS = ['서울', '인천/경기', '대전/세종/충청', '강원', '부산/대구/경상', '광주/전라', '제주', '아직 모름'];
-
-  // 채점 규칙은 LMCT_라이트_문항_채점명세.md 3절과 같다.
-  function score(a) {
-    var independent = a.style === 'online' || a.style === 'self';
-    var sdl = Number(a.plan) + Number(a.start);
-    var strong = sdl >= 6;
-    var type = independent ? (strong ? 'self' : 'spark') : (strong ? 'pace' : 'care');
-    var course = TYPES[type].course;
-    var lowGrade = a.grade === '56' || a.grade === '79';
-    if (lowGrade) course = Math.min(2, course + 1);
-    return { type: type, course: course, sdl: sdl, bumped: lowGrade && course !== TYPES[type].course };
+  // 국어, 수학, 영어 등급의 평균으로 등급 구간을 정한다. 모두 모름이면 'na'
+  var GRADE_MID = { '12': 1.5, '34': 3.5, '56': 5.5, '79': 7.5 };
+  function gradeBucket(a) {
+    var vals = ['grade_kor', 'grade_math', 'grade_eng'].map(function (k) { return GRADE_MID[a[k]]; }).filter(function (v) { return v; });
+    if (!vals.length) return 'na';
+    var avg = vals.reduce(function (s, v) { return s + v; }, 0) / vals.length;
+    return avg <= 2.5 ? '12' : avg <= 4.5 ? '34' : avg <= 6.5 ? '56' : '79';
   }
+
+  // 학습 유형: 공부 방법 답(혼자 공부, 인강 = 독립 / 현장 강의, 1:1 = 가이드) × 스스로 공부하는 힘(25점 만점, 18점 이상 = 강)
+  var TYPES = {
+    self: { name: '자율주행형', one: '계획부터 실행까지 스스로 굴러가는 타입', traits: ['내 속도로 공부할 때 효율이 가장 높아요', '자습 시간에 몰입이 잘 돼요', '방향만 잘 잡으면 성적이 빠르게 올라요'], method: '자습 비중을 높이고 인강은 막히는 단원만 골라 들어요. 주 1회 스스로 진도와 오답을 점검하는 시간을 정해 두면 충분해요.' },
+    spark: { name: '몰아치기형', one: '이해력은 좋은데 루틴이 흔들리는 타입', traits: ['혼자서도 개념은 잘 잡아요', '컨디션에 따라 공부량 차이가 커요', '정해진 시간표가 생기면 실력이 확 살아나요'], method: '혼자 공부가 맞지만 루틴이 먼저예요. 요일별 과목과 시작 시각을 고정하고, 하루 공부량을 작게 쪼개 매일 끝내는 쪽으로 가요.' },
+    pace: { name: '페이스메이커형', one: '설명을 들으면 쭉쭉 따라가는 성실 타입', traits: ['현장 강의에서 흡수력이 가장 좋아요', '세운 계획은 꾸준히 지켜요', '질문할 곳이 가까이 있으면 더 빨라져요'], method: '강의로 개념을 흡수하고 그날 바로 복습 문제로 굳히는 흐름이 맞아요. 질문을 바로 할 수 있는 환경(현장 강의, 질의응답)을 확보하세요.' },
+    care: { name: '풀케어형', one: '옆에서 잡아 주면 확 달라지는 타입', traits: ['설명을 들을 때 이해가 가장 잘 돼요', '혼자 두면 계획이 자주 무너져요', '매일 점검해 주는 사람이 있으면 공부량이 크게 늘어요'], method: '현장 강의 위주로 개념을 쌓고, 매일 점검받는 구조(담임, 1:1 클리닉)를 먼저 만드세요. 혼자 세운 계획보다 짜인 시간표가 잘 맞아요.' }
+  };
+  var STYLE_TEXT = {
+    concept: '개념부터 이해하는 쪽이 맞아요. 새 단원은 개념서를 한 바퀴 돌린 뒤 문제로 들어가고, 문제를 먼저 풀며 익히려다 막히면 억지로 버티지 마세요.',
+    problem: '문제부터 풀어 보는 쪽이 맞아요. 기출을 먼저 풀고 틀린 개념만 돌아가서 보는 방식이 시간 대비 효율이 높아요.',
+    error: '틀린 문제를 다시 보는 힘이 강점이에요. 오답 노트를 중심에 두고, 같은 유형을 사흘 뒤 다시 풀어 확인하세요.',
+    memor: '외우고 반복하는 쪽이 맞아요. 단원마다 핵심 정리표를 한 장으로 만들고, 반복 주기를 하루, 사흘, 일주일로 늘려 가세요.'
+  };
+  function score(a) {
+    var tools = ['tool_kor', 'tool_math', 'tool_eng', 'tool_inq'].map(function (k) { return a[k]; }).filter(Boolean);
+    var indep = tools.filter(function (v) { return v === 'self' || v === 'online'; }).length;
+    var independent = indep * 2 >= tools.length;
+    var sdl = SDL_IDS.reduce(function (s, k) { return s + (Number(a[k]) || 3); }, 0);
+    var strong = sdl >= 18;
+    var type = independent ? (strong ? 'self' : 'spark') : (strong ? 'pace' : 'care');
+    return { type: type, sdl: sdl, grade: gradeBucket(a), independent: independent, indepCount: indep, toolCount: tools.length };
+  }
+
+  // 2028 수능(2022 개정 교육과정)에서 새로 공부할 부분. 작년 선택과목으로 정한다.
+  // 2028 수능: 국어는 화법과 언어, 독서와 작문, 문학 공통 / 수학은 대수, 미적분Ⅰ, 확률과 통계 공통 / 탐구는 통합사회와 통합과학 공통
+  var GAPS = {
+    gram: { title: '국어 언어(문법)', tag: '새로 공부할 범위', why: '작년에 화법과 작문으로 봤다면 문법을 안 했어요. 2028 수능 국어는 선택 없이 화법과 언어, 독서와 작문, 문학이 공통이라 문법이 들어와요.', lines: ['문법을 처음 하는 사람은 음운 변동(교체, 탈락, 첨가, 축약)부터 하세요. 규칙이 적고 기출 유형이 정해져 있어 2주면 한 바퀴 돌아요.', '그다음 형태소와 단어 형성, 마지막에 문장 성분과 문장 구조(안은문장, 이어진문장) 순서로 가세요.', '매체는 따로 새로 배울 범위가 없고, 화작은 하던 대로 선지 소거 연습을 이어 가면 돼요.'] },
+    gram_na: { title: '국어 언어(문법)', tag: '확인 필요', why: '작년 국어 선택과목을 모르면 문법 공백이 있는지 알 수 없어요. 화작으로 봤다면 문법이 새 범위예요.', lines: ['작년 시험지나 성적표에서 국어 선택과목을 먼저 확인하세요.', '화법과 작문이었다면 음운 변동, 형태소, 문장 구조 순서로 문법을 새로 시작하세요.', '언어와 매체였다면 문법은 복습만 하고 독서와 문학에 시간을 쓰세요.'] },
+    prob: { title: '수학 확률과 통계', tag: '새로 공부할 범위', why: '작년에 미적분이나 기하를 골랐다면 확률과 통계를 안 했어요. 2028 수능 수학은 선택 없이 대수, 미적분Ⅰ, 확률과 통계가 모두 공통이에요.', lines: ['확률과 통계를 처음 하는 사람은 경우의 수(순열, 조합)부터 하세요. 수학Ⅰ, Ⅱ와 거의 연결되지 않아 바로 들어갈 수 있어요.', '그다음 확률(조건부확률, 독립), 마지막에 통계(확률분포, 통계적 추정) 순서로 가세요. 통계는 공식보다 표 읽기가 핵심이에요.', '미적분, 기하는 2028 수능 범위가 아니에요. 그 시간을 확률과 통계로 옮기면 세 과목 공통 체제에서 손해가 없어요.'] },
+    prob_na: { title: '수학 확률과 통계', tag: '확인 필요', why: '작년 수학 선택과목을 모르면 확률과 통계 공백이 있는지 알 수 없어요. 2028 수능 수학은 확률과 통계가 공통이에요.', lines: ['작년 시험지나 성적표에서 수학 선택과목을 먼저 확인하세요.', '미적분이나 기하였다면 경우의 수, 확률, 통계 순서로 확률과 통계를 새로 시작하세요.', '확률과 통계였다면 공백은 없어요. 대수(수학Ⅰ)와 미적분Ⅰ(수학Ⅱ)을 유지하면 돼요.'] },
+    calc1: { title: '수학 대수, 미적분Ⅰ', tag: '이름만 바뀜', why: '2028 수능의 대수는 수학Ⅰ, 미적분Ⅰ은 수학Ⅱ와 범위가 거의 같아요. 새로 배울 건 없고 이름만 달라져요.', lines: ['지수로그, 삼각함수, 수열은 대수로, 극한, 미분, 적분은 미적분Ⅰ로 불려요. 지금 교재 그대로 써도 돼요.', '다만 선택과목이 사라져 공통 세 과목의 비중이 커져요. 수학Ⅰ, Ⅱ에서 흔들리던 단원이 있으면 지금 메우세요.', '2028 수능은 첫 시행이라 기출이 없어요. 평가원 예시 문항과 2022 개정 교과서를 기준으로 삼으세요.'] },
+    sci: { title: '통합과학', tag: '새로 공부할 범위', why: '작년에 과학탐구를 안 봤다면 통합과학 전체가 처음이에요. 2028 수능 탐구는 사탐, 과탐 선택 없이 통합사회와 통합과학을 모두 봐요.', lines: ['통합과학을 처음 하는 사람은 과학의 기초(단위, 측정, 정보)와 물질과 규칙성(원소, 주기율표, 화학 결합)부터 하세요. 중학 과학과 이어져 진입이 가장 쉬워요.', '그다음 시스템과 상호작용(역학, 지구 시스템, 생명 시스템), 변화와 다양성(산화 환원, 진화), 환경과 에너지 순서로 가세요.', '물리, 화학, 생명, 지구가 한 과목이라 한 영역만 잘해서는 점수가 안 나와요. 매주 영역을 바꿔 가며 개념 한 단원과 기출 10문항을 묶어 가세요.'] },
+    sci_part: { title: '통합과학', tag: '일부 공백', why: '작년에 과학탐구를 한 과목만 봤다면 나머지 영역이 비어 있어요. 통합과학은 물리, 화학, 생명, 지구를 모두 다뤄요.', lines: ['안 본 영역부터 하세요. 예를 들어 생명과학만 봤다면 물질과 규칙성(화학), 시스템과 상호작용의 역학(물리)과 지구 시스템(지구)이 비어 있어요.', '본 과목 영역은 개념 복습 없이 기출만 풀어 확인하고, 안 본 영역은 개념부터 들어가세요.', '통합과학은 선택과목보다 깊이가 얕고 범위가 넓어요. 한 영역에 2주 이상 머물지 말고 돌려 가며 채우세요.'] },
+    soc: { title: '통합사회', tag: '새로 공부할 범위', why: '작년에 사회탐구를 안 봤다면 통합사회 전체가 처음이에요. 2028 수능 탐구는 통합사회와 통합과학을 모두 봐요.', lines: ['통합사회를 처음 하는 사람은 통합적 관점과 인간, 사회, 환경과 행복부터 하세요. 모든 단원을 보는 틀이라 먼저 잡으면 뒤가 쉬워요.', '그다음 인권 보장과 헌법, 시장 경제와 지속 가능 발전, 사회 정의와 불평등 순서로 가세요. 이 세 단원이 자료 문항의 중심이에요.', '암기보다 자료(도표, 지도, 글) 읽기가 많아요. 단원마다 핵심 개념 10개와 자료 문항 5개를 한 묶음으로 익히세요.'] },
+    soc_part: { title: '통합사회', tag: '일부 공백', why: '작년에 사회탐구를 한 과목만 봤다면 다른 영역이 비어 있어요. 통합사회는 윤리, 지리, 일반사회, 경제를 모두 다뤄요.', lines: ['안 본 영역부터 하세요. 예를 들어 생활과 윤리만 봤다면 자연환경과 인간, 생활공간과 사회(지리), 시장 경제(경제), 인권 보장과 헌법(법)이 비어 있어요.', '본 과목 영역은 기출로 바로 확인하고, 안 본 영역은 개념 10개씩 먼저 정리하세요.', '통합사회는 사례형 문항이 많아요. 개념마다 사례 두 개씩 묶어 기억하면 처음 보는 자료에도 대응돼요.'] },
+    inq_none: { title: '통합사회, 통합과학', tag: '둘 다 새로 공부할 범위', why: '작년에 탐구를 안 봤거나 기억이 없다면 2028 수능의 통합사회와 통합과학이 모두 처음이에요.', lines: ['두 과목을 번갈아 가세요. 통합사회는 통합적 관점부터, 통합과학은 과학의 기초와 물질과 규칙성부터 시작하면 진입이 쉬워요.', '하루에 두 과목을 다 하지 말고, 요일을 나눠 한 과목씩 개념 한 단원과 기출 10문항을 묶어 가세요.', '2028 수능은 첫 시행이라 기출이 없어요. 2022 개정 교과서와 평가원 예시 문항을 기준으로 삼고, 단원 이름부터 먼저 외우세요.'] }
+  };
+  function inqInfo(a) {
+    var ids = (a.inq_subj || []).filter(function (v) { return TAMGU_BY[v]; });
+    var taken = ids.map(function (v) { return TAMGU_BY[v]; });
+    return { none: !ids.length, names: taken.map(function (r) { return r[1]; }), socAreas: taken.filter(function (r) { return r[2] === 'soc'; }).map(function (r) { return r[3]; }), sciAreas: taken.filter(function (r) { return r[2] === 'sci'; }).map(function (r) { return r[3]; }) };
+  }
+  // 받침 유무로 조사를 고른다 (을/를, 은/는)
+  function hasBatchim(word) {
+    var code = word.charCodeAt(word.length - 1) - 0xac00;
+    return code >= 0 && code <= 11171 && code % 28 !== 0;
+  }
+  function josa(word, a, b) { return word + (hasBatchim(word) ? a : b); }
+  function areaGap(kind, info) {
+    var AREAS = kind === 'sci' ? SCI_AREAS : SOC_AREAS;
+    var covered = kind === 'sci' ? info.sciAreas : info.socAreas;
+    var takenNames = (kind === 'sci' ? info.names.filter(function (n) { return /물리|화학|생명|지구/.test(n); }) : info.names.filter(function (n) { return !/물리|화학|생명|지구/.test(n); })).join(', ');
+    var missing = Object.keys(AREAS).filter(function (k) { return covered.indexOf(k) < 0; });
+    var subject = kind === 'sci' ? '통합과학' : '통합사회';
+    if (!covered.length) return kind === 'sci' ? GAPS.sci : GAPS.soc;
+    var coveredUnits = covered.map(function (k) { return AREAS[k].join(', '); }).join(', ');
+    var missingUnits = missing.map(function (k) { return k + '(' + AREAS[k].join(', ') + ')'; }).join(', ');
+    return {
+      title: subject, tag: missing.length ? '일부 공백: ' + missing.join(', ') + '부터' : '거의 덮임',
+      why: '작년에 ' + josa(takenNames, '을', '를') + ' 봤다면 ' + subject + ' 중 ' + josa(coveredUnits, '은', '는') + ' 익숙해요. 나머지 영역이 비어 있어요.',
+      lines: [
+        '먼저 할 곳은 ' + missing.join(', ') + ' 영역이에요. ' + josa(subject, '은', '는') + ' 영역별로 대단원이 나뉘어 있어서 안 본 영역부터 채우면 돼요.',
+        '순서는 ' + missingUnits + '로 가세요. 각 대단원은 개념 10개와 기출 유형 5개 정도라 한 단원에 1주면 충분해요.',
+        takenNames + ' 영역(' + coveredUnits + ')은 개념 복습 없이 기출만 풀어 확인하고, 그 시간을 안 본 영역으로 옮기세요.'
+      ]
+    };
+  }
+  function gaps(a) {
+    var out = [];
+    if (a.kor_sel === 'hwajak') out.push(GAPS.gram); else if (a.kor_sel === 'na') out.push(GAPS.gram_na);
+    if (a.math_sel === 'calc' || a.math_sel === 'geo') out.push(GAPS.prob); else if (a.math_sel === 'na') out.push(GAPS.prob_na);
+    var info = inqInfo(a);
+    if (info.none) out.push(GAPS.inq_none);
+    else { out.push(areaGap('soc', info)); out.push(areaGap('sci', info)); }
+    out.push(GAPS.calc1);
+    return out;
+  }
+  // 작년 선택과목 답을 사람이 읽는 문장으로 (판단 근거 표시용)
+  var SEL_LABEL = { kor_sel: { hwajak: '화법과 작문', eonmae: '언어와 매체', na: '모름' }, math_sel: { prob: '확률과 통계', calc: '미적분', geo: '기하', na: '모름' } };
+
+  // 과목별 학습 추천: 등급 구간 × 효과가 좋았던 방법
+  var GRADE_PLAN = {
+    '12': '유지 단계예요. 기출 실전 풀이로 감을 유지하고, 틀리는 유형만 골라 보완하세요.',
+    '34': '개념은 있는데 득점이 새는 단계예요. 기출을 유형별로 다시 분류해 틀리는 유형의 개념을 되짚으세요.',
+    '56': '개념 정립이 먼저예요. 개념 한 단원과 기본 문제를 묶어 처음부터 다시 쌓고, 실전 문제는 뒤로 미루세요.',
+    '79': '기초부터예요. 교과서 수준 개념과 쉬운 문제로 매일 조금씩, 양보다 매일 하는 것이 중요해요.',
+    'na': '먼저 모의고사 한 회를 풀어 지금 위치를 확인하세요. 그 결과로 개념부터 할지 기출부터 할지 정해요.'
+  };
+  var TOOL_PLAN = {
+    self: '혼자 공부가 잘 맞으니 개념서와 기출을 자습으로 돌리고, 막히는 단원만 인강으로 짧게 확인하세요.',
+    online: '인강으로 개념을 잡고 바로 이어서 같은 단원 문제를 자습으로 푸세요. 듣기만 하고 끝내면 남지 않아요.',
+    offline: '현장 강의에서 개념을 듣고 그 자리에서 질문하세요. 강의 당일 복습 30분이 효과를 두 배로 만들어요.',
+    tutoring: '1:1 클리닉으로 주 1회 점검받는 구조가 맞아요. 한 주 동안 막힌 문제를 모아 가서 한 번에 해결하세요.'
+  };
 
   // ---- 로그 ----
   var params = new URLSearchParams(location.search);
@@ -362,7 +431,7 @@ button { cursor: pointer; }
     for (var i = 2; i < arguments.length; i++) {
       var c = arguments[i];
       if (c == null || c === false) continue;
-      (Array.isArray(c) ? c : [c]).forEach(function (cc) { el.appendChild(typeof cc === 'string' ? document.createTextNode(cc) : cc); });
+      (Array.isArray(c) ? c : [c]).forEach(function (cc) { if (cc != null && cc !== false) el.appendChild(typeof cc === 'string' ? document.createTextNode(cc) : cc); });
     }
     return el;
   }
@@ -396,41 +465,65 @@ button { cursor: pointer; }
     step = -1; backBtn.hidden = true;
     show(h('section', { class: 'screen' },
       h('div', { class: 'hero' },
-        h('span', { class: 'kicker' }, '공부 빈틈 LMCT 1분 진단'),
+        h('span', { class: 'kicker' }, '공부 빈틈 LMCT 3분 진단'),
         h('h1', { html: '나에게 맞는<br><em>이투스247 학습 코스</em>를 찾아봅니다' }),
-        h('p', null, '나만의 공부 빈틈에 꼭 맞는 학습 유형과 추천 교재 & 인강을 바로 확인해보세요')),
+        h('p', null, '나만의 공부 빈틈과 2028 수능에서 새로 공부할 부분, 나에게 맞는 학습 방법을 바로 확인해보세요')),
       h('div', { class: 'card' },
         h('h2', { class: 'card-head' }, '이런걸 알려드려요!'),
         h('p', { class: 'card-sub' }, '이름이나 연락처 없이 바로 시작합니다.'),
         h('div', { class: 'values' },
-          h('div', { class: 'value' }, h('div', { class: 'ico' }, '1'), h('div', null, h('h3', null, '나의 공부 빈틈'), h('p', { html: '먼저 메워야 할 <b>공백 과목과 단원</b>을 짚어 드립니다' }))),
-          h('div', { class: 'value' }, h('div', { class: 'ico' }, '2'), h('div', null, h('h3', null, '나의 학습 유형'), h('p', { html: '학습 방식과 실행력으로 <b>4가지 유형</b> 중 하나를 알려 드립니다' }))),
-          h('div', { class: 'value' }, h('div', { class: 'ico' }, '3'), h('div', null, h('h3', null, '추천 교재 & 인강'), h('p', { html: '빈틈 단원에 맞는 <b>학습 방법과 이투스 인강, 교재</b>를 추천합니다' })))),
+          h('div', { class: 'value' }, h('div', { class: 'ico' }, '1'), h('div', null, h('h3', null, '2028 수능에서 새로 공부할 부분'), h('p', { html: '작년에 본 선택과목으로 <b>개정 수능의 공백</b>을 찾아 무엇부터 할지 알려 드립니다' }))),
+          h('div', { class: 'value' }, h('div', { class: 'ico' }, '2'), h('div', null, h('h3', null, '나의 학습 유형'), h('p', { html: '공부 방법과 실행력으로 <b>4가지 유형</b> 중 하나를 알려 드립니다' }))),
+          h('div', { class: 'value' }, h('div', { class: 'ico' }, '3'), h('div', null, h('h3', null, '과목별 학습 방법'), h('p', { html: '등급과 효과가 좋았던 방법으로 <b>과목마다 어떻게 공부할지</b> 알려 드립니다' })))),
         h('button', { class: 'btn btn-primary', type: 'button', on: { click: function () { log('start'); goTo(0); } } }, '진단 시작하기 →'),
         h('p', { class: 'hint' }, '최대한 솔직하게 골라주셔야 결과의 정확도가 상승돼요.')),
       h('p', { class: 'foot' }, h('b', null, '이투스247학원'), ' LMCT 학습진단', h('br'), 'LMCT진단 기반 247 콘텐츠 추천 시스템')
     ));
   }
 
+  function nextIndex(i, dir) {
+    var j = i + dir;
+    while (j >= 0 && j < QUESTIONS.length && !applies(QUESTIONS[j], answers)) j += dir;
+    return j;
+  }
   function goTo(i) {
+    if (i >= 0 && i < QUESTIONS.length && !applies(QUESTIONS[i], answers)) i = nextIndex(i, 1);
+    if (i >= QUESTIONS.length) return finish();
     step = i;
     backBtn.hidden = false;
     var q = QUESTIONS[i];
+    var act = activeQuestions(answers);
+    var no = act.indexOf(q) + 1, total = act.length;
     var qText = typeof q.text === 'function' ? q.text(answers) : q.text;
     var qOpts = typeof q.opts === 'function' ? q.opts(answers) : q.opts;
+    var picked = q.multi ? (answers[q.id] || []).slice() : null;
+    var nextBtn = q.multi ? h('button', { class: 'btn btn-primary', type: 'button', disabled: '', style: 'margin-top:14px', on: { click: function () { if (picked.length) choose(q, picked.slice(), null); } } }, '다음 →') : null;
     var opts = qOpts.map(function (o, idx) {
-      return h('button', { class: 'opt', type: 'button', 'aria-pressed': String(answers[q.id] === o[0]), on: { click: function (ev) { choose(q, o[0], ev.currentTarget); } } },
-        h('span', { class: 'num' }, String(idx + 1)), h('span', { class: 'lb' }, o[1]));
+      var on = q.multi ? picked.indexOf(o[0]) >= 0 : answers[q.id] === o[0];
+      return h('button', { class: 'opt', type: 'button', 'aria-pressed': String(on), on: { click: function (ev) {
+        if (!q.multi) return choose(q, o[0], ev.currentTarget);
+        // 다중 선택: '안 봤어요'와 '모름'은 단독 선택, 나머지는 최대 max개
+        var exclusive = o[0] === 'none' || o[0] === 'na';
+        var i = picked.indexOf(o[0]);
+        if (i >= 0) picked.splice(i, 1);
+        else {
+          if (exclusive) picked = [o[0]];
+          else { picked = picked.filter(function (v) { return v !== 'none' && v !== 'na'; }); if (picked.length >= (q.max || 2)) picked.shift(); picked.push(o[0]); }
+        }
+        ev.currentTarget.parentNode.querySelectorAll('.opt').forEach(function (b, k) { b.setAttribute('aria-pressed', String(picked.indexOf(qOpts[k][0]) >= 0)); });
+        if (picked.length) nextBtn.removeAttribute('disabled'); else nextBtn.setAttribute('disabled', '');
+      } } }, h('span', { class: 'num' }, String(idx + 1)), h('span', { class: 'lb' }, o[1]));
     });
     show(h('section', { class: 'screen' },
       h('div', { class: 'progress', 'aria-label': '진행률' },
-        h('div', { class: 'progress-top' }, h('span', null, '문항 ', h('b', null, String(i + 1)), ' / ' + QUESTIONS.length), h('span', null, Math.round((i + 1) / QUESTIONS.length * 100) + '%')),
-        h('div', { class: 'progress-bar' }, h('span', { style: 'width:' + Math.round((i + 1) / QUESTIONS.length * 100) + '%' }))),
+        h('div', { class: 'progress-top' }, h('span', null, '문항 ', h('b', null, String(no)), ' / ' + total), h('span', null, Math.round(no / total * 100) + '%')),
+        h('div', { class: 'progress-bar' }, h('span', { style: 'width:' + Math.round(no / total * 100) + '%' }))),
       h('div', { class: 'stage' },
         h('span', { class: 'phase' }, q.phase),
         h('h2', { class: 'q-text' }, qText),
         h('p', { class: 'q-desc' }, q.hint || '하나만 골라 주세요.'),
-        h('div', { class: 'scale', role: 'group', 'aria-label': qText }, opts))
+        h('div', { class: 'scale', role: 'group', 'aria-label': qText }, opts),
+        nextBtn)
     ));
   }
 
@@ -439,19 +532,21 @@ button { cursor: pointer; }
     if (choosing) return;
     choosing = true;
     answers[q.id] = value;
-    // 취약 과목을 바꾸면 이전에 고른 단원은 맞지 않으므로 지운다.
+    // 빈틈 과목을 바꾸면 이전에 고른 단원은 맞지 않으므로 지운다.
     if (q.id === 'weak' && answers.unit && answers.unit.indexOf(value + '_') !== 0) delete answers.unit;
-    btn.parentNode.querySelectorAll('.opt').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
-    log('answer', { qid: q.id, value: value, q_no: step + 1 });
+    if (q.id === 'inq_subj' && value[0] === 'none') delete answers.grade_inq;
+    if (btn) btn.parentNode.querySelectorAll('.opt').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+    log('answer', { qid: q.id, value: Array.isArray(value) ? value.join('+') : value, q_no: activeQuestions(answers).indexOf(q) + 1 });
     setTimeout(function () {
       choosing = false;
-      if (step < QUESTIONS.length - 1) goTo(step + 1); else finish();
+      var j = nextIndex(step, 1);
+      if (j < QUESTIONS.length) goTo(j); else finish();
     }, 220);
   }
 
   backBtn.addEventListener('click', function () {
     if (step === QUESTIONS.length + 1) { backBtn.hidden = true; renderResult(); }
-    else if (step > 0) goTo(step - 1);
+    else if (step > 0 && nextIndex(step, -1) >= 0) goTo(nextIndex(step, -1));
     else renderIntro();
   });
 
@@ -459,7 +554,8 @@ button { cursor: pointer; }
     step = QUESTIONS.length;
     backBtn.hidden = true;
     result = score(answers);
-    log('complete', { answers: Object.assign({}, answers), type: result.type, course: COURSES[result.course].name, sdl: result.sdl });
+    var flat = Object.assign({}, answers, { inq_subj: (answers.inq_subj || []).join('+') });
+    log('complete', { answers: flat, grade: result.grade, gaps: gaps(answers).map(function (g) { return g.title; }).join(','), type: result.type, sdl: result.sdl });
     show(h('section', { class: 'loading screen' },
       h('div', { class: 'spinner', 'aria-hidden': 'true' }),
       h('span', null, '답변을 분석하고 있어요')));
@@ -468,16 +564,15 @@ button { cursor: pointer; }
 
   function renderResult() {
     var t = TYPES[result.type];
-    var c = COURSES[result.course];
     var weak = SUBJECT[answers.weak];
-    var sdlPct = Math.round((result.sdl - 2) / 6 * 100);
+    var sdlPct = Math.round((result.sdl - 5) / 20 * 100);
     var unitId = answers.unit || (answers.weak + '_na');
     var unitRow = (UNITS[answers.weak] || []).filter(function (u) { return u[0] === unitId; })[0];
     var unitName = unitRow ? unitRow[1] : weak + ' 전반';
-    var reco = RECO[unitId] || RECO[answers.weak + '_na'];
-    var method = METHOD[answers.grade] || METHOD.na;
-    var reasons = [t.why, weak + (hasBatchim(weak) ? '은' : '는') + ' 1:1 코칭(주 30분)으로 먼저 잡는 걸 추천해요.'];
-    if (result.bumped) reasons.push('최근 등급을 고려해 관리 강도를 한 단계 올렸어요.');
+    var gapList = gaps(answers);
+    var info = inqInfo(answers);
+    var selText = '국어 ' + (SEL_LABEL.kor_sel[answers.kor_sel] || '모름') + ', 수학 ' + (SEL_LABEL.math_sel[answers.math_sel] || '모름') + ', 탐구 ' + (info.none ? ((answers.inq_subj || [])[0] === 'none' ? '안 봄' : '모름') : info.names.join(', '));
+    var subjects = [['kor', 'grade_kor', 'tool_kor'], ['math', 'grade_math', 'tool_math'], ['eng', 'grade_eng', 'tool_eng'], ['inq', 'grade_inq', 'tool_inq']];
 
     show(h('section', { class: 'screen' },
       h('div', { class: 'res-hero' },
@@ -488,41 +583,35 @@ button { cursor: pointer; }
         h('div', { class: 'pills' }, t.traits.map(function (s) { return h('span', { class: 'pill' }, s); })),
         h('div', { class: 'axis' },
           h('div', { class: 'axis-labels' }, h('span', null, '스스로 공부하는 힘'), h('span', { class: 'pct' }, sdlPct + '%')),
-          h('div', { class: 'axis-track' }, h('span', { style: 'width:' + Math.max(6, sdlPct) + '%' })))),
+          h('div', { class: 'axis-track' }, h('span', { style: 'width:' + Math.max(6, sdlPct) + '%' }))),
+        h('p', { class: 'basis' }, '이렇게 판단했어요: 공부 방법 답 ' + result.toolCount + '개 중 ' + result.indepCount + '개가 혼자 공부나 인강(' + (result.independent ? '독립형' : '가이드형') + '), 스스로 공부하는 힘 ' + result.sdl + '점 / 25점(' + (result.sdl >= 18 ? '강함' : '보강 필요') + ')')),
+
+      h('div', { class: 'sechead' }, h('span', { class: 'kicker dark' }, '개정 수능 대비'), h('h3', null, '2028 수능에서 새로 공부할 부분')),
+      h('div', { class: 'card gapcard' },
+        h('p', { class: 'card-sub' }, '2028 수능부터 국어는 화법과 언어, 독서와 작문, 문학이 공통, 수학은 대수, 미적분Ⅰ, 확률과 통계가 공통, 탐구는 통합사회와 통합과학을 모두 봐요. 작년에 본 선택과목(' + selText + ')으로 찾았어요.'),
+        gapList.map(function (g) {
+          return h('div', { class: 'gap' },
+            h('div', { class: 'course-top' }, h('span', { class: 'badge' }, g.title), h('span', { class: 'badge-soft' }, g.tag)),
+            h('p', { class: 'why' }, g.why),
+            h('ol', { class: 'steps' }, g.lines.map(function (s) { return h('li', null, s); })));
+        })),
+
+      h('div', { class: 'sechead' }, h('span', { class: 'kicker dark' }, '학습 방법'), h('h3', null, '나에게 맞는 공부 방법')),
       h('div', { class: 'card' },
-        h('h3', { class: 'card-head' }, '나에게 맞는 관리 코스'),
-        h('p', { class: 'card-sub' }, '학습 방식과 실행력, 최근 등급으로 정했습니다.'),
-        h('div', { class: 'course-box' },
-          h('div', { class: 'course-top' }, h('span', { class: 'badge' }, c.name), h('span', { class: 'badge-soft' }, weak + ' 1:1 코칭'), h('span', { class: 'badge-soft' }, CLASS_BY_STATUS[answers.status])),
-          h('p', { class: 'course-desc' }, c.desc),
-          h('div', { class: 'reasons' }, reasons.map(function (s) { return h('div', { class: 'reason' }, s); }))),
-        h('p', { class: 'hint' }, '개강 일정은 지점마다 다를 수 있어요.')),
-      h('div', { class: 'card' },
-        h('h3', { class: 'card-head' }, weak + ' 빈틈 메우기 처방'),
-        h('p', { class: 'card-sub' }, '이투스247 진단 체계의 ' + method.type + ' 처방이에요. ' + method.tools + '으로 잡아요.'),
-        h('div', { class: 'course-top' }, h('span', { class: 'badge' }, unitName), h('span', { class: 'badge-soft' }, method.type)),
-        h('div', { class: 'reco-row' }, h('span', { class: 'reco-k' }, '학습 방법'), h('div', { class: 'reco-v tip' }, method.how)),
-        h('div', { class: 'rcards' },
-          reco.lectures.slice(0, 4).map(function (l) {
-            var code = TEACHER[l[0]];
-            return h('a', { class: 'rcard', href: LECTURE_URL + l[2], target: '_blank', rel: 'noopener', on: { click: function () { log('cta', { value: 'lecture:' + l[2] }); } } },
-              h('div', { class: 'thumb round' }, code ? h('img', { src: 'img/instructors/' + code + '.png', alt: l[0] + ' 선생님', loading: 'lazy' }) : h('span', { class: 'ph' }, '강')),
-              h('div', { class: 'rbody' }, h('span', { class: 'rtag' }, '추천 인강' + (l[3] ? ' (' + l[3] + ')' : '')), h('b', null, l[1]), h('span', { class: 'rsub' }, l[0] + ' 선생님, 이투스 월구독 포함')),
-              h('span', { class: 'go' }, '강좌 보기'));
-          }),
-          h('a', { class: 'rcard', href: LECTURE_URL + reco.book[1], target: '_blank', rel: 'noopener', on: { click: function () { log('cta', { value: 'book:' + reco.book[1] }); } } },
-            h('div', { class: 'thumb book' }, h('img', { src: 'img/books/' + reco.book[1] + '.jpg', alt: reco.book[0], loading: 'lazy', on: { error: function (ev) { ev.currentTarget.replaceWith(h('span', { class: 'ph' }, '교재')); } } })),
-            h('div', { class: 'rbody' }, h('span', { class: 'rtag' }, '추천 교재'), h('b', null, reco.book[0]), h('span', { class: 'rsub' }, '강좌 교재, 마켓ECI에서 학원으로 무료배송')),
-            h('span', { class: 'go' }, '교재 보기')),
-          reco.mocks.map(function (k) {
-            var m = MOCK[k];
-            var href = m.asap ? ASAP_URL : BOOK_URL + m.id;
-            return h('a', { class: 'rcard', href: href, target: '_blank', rel: 'noopener', on: { click: function () { log('cta', { value: 'mock:' + (m.id || k) }); } } },
-              h('div', { class: 'thumb book' }, m.img ? h('img', { src: m.img, alt: m.n, loading: 'lazy', on: { error: function (ev) { ev.currentTarget.replaceWith(h('span', { class: 'ph' }, '모의')); } } }) : h('span', { class: 'ph' }, '아삽')),
-              h('div', { class: 'rbody' }, h('span', { class: 'rtag' }, '추천 모의고사'), h('b', null, m.n), h('span', { class: 'rsub' }, '이투스북')),
-              h('span', { class: 'go' }, '이투스북 보기'));
-          })),
-        h('div', { class: 'reco-row' }, h('span', { class: 'reco-k' }, '단원 포인트'), h('div', { class: 'reco-v tip' }, reco.point))),
+        h('h3', { class: 'card-head' }, t.name + '에게 맞는 방법'),
+        h('p', { class: 'why' }, t.method),
+        h('p', { class: 'why' }, STYLE_TEXT[answers.style] || ''),
+        h('h3', { class: 'card-head', style: 'margin-top:18px' }, '과목별 학습 추천'),
+        h('p', { class: 'card-sub' }, '최근 등급과 효과가 좋았던 방법으로 정했어요.'),
+        h('div', { class: 'subjlist' }, subjects.map(function (s) {
+          var g = answers[s[1]] || 'na', tool = answers[s[2]];
+          var isWeak = s[0] === answers.weak;
+          return h('div', { class: 'subj' + (isWeak ? ' weak' : '') },
+            h('div', { class: 'course-top' }, h('span', { class: isWeak ? 'badge' : 'badge-soft' }, SUBJECT[s[0]]), h('span', { class: 'badge-soft' }, GRADE_LABEL[g]), tool ? h('span', { class: 'badge-soft' }, TOOL_LABEL[tool]) : null, isWeak ? h('span', { class: 'badge-soft' }, '가장 큰 빈틈') : null),
+            h('p', { class: 'why' }, GRADE_PLAN[g] + (tool ? ' ' + TOOL_PLAN[tool] : '')),
+            isWeak ? h('p', { class: 'why strong' }, '특히 ' + unitName + '부터: ' + (UNIT_POINT[unitId] || UNIT_POINT[answers.weak + '_na'])) : null);
+        }))),
+
       h('div', { class: 'card locked' },
         h('h3', { class: 'card-head' }, weak + ' 단원별 빈틈 지도와 주간 시간표'),
         h('div', { class: 'blur', 'aria-hidden': 'true' }, h('div', { style: 'width:92%' }), h('div', { style: 'width:70%' }), h('div', { style: 'width:84%' })),
@@ -538,22 +627,18 @@ button { cursor: pointer; }
     if (leadSent) app.querySelector('.btn-primary').disabled = true;
   }
 
-  function hasBatchim(word) {
-    var code = word.charCodeAt(word.length - 1) - 0xac00;
-    return code >= 0 && code <= 11171 && code % 28 !== 0;
-  }
-
   function share() {
     log('cta', { value: 'share' });
     var url = HOME_URL;
     try { var u = new URL(location.href); u.search = ''; u.searchParams.set('utm_source', 'share'); url = u.toString(); } catch (e) {}
-    var text = '나는 ' + TYPES[result.type].name + '! 이투스247 LMCT 학습진단으로 나에게 맞는 코스 찾기';
+    var text = '나는 ' + TYPES[result.type].name + '! 이투스247 LMCT 학습진단으로 2028 수능 공백 찾기';
     if (navigator.share) { navigator.share({ title: '이투스247 LMCT 학습진단', text: text, url: url }).catch(function () {}); return; }
     var done = function () { toast('링크를 복사했어요'); };
     if (navigator.clipboard) navigator.clipboard.writeText(text + ' ' + url).then(done, function () { toast('복사하지 못했어요'); });
     else toast('복사하지 못했어요');
   }
 
+  var REGIONS = ['서울', '인천/경기', '대전/세종/충청', '강원', '부산/대구/경상', '광주/전라', '제주', '아직 모름'];
   function renderLead() {
     backBtn.hidden = false;
     step = QUESTIONS.length + 1;
@@ -584,7 +669,7 @@ button { cursor: pointer; }
         : !agree.checked ? '개인정보 수집과 이용에 동의해 주세요.' : '';
       if (msg) { err.textContent = msg; err.hidden = false; postHeight(); return; }
       submit.disabled = true;
-      log('lead', { name: name.value.trim(), phone: digits, region: region.value, mode: mode || '아직 모름', consent: true, type: result.type, course: COURSES[result.course].name });
+      log('lead', { name: name.value.trim(), phone: digits, region: region.value, mode: mode || '아직 모름', consent: true, type: result.type, course: '' });
       leadSent = true;
       renderThanks();
     } } },
@@ -605,9 +690,9 @@ button { cursor: pointer; }
 
     show(h('section', { class: 'screen' },
       h('div', { class: 'card', style: 'margin-top:14px' },
-        h('span', { class: 'phase' }, TYPES[result.type].name + ', ' + COURSES[result.course].name),
+        h('span', { class: 'phase' }, TYPES[result.type].name),
         h('h2', { class: 'card-head', style: 'font-size:21px' }, '무료 상담 신청'),
-        h('p', { class: 'card-sub' }, '가까운 이투스247학원에서 연락드려 공백 단원에 맞는 교재, 인강과 맞춤 코스를 안내해 드려요.'),
+        h('p', { class: 'card-sub' }, '가까운 이투스247학원에서 연락드려 2028 수능 공백에 맞는 정밀진단과 맞춤 코스를 안내해 드려요.'),
         form)
     ));
   }
@@ -627,7 +712,7 @@ button { cursor: pointer; }
   }
 
   window.addEventListener('resize', postHeight);
-  window.LMCTLite = { score: score, QUESTIONS: QUESTIONS, TYPES: TYPES, COURSES: COURSES, UNITS: UNITS, RECO: RECO, METHOD: METHOD, MOCK: MOCK, TEACHER: TEACHER };
+  window.LMCTLite = { score: score, gaps: gaps, gradeBucket: gradeBucket, QUESTIONS: QUESTIONS, TYPES: TYPES, UNITS: UNITS, GAPS: GAPS };
   log('view');
   renderIntro();
 })();
