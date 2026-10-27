@@ -167,10 +167,10 @@ button { cursor: pointer; }
 .gap { padding: 12px 0 4px; border-top: 1px solid var(--line-soft); }
 .gap:first-of-type { border-top: 0; }
 .basis { margin: 14px 0 0; font-size: 13px; line-height: 1.5; opacity: .9; }
-.why { margin: 6px 0 0; font-size: 15px; line-height: 1.6; font-weight: 700; }
+.why { margin: 6px 0 0; font-size: 15px; line-height: 1.5; font-weight: 700; }
 .why.strong { color: var(--teal-deep); }
 .steps { margin: 10px 0 4px; padding-left: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 8px; }
-.steps li { counter-increment: s; position: relative; padding: 10px 12px 10px 42px; border-radius: 12px; background: rgba(255, 255, 255, .8); border: 1px solid #F0E4B8; font-size: 15px; line-height: 1.55; font-weight: 700; }
+.steps li { counter-increment: s; position: relative; padding: 8px 12px 8px 40px; border-radius: 12px; background: rgba(255, 255, 255, .8); border: 1px solid #F0E4B8; font-size: 15px; line-height: 1.55; font-weight: 700; }
 .steps li::before { content: counter(s); position: absolute; left: 12px; top: 10px; width: 22px; height: 22px; border-radius: 50%; background: var(--grad-bi); color: #fff; font-size: 12px; font-weight: 900; display: grid; place-items: center; }
 .subjlist { display: flex; flex-direction: column; gap: 10px; }
 .subj { padding: 12px 14px; border-radius: 14px; border: 1.5px solid var(--line); background: #fff; }
@@ -217,27 +217,27 @@ button { cursor: pointer; }
   };
   // 빈틈 단원별 학습 포인트 한 줄
   var UNIT_POINT = {
-    kor_read: '하루 지문 3개를 시간 재고 풀고, 틀린 문항은 근거 문장을 지문에서 찾아 표시해요.',
-    kor_poem: '화자, 상황, 정서 세 가지를 먼저 잡고 선지를 판단해요.',
-    kor_novel: '인물 관계도를 그리고 서술자 시점이 바뀌는 지점을 표시하며 읽어요.',
-    kor_gram: '음운, 형태소, 문장 성분을 표로 정리한 뒤 기출로 확인해요. 화작은 선지 소거 연습이 핵심이에요.',
-    kor_na: '최근 모의고사 오답을 독서, 문학, 문법으로 나눠 세어 보면 빈틈이 바로 보여요.',
-    math_su1: '지수로그 식 변형과 삼각함수 그래프를 손으로 그리는 연습부터 해요. 2028 수능에서는 대수 범위예요.',
-    math_su2: '극한과 미분 정의를 말로 설명할 수 있을 때까지 반복하고, 그다음 3점 기출을 풀어요. 2028 수능에서는 미적분Ⅰ 범위예요.',
-    math_prob: '경우의 수 문제를 유형별로 분류해 풀이 틀을 외우면 정확도가 올라가요. 2028 수능에서는 공통 범위예요.',
-    math_calc: '2028 수능 수학은 선택과목이 없어요. 미적분, 기하보다 대수, 미적분Ⅰ, 확률과 통계에 시간을 쓰세요.',
-    math_na: '모의고사 틀린 문항의 단원을 적어 보면 어디서 점수가 새는지 보여요.',
-    eng_vocab: '하루 50개씩 보고, 다음 날 아침에 어제 단어를 다시 확인하는 식으로 돌려요.',
-    eng_gram: '수능 어법 출제 포인트는 20개 안쪽이에요. 포인트별로 예문을 모아 정리해요.',
-    eng_blank: '빈칸 앞뒤 문장의 연결어와 반복되는 핵심어를 먼저 찾는 습관을 들여요.',
-    eng_order: '대명사, 연결어, 관사로 문장 사이 연결 고리를 찾는 연습을 해요.',
-    eng_topic: '첫 문장과 마지막 문장을 먼저 읽고 글의 방향을 잡아요. 듣기는 매일 한 회 받아쓰기로 잡아요.',
-    eng_na: '어휘가 부족하면 모든 유형이 흔들려요. 단어부터 점검하는 게 빠른 길이에요.',
-    inq_soc_concept: '단원마다 핵심 개념 10개를 뽑아 빈칸 채우기로 반복해요. 2028 수능 통합사회에서도 같은 방식이 통해요.',
-    inq_soc_data: '도표 문제는 축과 단위를 먼저 읽고, 선지를 자료에 대입해 하나씩 지워요.',
-    inq_sci_concept: '그림과 그래프를 직접 그려 보며 개념을 설명하는 연습이 효과가 커요. 통합과학도 같은 방식이에요.',
-    inq_sci_calc: '계산 문제는 공식 암기보다 단위와 비례 관계로 접근하면 실수가 줄어요.',
-    inq_na: '선택과목 기출 한 회를 풀고 틀린 문항이 개념인지 자료 해석인지 나눠 보세요.'
+    kor_read: '하루 지문 3개, 근거 문장 표시',
+    kor_poem: '화자, 상황, 정서부터 잡기',
+    kor_novel: '인물 관계도와 시점 변화 표시',
+    kor_gram: '음운, 형태소, 문장 성분 표 정리 후 기출',
+    kor_na: '오답을 독서, 문학, 문법으로 나눠 세기',
+    math_su1: '지수로그 식 변형, 삼각함수 그래프 손으로',
+    math_su2: '극한과 미분 정의 설명 후 3점 기출',
+    math_prob: '경우의 수 유형 분류, 풀이 틀 암기',
+    math_calc: '2028은 선택과목 없음, 공통 세 과목에 집중',
+    math_na: '틀린 문항의 단원 적어 보기',
+    eng_vocab: '하루 50개, 다음 날 아침 복습',
+    eng_gram: '출제 포인트 20개, 예문으로 정리',
+    eng_blank: '연결어와 반복 핵심어 먼저',
+    eng_order: '대명사, 연결어, 관사로 고리 찾기',
+    eng_topic: '첫 문장과 끝 문장 먼저, 듣기 매일 한 회',
+    eng_na: '어휘부터 점검',
+    inq_soc_concept: '단원마다 핵심 개념 10개 빈칸 채우기',
+    inq_soc_data: '축과 단위 먼저, 선지를 자료에 대입',
+    inq_sci_concept: '그림과 그래프 직접 그려 설명',
+    inq_sci_calc: '공식보다 단위와 비례 관계',
+    inq_na: '기출 한 회로 개념 오답과 자료 오답 나누기'
   };
 
   // 작년(2027 수능, 2015 교육과정) 탐구 과목과 그 과목이 덮는 통합사회, 통합과학 영역
@@ -289,16 +289,16 @@ button { cursor: pointer; }
 
   // 학습 유형: 공부 방법 답(혼자 공부, 인강 = 독립 / 현장 강의, 1:1 = 가이드) × 스스로 공부하는 힘(25점 만점, 18점 이상 = 강)
   var TYPES = {
-    self: { name: '자율주행형', one: '계획부터 실행까지 스스로 굴러가는 타입', traits: ['내 속도로 공부할 때 효율이 가장 높아요', '자습 시간에 몰입이 잘 돼요', '방향만 잘 잡으면 성적이 빠르게 올라요'], method: '자습 비중을 높이고 인강은 막히는 단원만 골라 들어요. 주 1회 스스로 진도와 오답을 점검하는 시간을 정해 두면 충분해요.' },
-    spark: { name: '몰아치기형', one: '이해력은 좋은데 루틴이 흔들리는 타입', traits: ['혼자서도 개념은 잘 잡아요', '컨디션에 따라 공부량 차이가 커요', '정해진 시간표가 생기면 실력이 확 살아나요'], method: '혼자 공부가 맞지만 루틴이 먼저예요. 요일별 과목과 시작 시각을 고정하고, 하루 공부량을 작게 쪼개 매일 끝내는 쪽으로 가요.' },
-    pace: { name: '페이스메이커형', one: '설명을 들으면 쭉쭉 따라가는 성실 타입', traits: ['현장 강의에서 흡수력이 가장 좋아요', '세운 계획은 꾸준히 지켜요', '질문할 곳이 가까이 있으면 더 빨라져요'], method: '강의로 개념을 흡수하고 그날 바로 복습 문제로 굳히는 흐름이 맞아요. 질문을 바로 할 수 있는 환경(현장 강의, 질의응답)을 확보하세요.' },
-    care: { name: '풀케어형', one: '옆에서 잡아 주면 확 달라지는 타입', traits: ['설명을 들을 때 이해가 가장 잘 돼요', '혼자 두면 계획이 자주 무너져요', '매일 점검해 주는 사람이 있으면 공부량이 크게 늘어요'], method: '현장 강의 위주로 개념을 쌓고, 매일 점검받는 구조(담임, 1:1 클리닉)를 먼저 만드세요. 혼자 세운 계획보다 짜인 시간표가 잘 맞아요.' }
+    self: { name: '자율주행형', one: '계획부터 실행까지 스스로 굴러가는 타입', traits: ['내 속도로 공부할 때 효율 최고', '자습 몰입이 잘 됨', '방향만 잡으면 빠르게 오름'], method: '자습 중심, 인강은 막히는 단원만. 주 1회 스스로 점검.' },
+    spark: { name: '몰아치기형', one: '이해력은 좋은데 루틴이 흔들리는 타입', traits: ['혼자서도 개념은 잘 잡음', '컨디션 따라 공부량 차이 큼', '시간표가 생기면 확 살아남'], method: '루틴이 먼저. 요일별 과목과 시작 시각 고정, 하루 분량은 작게.' },
+    pace: { name: '페이스메이커형', one: '설명을 들으면 쭉쭉 따라가는 성실 타입', traits: ['현장 강의 흡수력 최고', '세운 계획은 꾸준히 지킴', '질문할 곳이 가까우면 더 빠름'], method: '강의로 개념, 당일 복습 문제로 굳히기. 바로 질문할 환경 확보.' },
+    care: { name: '풀케어형', one: '옆에서 잡아 주면 확 달라지는 타입', traits: ['설명 들을 때 이해 최고', '혼자 두면 계획이 무너짐', '매일 점검받으면 공부량 급증'], method: '현장 강의 위주, 매일 점검받는 구조(담임, 1:1 클리닉)부터.' }
   };
   var STYLE_TEXT = {
-    concept: '개념부터 이해하는 쪽이 맞아요. 새 단원은 개념서를 한 바퀴 돌린 뒤 문제로 들어가고, 문제를 먼저 풀며 익히려다 막히면 억지로 버티지 마세요.',
-    problem: '문제부터 풀어 보는 쪽이 맞아요. 기출을 먼저 풀고 틀린 개념만 돌아가서 보는 방식이 시간 대비 효율이 높아요.',
-    error: '틀린 문제를 다시 보는 힘이 강점이에요. 오답 노트를 중심에 두고, 같은 유형을 사흘 뒤 다시 풀어 확인하세요.',
-    memor: '외우고 반복하는 쪽이 맞아요. 단원마다 핵심 정리표를 한 장으로 만들고, 반복 주기를 하루, 사흘, 일주일로 늘려 가세요.'
+    concept: '개념서 한 바퀴 뒤 문제로. 문제부터 밀어붙이지 않기.',
+    problem: '기출 먼저, 틀린 개념만 돌아가서 보기.',
+    error: '오답 노트 중심, 같은 유형 사흘 뒤 다시 풀기.',
+    memor: '단원마다 정리표 한 장, 반복 주기 1일 → 3일 → 7일.'
   };
   function score(a) {
     var tools = ['tool_kor', 'tool_math', 'tool_eng', 'tool_inq'].map(function (k) { return a[k]; }).filter(Boolean);
@@ -313,16 +313,14 @@ button { cursor: pointer; }
   // 2028 수능(2022 개정 교육과정)에서 새로 공부할 부분. 작년 선택과목으로 정한다.
   // 2028 수능: 국어는 화법과 언어, 독서와 작문, 문학 공통 / 수학은 대수, 미적분Ⅰ, 확률과 통계 공통 / 탐구는 통합사회와 통합과학 공통
   var GAPS = {
-    gram: { title: '국어 언어(문법)', tag: '새로 공부할 범위', why: '작년에 화법과 작문으로 봤다면 문법을 안 했어요. 2028 수능 국어는 선택 없이 화법과 언어, 독서와 작문, 문학이 공통이라 문법이 들어와요.', lines: ['문법을 처음 하는 사람은 음운 변동(교체, 탈락, 첨가, 축약)부터 하세요. 규칙이 적고 기출 유형이 정해져 있어 2주면 한 바퀴 돌아요.', '그다음 형태소와 단어 형성, 마지막에 문장 성분과 문장 구조(안은문장, 이어진문장) 순서로 가세요.', '매체는 따로 새로 배울 범위가 없고, 화작은 하던 대로 선지 소거 연습을 이어 가면 돼요.'] },
-    gram_na: { title: '국어 언어(문법)', tag: '확인 필요', why: '작년 국어 선택과목을 모르면 문법 공백이 있는지 알 수 없어요. 화작으로 봤다면 문법이 새 범위예요.', lines: ['작년 시험지나 성적표에서 국어 선택과목을 먼저 확인하세요.', '화법과 작문이었다면 음운 변동, 형태소, 문장 구조 순서로 문법을 새로 시작하세요.', '언어와 매체였다면 문법은 복습만 하고 독서와 문학에 시간을 쓰세요.'] },
-    prob: { title: '수학 확률과 통계', tag: '새로 공부할 범위', why: '작년에 미적분이나 기하를 골랐다면 확률과 통계를 안 했어요. 2028 수능 수학은 선택 없이 대수, 미적분Ⅰ, 확률과 통계가 모두 공통이에요.', lines: ['확률과 통계를 처음 하는 사람은 경우의 수(순열, 조합)부터 하세요. 수학Ⅰ, Ⅱ와 거의 연결되지 않아 바로 들어갈 수 있어요.', '그다음 확률(조건부확률, 독립), 마지막에 통계(확률분포, 통계적 추정) 순서로 가세요. 통계는 공식보다 표 읽기가 핵심이에요.', '미적분, 기하는 2028 수능 범위가 아니에요. 그 시간을 확률과 통계로 옮기면 세 과목 공통 체제에서 손해가 없어요.'] },
-    prob_na: { title: '수학 확률과 통계', tag: '확인 필요', why: '작년 수학 선택과목을 모르면 확률과 통계 공백이 있는지 알 수 없어요. 2028 수능 수학은 확률과 통계가 공통이에요.', lines: ['작년 시험지나 성적표에서 수학 선택과목을 먼저 확인하세요.', '미적분이나 기하였다면 경우의 수, 확률, 통계 순서로 확률과 통계를 새로 시작하세요.', '확률과 통계였다면 공백은 없어요. 대수(수학Ⅰ)와 미적분Ⅰ(수학Ⅱ)을 유지하면 돼요.'] },
-    calc1: { title: '수학 대수, 미적분Ⅰ', tag: '이름만 바뀜', why: '2028 수능의 대수는 수학Ⅰ, 미적분Ⅰ은 수학Ⅱ와 범위가 거의 같아요. 새로 배울 건 없고 이름만 달라져요.', lines: ['지수로그, 삼각함수, 수열은 대수로, 극한, 미분, 적분은 미적분Ⅰ로 불려요. 지금 교재 그대로 써도 돼요.', '다만 선택과목이 사라져 공통 세 과목의 비중이 커져요. 수학Ⅰ, Ⅱ에서 흔들리던 단원이 있으면 지금 메우세요.', '2028 수능은 첫 시행이라 기출이 없어요. 평가원 예시 문항과 2022 개정 교과서를 기준으로 삼으세요.'] },
-    sci: { title: '통합과학', tag: '새로 공부할 범위', why: '작년에 과학탐구를 안 봤다면 통합과학 전체가 처음이에요. 2028 수능 탐구는 사탐, 과탐 선택 없이 통합사회와 통합과학을 모두 봐요.', lines: ['통합과학을 처음 하는 사람은 과학의 기초(단위, 측정, 정보)와 물질과 규칙성(원소, 주기율표, 화학 결합)부터 하세요. 중학 과학과 이어져 진입이 가장 쉬워요.', '그다음 시스템과 상호작용(역학, 지구 시스템, 생명 시스템), 변화와 다양성(산화 환원, 진화), 환경과 에너지 순서로 가세요.', '물리, 화학, 생명, 지구가 한 과목이라 한 영역만 잘해서는 점수가 안 나와요. 매주 영역을 바꿔 가며 개념 한 단원과 기출 10문항을 묶어 가세요.'] },
-    sci_part: { title: '통합과학', tag: '일부 공백', why: '작년에 과학탐구를 한 과목만 봤다면 나머지 영역이 비어 있어요. 통합과학은 물리, 화학, 생명, 지구를 모두 다뤄요.', lines: ['안 본 영역부터 하세요. 예를 들어 생명과학만 봤다면 물질과 규칙성(화학), 시스템과 상호작용의 역학(물리)과 지구 시스템(지구)이 비어 있어요.', '본 과목 영역은 개념 복습 없이 기출만 풀어 확인하고, 안 본 영역은 개념부터 들어가세요.', '통합과학은 선택과목보다 깊이가 얕고 범위가 넓어요. 한 영역에 2주 이상 머물지 말고 돌려 가며 채우세요.'] },
-    soc: { title: '통합사회', tag: '새로 공부할 범위', why: '작년에 사회탐구를 안 봤다면 통합사회 전체가 처음이에요. 2028 수능 탐구는 통합사회와 통합과학을 모두 봐요.', lines: ['통합사회를 처음 하는 사람은 통합적 관점과 인간, 사회, 환경과 행복부터 하세요. 모든 단원을 보는 틀이라 먼저 잡으면 뒤가 쉬워요.', '그다음 인권 보장과 헌법, 시장 경제와 지속 가능 발전, 사회 정의와 불평등 순서로 가세요. 이 세 단원이 자료 문항의 중심이에요.', '암기보다 자료(도표, 지도, 글) 읽기가 많아요. 단원마다 핵심 개념 10개와 자료 문항 5개를 한 묶음으로 익히세요.'] },
-    soc_part: { title: '통합사회', tag: '일부 공백', why: '작년에 사회탐구를 한 과목만 봤다면 다른 영역이 비어 있어요. 통합사회는 윤리, 지리, 일반사회, 경제를 모두 다뤄요.', lines: ['안 본 영역부터 하세요. 예를 들어 생활과 윤리만 봤다면 자연환경과 인간, 생활공간과 사회(지리), 시장 경제(경제), 인권 보장과 헌법(법)이 비어 있어요.', '본 과목 영역은 기출로 바로 확인하고, 안 본 영역은 개념 10개씩 먼저 정리하세요.', '통합사회는 사례형 문항이 많아요. 개념마다 사례 두 개씩 묶어 기억하면 처음 보는 자료에도 대응돼요.'] },
-    inq_none: { title: '통합사회, 통합과학', tag: '둘 다 새로 공부할 범위', why: '작년에 탐구를 안 봤거나 기억이 없다면 2028 수능의 통합사회와 통합과학이 모두 처음이에요.', lines: ['두 과목을 번갈아 가세요. 통합사회는 통합적 관점부터, 통합과학은 과학의 기초와 물질과 규칙성부터 시작하면 진입이 쉬워요.', '하루에 두 과목을 다 하지 말고, 요일을 나눠 한 과목씩 개념 한 단원과 기출 10문항을 묶어 가세요.', '2028 수능은 첫 시행이라 기출이 없어요. 2022 개정 교과서와 평가원 예시 문항을 기준으로 삼고, 단원 이름부터 먼저 외우세요.'] }
+    gram: { title: '국어 언어(문법)', tag: '새로 공부', why: '화작으로 봤다면 문법이 비어 있어요. 2028 국어는 문법 포함 공통.', lines: ['음운 변동부터 (교체, 탈락, 첨가, 축약)', '다음 형태소와 단어, 마지막 문장 구조', '매체는 새로 안 배워도 됨, 화작은 하던 대로'] },
+    gram_na: { title: '국어 언어(문법)', tag: '확인 필요', why: '작년 국어 선택과목을 확인하세요. 화작이었다면 문법이 새 범위.', lines: ['화작이었다면 음운 변동부터 시작', '언매였다면 복습만', '2028 국어는 선택 없이 공통'] },
+    prob: { title: '수학 확률과 통계', tag: '새로 공부', why: '미적분, 기하로 봤다면 확통이 비어 있어요. 2028 수학은 확통 포함 공통.', lines: ['경우의 수부터 (순열, 조합)', '다음 확률, 마지막 통계', '미적분, 기하 시간을 확통으로 옮기기'] },
+    prob_na: { title: '수학 확률과 통계', tag: '확인 필요', why: '작년 수학 선택과목을 확인하세요. 미적분, 기하였다면 확통이 새 범위.', lines: ['미적분, 기하였다면 경우의 수부터', '확통이었다면 공백 없음', '2028 수학은 대수, 미적분Ⅰ, 확통 공통'] },
+    calc1: { title: '수학 대수, 미적분Ⅰ', tag: '이름만 바뀜', why: '대수는 수학Ⅰ, 미적분Ⅰ은 수학Ⅱ와 거의 같아요.', lines: ['지금 교재 그대로 사용', '선택 없이 공통이라 흔들리던 단원 메우기', '2028은 기출이 없음. 평가원 예시 문항 기준'] },
+    sci: { title: '통합과학', tag: '새로 공부', why: '과탐을 안 봤다면 통합과학 전체가 처음이에요.', lines: ['과학의 기초, 물질과 규칙성부터 (진입 쉬움)', '다음 시스템과 상호작용 → 변화와 다양성 → 환경과 에너지', '물화생지 영역을 매주 바꿔 가며 개념 1단원 + 기출 10문항'] },
+    soc: { title: '통합사회', tag: '새로 공부', why: '사탐을 안 봤다면 통합사회 전체가 처음이에요.', lines: ['통합적 관점, 행복부터 (전체의 틀)', '다음 인권과 헌법 → 시장 경제 → 정의와 불평등', '암기보다 자료 읽기. 단원마다 개념 10개 + 자료 5문항'] },
+    inq_none: { title: '통합사회, 통합과학', tag: '둘 다 새로 공부', why: '탐구를 안 봤다면 두 과목 모두 처음이에요.', lines: ['통합사회는 통합적 관점부터, 통합과학은 과학의 기초부터', '요일을 나눠 한 과목씩 개념 1단원 + 기출 10문항', '2028은 기출이 없음. 교과서 단원 이름부터 외우기'] }
   };
   function inqInfo(a) {
     var ids = (a.inq_subj || []).filter(function (v) { return TAMGU_BY[v]; });
@@ -348,13 +346,13 @@ button { cursor: pointer; }
     var coveredUnits = covered.map(function (k) { return AREAS[k].join(', '); }).join(', ');
     var missingUnits = missing.map(function (k) { return k + '(' + AREAS[k].join(', ') + ')'; }).join(', ');
     return {
-      title: subject, tag: missing.length ? '일부 공백: ' + missing.join(', ') + '부터' : '거의 덮임',
-      why: '작년에 ' + josa(takenNames, '을', '를') + ' 봤다면 ' + subject + ' 중 ' + josa(coveredUnits, '은', '는') + ' 익숙해요. 나머지 영역이 비어 있어요.',
-      lines: [
-        '먼저 할 곳은 ' + missing.join(', ') + ' 영역이에요. ' + josa(subject, '은', '는') + ' 영역별로 대단원이 나뉘어 있어서 안 본 영역부터 채우면 돼요.',
-        '순서는 ' + missingUnits + '로 가세요. 각 대단원은 개념 10개와 기출 유형 5개 정도라 한 단원에 1주면 충분해요.',
-        takenNames + ' 영역(' + coveredUnits + ')은 개념 복습 없이 기출만 풀어 확인하고, 그 시간을 안 본 영역으로 옮기세요.'
-      ]
+      title: subject, tag: missing.length ? '일부 공백' : '거의 덮임',
+      why: takenNames + ' 기준: ' + (missing.length ? missing.join(', ') + ' 영역이 비어 있어요.' : '대부분 익숙한 범위예요.'),
+      lines: missing.length ? [
+        '먼저: ' + missing.join(', ') + ' 영역',
+        '순서: ' + missing.map(function (k) { return AREAS[k][0].replace(/^.*?의 /, ''); }).join(' → '),
+        covered.join(', ') + ' 영역은 기출만 확인'
+      ] : ['전 영역 기출 한 회로 점검', '틀린 단원만 개념 복습', '2028은 기출이 없음. 평가원 예시 문항 기준']
     };
   }
   function gaps(a) {
@@ -364,7 +362,6 @@ button { cursor: pointer; }
     var info = inqInfo(a);
     if (info.none) out.push(GAPS.inq_none);
     else { out.push(areaGap('soc', info)); out.push(areaGap('sci', info)); }
-    out.push(GAPS.calc1);
     return out;
   }
   // 작년 선택과목 답을 사람이 읽는 문장으로 (판단 근거 표시용)
@@ -372,17 +369,17 @@ button { cursor: pointer; }
 
   // 과목별 학습 추천: 등급 구간 × 효과가 좋았던 방법
   var GRADE_PLAN = {
-    '12': '유지 단계예요. 기출 실전 풀이로 감을 유지하고, 틀리는 유형만 골라 보완하세요.',
-    '34': '개념은 있는데 득점이 새는 단계예요. 기출을 유형별로 다시 분류해 틀리는 유형의 개념을 되짚으세요.',
-    '56': '개념 정립이 먼저예요. 개념 한 단원과 기본 문제를 묶어 처음부터 다시 쌓고, 실전 문제는 뒤로 미루세요.',
-    '79': '기초부터예요. 교과서 수준 개념과 쉬운 문제로 매일 조금씩, 양보다 매일 하는 것이 중요해요.',
-    'na': '먼저 모의고사 한 회를 풀어 지금 위치를 확인하세요. 그 결과로 개념부터 할지 기출부터 할지 정해요.'
+    '12': '유지. 기출 실전 + 틀리는 유형만 보완.',
+    '34': '기출을 유형별로 분류, 새는 유형의 개념 되짚기.',
+    '56': '개념부터. 개념 1단원 + 기본 문제 묶어 다시 쌓기.',
+    '79': '기초부터. 교과서 개념과 쉬운 문제로 매일 조금씩.',
+    'na': '모의고사 한 회로 위치 확인 후 방향 결정.'
   };
   var TOOL_PLAN = {
-    self: '혼자 공부가 잘 맞으니 개념서와 기출을 자습으로 돌리고, 막히는 단원만 인강으로 짧게 확인하세요.',
-    online: '인강으로 개념을 잡고 바로 이어서 같은 단원 문제를 자습으로 푸세요. 듣기만 하고 끝내면 남지 않아요.',
-    offline: '현장 강의에서 개념을 듣고 그 자리에서 질문하세요. 강의 당일 복습 30분이 효과를 두 배로 만들어요.',
-    tutoring: '1:1 클리닉으로 주 1회 점검받는 구조가 맞아요. 한 주 동안 막힌 문제를 모아 가서 한 번에 해결하세요.'
+    self: '개념서와 기출 자습, 막히면 인강 짧게.',
+    online: '인강 후 바로 같은 단원 문제 풀기.',
+    offline: '현장 강의 당일 복습 30분.',
+    tutoring: '1:1 클리닉 주 1회, 막힌 문제 모아 가기.'
   };
 
   // ---- 로그 ----
@@ -574,7 +571,7 @@ button { cursor: pointer; }
     var unitName = unitRow ? unitRow[1] : weak + ' 전반';
     var gapList = gaps(answers);
     var info = inqInfo(answers);
-    var selText = '국어 ' + (SEL_LABEL.kor_sel[answers.kor_sel] || '모름') + ', 수학 ' + (SEL_LABEL.math_sel[answers.math_sel] || '모름') + ', 탐구 ' + (info.none ? ((answers.inq_subj || [])[0] === 'none' ? '안 봄' : '모름') : info.names.join(', '));
+    var selText = (SEL_LABEL.kor_sel[answers.kor_sel] || '국어 모름') + ', ' + (SEL_LABEL.math_sel[answers.math_sel] || '수학 모름') + ', ' + (info.none ? ((answers.inq_subj || [])[0] === 'none' ? '탐구 안 봄' : '탐구 모름') : info.names.join(', '));
     var subjects = [['kor', 'grade_kor', 'tool_kor'], ['math', 'grade_math', 'tool_math'], ['eng', 'grade_eng', 'tool_eng'], ['inq', 'grade_inq', 'tool_inq']];
 
     show(h('section', { class: 'screen' },
@@ -587,17 +584,18 @@ button { cursor: pointer; }
         h('div', { class: 'axis' },
           h('div', { class: 'axis-labels' }, h('span', null, '스스로 공부하는 힘'), h('span', { class: 'pct' }, sdlPct + '%')),
           h('div', { class: 'axis-track' }, h('span', { style: 'width:' + Math.max(6, sdlPct) + '%' }))),
-        h('p', { class: 'basis' }, '이렇게 판단했어요: 공부 방법 답 ' + result.toolCount + '개 중 ' + result.indepCount + '개가 혼자 공부나 인강(' + (result.independent ? '독립형' : '가이드형') + '), 스스로 공부하는 힘 ' + result.sdl + '점 / 25점(' + (result.sdl >= 18 ? '강함' : '보강 필요') + ')')),
+        h('p', { class: 'basis' }, '근거: 혼자 공부, 인강 ' + result.indepCount + '/' + result.toolCount + ' (' + (result.independent ? '독립형' : '가이드형') + '), 스스로 공부하는 힘 ' + result.sdl + '/25')),
 
       h('div', { class: 'sechead' }, h('span', { class: 'kicker dark' }, '개정 수능 대비'), h('h3', null, '2028 수능에서 새로 공부할 부분')),
       h('div', { class: 'card gapcard' },
-        h('p', { class: 'card-sub' }, '2028 수능부터 국어는 화법과 언어, 독서와 작문, 문학이 공통, 수학은 대수, 미적분Ⅰ, 확률과 통계가 공통, 탐구는 통합사회와 통합과학을 모두 봐요. 작년에 본 선택과목(' + selText + ')으로 찾았어요.'),
+        h('p', { class: 'card-sub' }, '2028 수능은 국어, 수학 선택 없이 공통, 탐구는 통합사회와 통합과학. 작년 ' + selText + ' 기준.'),
         gapList.map(function (g) {
           return h('div', { class: 'gap' },
             h('div', { class: 'course-top' }, h('span', { class: 'badge' }, g.title), h('span', { class: 'badge-soft' }, g.tag)),
             h('p', { class: 'why' }, g.why),
             h('ol', { class: 'steps' }, g.lines.map(function (s) { return h('li', null, s); })));
-        })),
+        }),
+        h('p', { class: 'note', style: 'text-align:left;margin-top:12px' }, '대수, 미적분Ⅰ은 수학Ⅰ, Ⅱ와 거의 같아요. 새로 배울 것 없음.')),
 
       h('div', { class: 'sechead' }, h('span', { class: 'kicker dark' }, '학습 방법'), h('h3', null, '나에게 맞는 공부 방법')),
       h('div', { class: 'card' },
@@ -605,20 +603,20 @@ button { cursor: pointer; }
         h('p', { class: 'why' }, t.method),
         h('p', { class: 'why' }, STYLE_TEXT[answers.style] || ''),
         h('h3', { class: 'card-head', style: 'margin-top:18px' }, '과목별 학습 추천'),
-        h('p', { class: 'card-sub' }, '최근 등급과 효과가 좋았던 방법으로 정했어요.'),
+
         h('div', { class: 'subjlist' }, subjects.map(function (s) {
           var g = answers[s[1]] || 'na', tool = answers[s[2]];
           var isWeak = s[0] === answers.weak;
           return h('div', { class: 'subj' + (isWeak ? ' weak' : '') },
             h('div', { class: 'course-top' }, h('span', { class: isWeak ? 'badge' : 'badge-soft' }, SUBJECT[s[0]]), h('span', { class: 'badge-soft' }, GRADE_LABEL[g]), tool ? h('span', { class: 'badge-soft' }, TOOL_LABEL[tool]) : null, isWeak ? h('span', { class: 'badge-soft' }, '가장 큰 빈틈') : null),
             h('p', { class: 'why' }, GRADE_PLAN[g] + (tool ? ' ' + TOOL_PLAN[tool] : '')),
-            isWeak ? h('p', { class: 'why strong' }, '특히 ' + unitName + '부터: ' + (UNIT_POINT[unitId] || UNIT_POINT[answers.weak + '_na'])) : null);
+            isWeak ? h('p', { class: 'why strong' }, unitName + ': ' + (UNIT_POINT[unitId] || UNIT_POINT[answers.weak + '_na'])) : null);
         }))),
 
       h('div', { class: 'card locked' },
         h('h3', { class: 'card-head' }, weak + ' 단원별 빈틈 지도와 주간 시간표'),
         h('div', { class: 'blur', 'aria-hidden': 'true' }, h('div', { style: 'width:92%' }), h('div', { style: 'width:70%' }), h('div', { style: 'width:84%' })),
-        h('div', { class: 'over' }, h('b', null, '정밀진단에서 열려요'), h('span', null, '상담을 신청하면 전 단원 빈틈 지도와 주간 학습시간까지 알려 드려요.'))),
+        h('div', { class: 'over' }, h('b', null, '정밀진단에서 열려요'), h('span', null, '상담 신청 시 전 단원 빈틈 지도까지'))),
       h('div', { class: 'actions' },
         h('button', { class: 'btn btn-primary', type: 'button', on: { click: function () { log('cta', { value: 'consult' }); renderLead(); } } }, leadSent ? '상담 신청 완료' : '무료 상담 신청하고 정밀진단 받기'),
         h('div', { class: 'two' },
