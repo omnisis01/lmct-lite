@@ -175,6 +175,19 @@ button { cursor: pointer; }
 .subjlist { display: flex; flex-direction: column; gap: 10px; }
 .subj { padding: 12px 14px; border-radius: 14px; border: 1.5px solid var(--line); background: #fff; }
 .subj.weak { border-color: #D9EDE3; background: linear-gradient(150deg, #F2FAF7 0%, #F7FCF3 100%); }
+/* 차트: 한 가지 청록 색조, 글자는 글자색 토큰, 격자는 연하게 */
+.chart { width: 100%; height: auto; display: block; margin: 6px 0 4px; }
+.chart .ring, .chart .spoke { fill: none; stroke: var(--line); stroke-width: 1; }
+.chart .ring { fill: rgba(14, 124, 119, .03); }
+.chart .area { fill: rgba(14, 124, 119, .22); stroke: var(--teal); stroke-width: 2; stroke-linejoin: round; }
+.chart .dot { fill: var(--teal); stroke: #fff; stroke-width: 2; }
+.chart .dot.na { fill: #fff; stroke: var(--teal); stroke-dasharray: 2 2; }
+.chart .lbl { font-size: 12px; font-weight: 800; fill: var(--ink); }
+.chart .val { font-size: 11px; font-weight: 700; fill: var(--ink); opacity: .85; }
+.chart .track { fill: #E6EDEA; }
+.chart .bar { fill: var(--teal); }
+.chart .bar.na { fill: #C9D6D2; }
+.bars .lbl { font-size: 12px; }
 </style>
 </head>
 <body>
@@ -461,6 +474,72 @@ button { cursor: pointer; }
     return d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + String(d.getDate()).padStart(2, '0');
   }
 
+  // ---- 차트 (SVG, 외부 라이브러리 없음) ----
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  function s(tag, attrs, text) {
+    var el = document.createElementNS(SVG_NS, tag);
+    Object.keys(attrs || {}).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+    if (text != null) el.textContent = text;
+    return el;
+  }
+  // 등급 구간을 0~100 점수로 (레이더용). 모름은 null
+  var GRADE_SCORE = { '12': 90, '34': 70, '56': 45, '79': 25 };
+  // 과목별 현재 위치 레이더: 국어, 수학, 영어, 탐구, 스스로 공부하는 힘
+  function radarChart(items) {
+    var W = 320, H = 300, cx = 160, cy = 150, R = 100, n = items.length;
+    var svg = s('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'chart radar', role: 'img', 'aria-label': '과목별 현재 위치 레이더' });
+    var ang = function (i) { return -Math.PI / 2 + i * 2 * Math.PI / n; };
+    var pt = function (i, r) { return [cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i))]; };
+    [25, 50, 75, 100].forEach(function (lv) {
+      var d = items.map(function (_, i) { var q = pt(i, R * lv / 100); return (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1); }).join(' ') + 'Z';
+      svg.appendChild(s('path', { d: d, class: 'ring' }));
+    });
+    items.forEach(function (_, i) { var q = pt(i, R); svg.appendChild(s('line', { x1: cx, y1: cy, x2: q[0].toFixed(1), y2: q[1].toFixed(1), class: 'spoke' })); });
+    var poly = items.map(function (it, i) { var q = pt(i, R * ((it.v == null ? 0 : it.v) / 100)); return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' ');
+    svg.appendChild(s('polygon', { points: poly, class: 'area' }));
+    items.forEach(function (it, i) {
+      var v = it.v == null ? 0 : it.v;
+      var q = pt(i, R * v / 100);
+      svg.appendChild(s('circle', { cx: q[0].toFixed(1), cy: q[1].toFixed(1), r: 5, class: it.v == null ? 'dot na' : 'dot' }));
+      var lq = pt(i, R + 26);
+      var anchor = Math.abs(Math.cos(ang(i))) < 0.2 ? 'middle' : (Math.cos(ang(i)) > 0 ? 'start' : 'end');
+      svg.appendChild(s('text', { x: lq[0].toFixed(1), y: (lq[1] - 4).toFixed(1), 'text-anchor': anchor, class: 'lbl' }, it.name));
+      svg.appendChild(s('text', { x: lq[0].toFixed(1), y: (lq[1] + 12).toFixed(1), 'text-anchor': anchor, class: 'val' }, it.label));
+    });
+    return svg;
+  }
+  // 2028 공백 비중 가로 막대: 과목마다 새로 공부할 범위가 얼마나 되는지(%). null은 확인 필요
+  function gapBars(rows) {
+    var W = 320, rowH = 34, top = 6, left = 78, right = 44, barW = W - left - right;
+    var H = top + rows.length * rowH;
+    var svg = s('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'chart bars', role: 'img', 'aria-label': '2028 수능에서 새로 공부할 비중' });
+    rows.forEach(function (r, i) {
+      var y = top + i * rowH, h = 14, yb = y + 10;
+      svg.appendChild(s('text', { x: left - 8, y: yb + 11, 'text-anchor': 'end', class: 'lbl' }, r.name));
+      svg.appendChild(s('rect', { x: left, y: yb, width: barW, height: h, rx: 4, class: 'track' }));
+      if (r.v == null) {
+        svg.appendChild(s('rect', { x: left, y: yb, width: barW * 0.5, height: h, rx: 4, class: 'bar na' }));
+        svg.appendChild(s('text', { x: left + barW + 6, y: yb + 11, class: 'val' }, '확인'));
+      } else {
+        if (r.v > 0) svg.appendChild(s('rect', { x: left, y: yb, width: Math.max(8, barW * r.v / 100), height: h, rx: 4, class: 'bar' }));
+        svg.appendChild(s('text', { x: left + barW + 6, y: yb + 11, class: 'val' }, r.v + '%'));
+      }
+    });
+    return svg;
+  }
+  // 공백 비중 계산: 문법(화작 100, 언매 0), 확통(미적, 기하 100), 통사(안 본 영역/6), 통과(안 본 영역/4)
+  function gapRows(a) {
+    var info = inqInfo(a);
+    var socMissing = Object.keys(SOC_AREAS).filter(function (k) { return info.socAreas.indexOf(k) < 0; }).length;
+    var sciMissing = Object.keys(SCI_AREAS).filter(function (k) { return info.sciAreas.indexOf(k) < 0; }).length;
+    return [
+      { name: '국어 문법', v: a.kor_sel === 'hwajak' ? 100 : a.kor_sel === 'eonmae' ? 0 : null },
+      { name: '수학 확통', v: (a.math_sel === 'calc' || a.math_sel === 'geo') ? 100 : a.math_sel === 'prob' ? 0 : null },
+      { name: '통합사회', v: info.none ? ((a.inq_subj || [])[0] === 'none' ? 100 : null) : Math.round(socMissing / 6 * 100) },
+      { name: '통합과학', v: info.none ? ((a.inq_subj || [])[0] === 'none' ? 100 : null) : Math.round(sciMissing / 4 * 100) }
+    ];
+  }
+
   function renderIntro() {
     step = -1; backBtn.hidden = true;
     show(h('section', { class: 'screen' },
@@ -586,9 +665,23 @@ button { cursor: pointer; }
           h('div', { class: 'axis-track' }, h('span', { style: 'width:' + Math.max(6, sdlPct) + '%' }))),
         h('p', { class: 'basis' }, '근거: 혼자 공부, 인강 ' + result.indepCount + '/' + result.toolCount + ' (' + (result.independent ? '독립형' : '가이드형') + '), 스스로 공부하는 힘 ' + result.sdl + '/25')),
 
+      h('div', { class: 'card' },
+        h('h3', { class: 'card-head' }, '한눈에 보기'),
+        h('p', { class: 'card-sub' }, '최근 등급과 스스로 공부하는 힘'),
+        radarChart([
+          { name: '국어', v: GRADE_SCORE[answers.grade_kor] || null, label: GRADE_LABEL[answers.grade_kor || 'na'] },
+          { name: '수학', v: GRADE_SCORE[answers.grade_math] || null, label: GRADE_LABEL[answers.grade_math || 'na'] },
+          { name: '영어', v: GRADE_SCORE[answers.grade_eng] || null, label: GRADE_LABEL[answers.grade_eng || 'na'] },
+          { name: '탐구', v: GRADE_SCORE[answers.grade_inq] || null, label: answers.grade_inq ? GRADE_LABEL[answers.grade_inq] : '안 봄' },
+          { name: '자립', v: sdlPct, label: result.sdl + '/25' }
+        ]),
+        h('p', { class: 'note', style: 'text-align:left' }, '바깥쪽일수록 좋아요. 등급은 1~2등급이 가장 바깥이에요.')),
+
       h('div', { class: 'sechead' }, h('span', { class: 'kicker dark' }, '개정 수능 대비'), h('h3', null, '2028 수능에서 새로 공부할 부분')),
       h('div', { class: 'card gapcard' },
         h('p', { class: 'card-sub' }, '2028 수능은 국어, 수학 선택 없이 공통, 탐구는 통합사회와 통합과학. 작년 ' + selText + ' 기준.'),
+        gapBars(gapRows(answers)),
+        h('p', { class: 'note', style: 'text-align:left;margin-bottom:6px' }, '막대가 길수록 새로 공부할 범위가 많아요. 확인은 작년 선택과목을 모를 때예요.'),
         gapList.map(function (g) {
           return h('div', { class: 'gap' },
             h('div', { class: 'course-top' }, h('span', { class: 'badge' }, g.title), h('span', { class: 'badge-soft' }, g.tag)),
