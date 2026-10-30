@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>이투스247 LMCT 학습진단</title>
-<meta name="description" content="공부 빈틈 3분 진단. 2028 수능에서 새로 공부할 부분과 나에게 맞는 학습 방법을 바로 확인하세요.">
+<meta name="description" content="공부 빈틈 3분 진단. 2028 수능에서 새로 공부할 부분과 나의 학습 유형을 바로 확인하세요.">
 <style>
 @font-face { font-family: 'Pretendard'; src: url('fonts/PretendardVariable.woff2') format('woff2-variations'), url('fonts/PretendardVariable.woff2') format('woff2'); font-weight: 45 920; font-display: swap; }
 /* 이천기숙 LMCT(/quick)와 같은 BI: 청록에서 연두로 이어지는 그라데이션, 흰 카드, 모바일 우선 */
@@ -675,13 +675,12 @@ button { cursor: pointer; }
       h('div', { class: 'hero' },
         h('span', { class: 'kicker' }, 'LMCT 빈틈 진단!'),
         h('h1', { html: '달라지는 수능<br><em>나만의 빈틈</em>을 확인하세요' }),
-        h('p', null, '2028 수능에서 새로 공부할 부분과 나에게 맞는 학습 방법을 바로 확인해보세요')),
+        h('p', null, '2028 수능에서 새로 공부할 부분과 나의 학습 유형을 바로 확인해보세요')),
       h('div', { class: 'card' },
         h('h2', { class: 'card-head', style: 'margin-bottom:14px' }, '이런걸 알려드려요!'),
         h('div', { class: 'values' },
           h('div', { class: 'value' }, h('div', { class: 'ico' }, '1'), h('div', null, h('h3', null, '2028 수능에서 새로 공부할 부분'), h('p', { html: '수능에서 본 선택과목으로 <b>개정 수능의 공백</b>을 찾아 무엇부터 할지 알려 드립니다' }))),
-          h('div', { class: 'value' }, h('div', { class: 'ico' }, '2'), h('div', null, h('h3', null, '나의 학습 유형'), h('p', { html: '공부 방법과 실행력으로 <b>4가지 유형</b> 중 하나를 알려 드립니다' }))),
-          h('div', { class: 'value' }, h('div', { class: 'ico' }, '3'), h('div', null, h('h3', null, '과목별 학습 방법'), h('p', { html: '등급과 효과가 좋았던 방법으로 <b>과목마다 어떻게 공부할지</b> 알려 드립니다' })))),
+          h('div', { class: 'value' }, h('div', { class: 'ico' }, '2'), h('div', null, h('h3', null, '나의 학습 유형'), h('p', { html: '공부 방법과 실행력으로 <b>4가지 유형</b> 중 하나를 알려 드립니다' })))),
         h('button', { class: 'btn btn-primary', type: 'button', on: { click: function () { log('start'); goTo(0); } } }, '진단 시작하기 →'),
         h('p', { class: 'hint' }, '최대한 솔직하게 골라주셔야 결과의 정확도가 상승돼요.')),
       h('p', { class: 'foot' }, h('b', null, '이투스247학원'), ' LMCT 학습진단', h('br'), 'LMCT진단 기반 247 콘텐츠 추천 시스템')
@@ -830,22 +829,6 @@ button { cursor: pointer; }
         h('div', { class: 'course-top' }, subjBadge('base', '국어, 수학, 탐구 모두 공통'), h('span', { class: 'badge-soft hot' }, '첫 개정 수능')),
         h('p', { class: 'why' }, '지금 배우는 과정 그대로가 시험 범위예요. 선택과목이 없어 빈틈이 그대로 드러나요.'),
         stepCards([[unitName, '여기부터 메우기'], ['전 영역 고르게', '통합사회, 통합과학', 'tip'], ['평가원 예시 문항', '기출이 없으니 모의고사와 함께', 'tip']])),
-
-      h('div', { class: 'sechead' }, h('span', { class: 'kicker dark' }, '학습 방법'), h('h3', null, '나에게 맞는 공부 방법')),
-      h('div', { class: 'card' },
-        h('h3', { class: 'card-head' }, t.name + '에게 맞는 방법'),
-        h('p', { class: 'why' }, t.method),
-        h('p', { class: 'why' }, STYLE_TEXT[answers.style] || ''),
-        h('h3', { class: 'card-head', style: 'margin-top:18px' }, '과목별 학습 추천'),
-
-        h('div', { class: 'subjlist' }, subjects.map(function (s) {
-          var g = answers[s[1]] || 'na', tool = answers[s[2]];
-          var isWeak = s[0] === answers.weak;
-          return h('div', { class: 'subj' + (isWeak ? ' weak' : '') },
-            h('div', { class: 'course-top' }, h('span', { class: isWeak ? 'badge' : 'badge-soft' }, SUBJECT[s[0]]), h('span', { class: 'badge-soft' }, GRADE_LABEL[g]), tool ? h('span', { class: 'badge-soft' }, TOOL_LABEL[tool]) : null, isWeak ? h('span', { class: 'badge-soft hot' }, '가장 큰 빈틈') : null),
-            h('p', { class: 'why' }, GRADE_PLAN[g] + (tool ? ' ' + TOOL_PLAN[tool] : '')),
-            isWeak ? h('p', { class: 'why strong' }, unitName + ': ' + (UNIT_POINT[unitId] || UNIT_POINT[answers.weak + '_na'])) : null);
-        }))),
 
       h('div', { class: 'card locked' },
         h('h3', { class: 'card-head' }, weak + ' 단원별 빈틈 지도와 주간 시간표'),
