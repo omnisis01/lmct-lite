@@ -182,9 +182,9 @@ button { cursor: pointer; }
 /* 처방 3단계: 가로 카드 3장, 키워드는 크게 형광펜 강조, 보조 문장은 작게 */
 .steps { margin: 12px 0 4px; padding: 0; list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .steps li { counter-increment: s; display: flex; flex-direction: column; gap: 7px; min-width: 0; padding: 11px 9px 12px; border-radius: 14px; background: #fff; border: 1px solid var(--line); box-shadow: var(--sh-sm); }
-.steps li::before { content: counter(s); width: 22px; height: 22px; border-radius: 50%; background: var(--grad-bi); color: #fff; font-size: 12px; font-weight: 900; display: grid; place-items: center; }
+.steps li::before { content: counter(s); width: 22px; height: 22px; border-radius: 50%; background: var(--s-ink, var(--teal)); color: #fff; font-size: 12px; font-weight: 900; display: grid; place-items: center; }
 .steps .kw { font-size: 17px; font-weight: 900; line-height: 1.32; letter-spacing: -.4px; color: var(--ink); word-break: keep-all; }
-.steps .kw span { background: linear-gradient(transparent 56%, var(--mark) 56%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 1px; }
+.steps .kw span { background: linear-gradient(transparent 56%, var(--s-mark, var(--mark)) 56%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 1px; }
 .steps .sub { font-size: 13px; line-height: 1.45; font-weight: 700; color: var(--ink); opacity: .78; word-break: keep-all; }
 .subjlist { display: flex; flex-direction: column; gap: 10px; }
 .subj { padding: 12px 14px; border-radius: 14px; border: 1.5px solid var(--line); background: #fff; }
@@ -206,7 +206,24 @@ button { cursor: pointer; }
 .bars .cnt { font-size: 15px; font-weight: 900; }
 .bars .of { font-size: 12px; font-weight: 700; }
 /* 후킹 강조색(주황): 완전히 새로 공부할 범위, 가장 큰 빈틈 */
-.chart .bar.full { fill: var(--hot-deep); }
+.chart .bar[class*="subj-"] { fill: var(--s); }
+/* 과목 색(색약 시뮬레이션으로 네 과목이 서로 구분되는 조합): 막대, 배지, 번호, 형광펜, 카드 윗선. 골드는 '새로 공부'와 상단 띠에만 */
+.subj-kor { --s: #B8325A; --s-tint: #FBEAF0; --s-ink: #8A1F42; --s-mark: rgba(184, 50, 90, .18); }
+.subj-math { --s: #2563EB; --s-tint: #EAF1FE; --s-ink: #1D4CB8; --s-mark: rgba(37, 99, 235, .16); }
+.subj-soc { --s: #A1459C; --s-tint: #F8EBF7; --s-ink: #7A2F76; --s-mark: rgba(161, 69, 156, .18); }
+.subj-sci { --s: #5B9A2E; --s-tint: #EEF6E7; --s-ink: #3D6A1C; --s-mark: rgba(91, 154, 46, .22); }
+.subj-base { --s: #0E7C77; --s-tint: #E6F4F2; --s-ink: #0A5F5C; --s-mark: rgba(14, 124, 119, .18); }
+.subj-badge { display: inline-flex; align-items: center; gap: 7px; background: var(--s-tint); color: var(--s-ink); border: 1px solid var(--s-tint); border-radius: 999px; padding: 6px 15px 6px 11px; font-size: 15.5px; font-weight: 900; letter-spacing: -.2px; }
+.subj-badge svg { width: 18px; height: 18px; flex: none; color: var(--s); }
+[class*="subj-"] .steps li { border-top: 3px solid var(--s); }
+.tips { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 4px; }
+.tip { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #FFF8E1; border: 1px dashed #E2B23C; }
+.tip-ico { flex: none; width: 30px; height: 30px; border-radius: 9px; background: #FFE7A3; color: #8A5A00; display: grid; place-items: center; }
+.tip-ico svg { width: 18px; height: 18px; }
+.tip-body { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.tip-label { font-size: 11.5px; font-weight: 900; color: #8A5A00; letter-spacing: .02em; }
+.tip-kw { font-size: 16px; font-weight: 900; color: var(--ink); line-height: 1.35; }
+.tip-sub { font-size: 13.5px; font-weight: 700; color: var(--ink); opacity: .8; line-height: 1.45; }
 .badge-soft.hot { background: var(--hot); border-color: transparent; color: var(--hot-ink); box-shadow: 0 4px 12px rgba(233, 162, 27, .3); }
 </style>
 </head>
@@ -344,6 +361,13 @@ button { cursor: pointer; }
     footprints: '<path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/>',
     'heart-handshake': '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66"/><path d="m18 15-2-2"/><path d="m15 18-2-2"/>'
   };
+  // 과목, 전략 아이콘(같은 Lucide 세트)
+  ICON_PATHS['book-open'] = '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>';
+  ICON_PATHS.sigma = '<path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2"/>';
+  ICON_PATHS.globe = '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>';
+  ICON_PATHS['flask-conical'] = '<path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/>';
+  ICON_PATHS.layers = '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>';
+  ICON_PATHS.lightbulb = '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>';
   function iconSvg(name) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON_PATHS[name] + '</svg>'; }
   var TYPES = {
     self: { icon: 'compass', color: '#A5D34A', name: '자율주행형', one: '계획부터 실행까지 스스로 굴러가는 타입', traits: ['내 속도로 공부할 때 효율 최고', '자습 몰입이 잘 됨', '방향만 잡으면 빠르게 오름'], method: '자습 중심, 인강은 막히는 단원만. 주 1회 스스로 점검.' },
@@ -376,16 +400,16 @@ button { cursor: pointer; }
   // 2028 수능(2022 개정 교육과정)에서 새로 공부할 부분. 작년 선택과목으로 정한다.
   // 2028 수능: 국어는 화법과 언어, 독서와 작문, 문학 공통 / 수학은 대수, 미적분Ⅰ, 확률과 통계 공통 / 탐구는 통합사회와 통합과학 공통
   var GAPS = {
-    gram: { title: '국어 언어(문법)', tag: '새로 공부', why: '화작으로 봤다면 문법이 빈틈이에요. 2028 국어는 문법 포함 공통.', lines: [['음운 변동', '교체, 탈락, 첨가, 축약부터'], ['단어와 문장', '형태소와 단어, 이어서 문장 구조'], ['매체는 제외', '새로 안 배워도 됨, 화작은 하던 대로']] },
-    kor_none: { title: '국어 전체', tag: '새로 공부', why: '국어를 안 봤다면 2028 국어(화법과 언어, 독서와 작문, 문학) 전체가 처음이에요.', lines: [['기출 한 회', '문학, 독서로 현재 위치 확인'], ['문법 개념', '음운, 형태소, 문장부터'], ['매일 루틴', '지문 2개 + 문법 1단원']] },
-    gram_na: { title: '국어 언어(문법)', tag: '확인 필요', why: '작년 국어 선택과목을 확인하세요. 화작이었다면 문법이 새 범위.', lines: [['화작이면', '음운 변동부터 시작'], ['언매면', '복습만'], ['선택 없음', '2028 국어는 공통']] },
-    prob: { title: '수학 확률과 통계', tag: '새로 공부', why: '미적분, 기하로 봤다면 확통이 빈틈이에요. 2028 수학은 확통 포함 공통.', lines: [['경우의 수', '순열, 조합부터'], ['확률, 통계', '경우의 수 다음 차례로'], ['시간 옮기기', '미적분, 기하 시간을 확통으로']] },
-    math_none: { title: '수학 전체', tag: '새로 공부', why: '수학을 안 봤다면 2028 수학(대수, 미적분Ⅰ, 확률과 통계) 전체가 처음이에요.', lines: [['대수', '지수로그, 삼각함수, 수열부터'], ['미적분Ⅰ', '극한, 미분, 적분'], ['확률과 통계', '경우의 수부터, 마지막에']] },
-    prob_na: { title: '수학 확률과 통계', tag: '확인 필요', why: '작년 수학 선택과목을 확인하세요. 미적분, 기하였다면 확통이 새 범위.', lines: [['미적, 기하면', '경우의 수부터'], ['확통이면', '공백 없음'], ['세 과목 공통', '대수, 미적분Ⅰ, 확통']] },
-    calc1: { title: '수학 대수, 미적분Ⅰ', tag: '이름만 바뀜', why: '대수는 수학Ⅰ, 미적분Ⅰ은 수학Ⅱ와 거의 같아요.', lines: [['교재 그대로', '지금 쓰던 교재 사용'], ['약한 단원', '공통이라 흔들리던 곳 메우기'], ['예시 문항', '기출이 없으니 평가원 기준']] },
-    sci: { title: '통합과학', tag: '새로 공부', why: '과탐을 안 봤다면 통합과학 전체가 처음이에요.', lines: [['과학의 기초', '물질과 규칙성까지 먼저(진입 쉬움)'], ['시스템과 상호작용', '이어서 변화와 다양성, 환경과 에너지'], ['주 1단원', '물화생지 번갈아 개념 + 기출 10문항']] },
-    soc: { title: '통합사회', tag: '새로 공부', why: '사탐을 안 봤다면 통합사회 전체가 처음이에요.', lines: [['통합적 관점', '행복까지 먼저(전체의 틀)'], ['인권과 헌법', '이어서 시장 경제, 정의와 불평등'], ['자료 읽기', '단원마다 개념 10개 + 자료 5문항']] },
-    inq_none: { title: '통합사회, 통합과학', tag: '둘 다 새로 공부', why: '탐구를 안 봤다면 두 과목 모두 처음이에요.', lines: [['첫 단원부터', '통합사회는 통합적 관점, 통합과학은 과학의 기초'], ['요일 나누기', '한 과목씩 개념 1단원 + 기출 10문항'], ['단원 이름', '기출이 없으니 교과서 목차부터']] }
+    gram: { subj: 'kor', title: '국어 언어(문법)', tag: '새로 공부', why: '화작으로 봤다면 문법이 빈틈이에요. 2028 국어는 문법 포함 공통.', lines: [['음운 변동', '교체, 탈락, 첨가, 축약부터'], ['단어와 문장', '형태소와 단어, 이어서 문장 구조'], ['매체는 제외', '새로 안 배워도 됨, 화작은 하던 대로', 'tip']] },
+    kor_none: { subj: 'kor', title: '국어 전체', tag: '새로 공부', why: '국어를 안 봤다면 2028 국어(화법과 언어, 독서와 작문, 문학) 전체가 처음이에요.', lines: [['기출 한 회', '문학, 독서로 현재 위치 확인'], ['문법 개념', '음운, 형태소, 문장부터'], ['매일 루틴', '지문 2개 + 문법 1단원', 'tip']] },
+    gram_na: { subj: 'kor', title: '국어 언어(문법)', tag: '확인 필요', why: '작년 국어 선택과목을 확인하세요. 화작이었다면 문법이 새 범위.', lines: [['화작이면', '음운 변동부터 시작'], ['언매면', '복습만'], ['선택 없음', '2028 국어는 공통', 'tip']] },
+    prob: { subj: 'math', title: '수학 확률과 통계', tag: '새로 공부', why: '미적분, 기하로 봤다면 확통이 빈틈이에요. 2028 수학은 확통 포함 공통.', lines: [['경우의 수', '순열, 조합부터'], ['확률, 통계', '경우의 수 다음 차례로'], ['시간 옮기기', '미적분, 기하 시간을 확통으로', 'tip']] },
+    math_none: { subj: 'math', title: '수학 전체', tag: '새로 공부', why: '수학을 안 봤다면 2028 수학(대수, 미적분Ⅰ, 확률과 통계) 전체가 처음이에요.', lines: [['대수', '지수로그, 삼각함수, 수열부터'], ['미적분Ⅰ', '극한, 미분, 적분'], ['확률과 통계', '경우의 수부터, 마지막에']] },
+    prob_na: { subj: 'math', title: '수학 확률과 통계', tag: '확인 필요', why: '작년 수학 선택과목을 확인하세요. 미적분, 기하였다면 확통이 새 범위.', lines: [['미적, 기하면', '경우의 수부터'], ['확통이면', '공백 없음'], ['세 과목 공통', '대수, 미적분Ⅰ, 확통', 'tip']] },
+    calc1: { subj: 'math', title: '수학 대수, 미적분Ⅰ', tag: '이름만 바뀜', why: '대수는 수학Ⅰ, 미적분Ⅰ은 수학Ⅱ와 거의 같아요.', lines: [['약한 단원', '공통이라 흔들리던 곳 메우기'], ['교재 그대로', '지금 쓰던 교재 사용', 'tip'], ['예시 문항', '기출이 없으니 평가원 기준', 'tip']] },
+    sci: { subj: 'sci', title: '통합과학', tag: '새로 공부', why: '과탐을 안 봤다면 통합과학 전체가 처음이에요.', lines: [['과학의 기초', '물질과 규칙성까지 먼저(진입 쉬움)'], ['시스템과 상호작용', '이어서 변화와 다양성, 환경과 에너지'], ['주 1단원', '물화생지 번갈아 개념 + 기출 10문항', 'tip']] },
+    soc: { subj: 'soc', title: '통합사회', tag: '새로 공부', why: '사탐을 안 봤다면 통합사회 전체가 처음이에요.', lines: [['통합적 관점', '행복까지 먼저(전체의 틀)'], ['인권과 헌법', '이어서 시장 경제, 정의와 불평등'], ['자료 읽기', '단원마다 개념 10개 + 자료 5문항', 'tip']] },
+    inq_none: { subj: 'base', title: '통합사회, 통합과학', tag: '둘 다 새로 공부', why: '탐구를 안 봤다면 두 과목 모두 처음이에요.', lines: [['첫 단원부터', '통합사회는 통합적 관점, 통합과학은 과학의 기초'], ['요일 나누기', '한 과목씩 개념 1단원 + 기출 10문항', 'tip'], ['단원 이름', '기출이 없으니 교과서 목차부터', 'tip']] }
   };
   // 탐구1, 탐구2 답을 기존 형식(inq_subj 배열: 과목 id 최대 2개, 또는 ['none'], ['na'])으로 합친다. 계산과 로그는 이 값을 쓴다.
   function syncInq(a) {
@@ -417,13 +441,13 @@ button { cursor: pointer; }
     var missingUnits = missing.map(function (k) { return k + '(' + AREAS[k].join(', ') + ')'; }).join(', ');
     var order = missing.map(function (k) { return AREAS[k][0].replace(/^.*?의 /, '').replace(/\(.*\)$/, ''); });
     return {
-      title: subject, tag: missing.length ? '일부 공백' : '거의 덮임',
+      subj: kind, title: subject, tag: missing.length ? '일부 공백' : '거의 덮임',
       why: takenNames + ' 기준: ' + (missing.length ? missing.join(', ') + ' 영역이 빈틈이에요.' : '대부분 익숙한 범위예요.'),
       lines: missing.length ? [
         [missing.length + '개 영역', missing.join(', ') + ' 먼저'],
         [order[0], order.length > 1 ? '다음 ' + order[1] + (order.length > 2 ? ' 등 ' + (order.length - 1) + '개' : '') : '이 단원만 새로'],
-        ['기출만', covered.join(', ') + ' 영역은 확인만']
-      ] : [['전 영역', '기출 한 회로 점검'], ['틀린 단원', '개념만 복습'], ['예시 문항', '기출이 없으니 평가원 기준']]
+        ['기출만', covered.join(', ') + ' 영역은 확인만', 'tip']
+      ] : [['전 영역', '기출 한 회로 점검'], ['틀린 단원', '개념만 복습'], ['예시 문항', '기출이 없으니 평가원 기준', 'tip']]
     };
   }
   function gaps(a) {
@@ -585,7 +609,7 @@ button { cursor: pointer; }
       svg.appendChild(val);
       svg.appendChild(s('rect', { x: 0, y: yb, width: W, height: barH, rx: 4, class: 'track' }));
       if (r.v == null) svg.appendChild(s('rect', { x: 0, y: yb, width: W * 0.5, height: barH, rx: 4, class: 'bar na' }));
-      else if (r.v > 0) svg.appendChild(s('rect', { x: 0, y: yb, width: Math.max(8, W * r.v / 100), height: barH, rx: 4, class: 'bar' + (r.v >= 100 ? ' full' : '') }));
+      else if (r.v > 0) svg.appendChild(s('rect', { x: 0, y: yb, width: Math.max(8, W * r.v / 100), height: barH, rx: 4, class: 'bar subj-' + r.subj }));
     });
     return svg;
   }
@@ -624,13 +648,26 @@ button { cursor: pointer; }
         : a.math_sel === 'prob' ? row('수학 확통', 0, g.prob.length) : { name: '수학 확통', v: null },
       inqRow('통합사회', SOC_AREAS, info.socAreas),
       inqRow('통합과학', SCI_AREAS, info.sciAreas)
-    ];
+    ].map(function (r, i) { r.subj = ['kor', 'math', 'soc', 'sci'][i]; return r; });
   }
 
-  // 처방 3단계를 가로 카드로: 키워드는 크게, 보조 문장은 작게
+  // 처방: 순서는 번호 붙은 가로 카드(키워드 크게), 전략('tip')은 그 아래 전구 아이콘 띠로 따로 보여 준다.
   function stepCards(lines) {
-    return h('ol', { class: 'steps' }, lines.map(function (l) { return h('li', null, h('b', { class: 'kw' }, h('span', null, l[0])), h('span', { class: 'sub' }, l[1])); }));
+    var steps = lines.filter(function (l) { return l[2] !== 'tip'; });
+    var tips = lines.filter(function (l) { return l[2] === 'tip'; });
+    return [
+      steps.length ? h('ol', { class: 'steps', style: 'grid-template-columns:repeat(' + steps.length + ', minmax(0, 1fr))' },
+        steps.map(function (l) { return h('li', null, h('b', { class: 'kw' }, h('span', null, l[0])), h('span', { class: 'sub' }, l[1])); })) : null,
+      tips.length ? h('div', { class: 'tips' }, tips.map(function (l) {
+        return h('div', { class: 'tip' },
+          h('span', { class: 'tip-ico', 'aria-hidden': 'true', html: iconSvg('lightbulb') }),
+          h('div', { class: 'tip-body' }, h('span', { class: 'tip-label' }, '공부 전략'), h('b', { class: 'tip-kw' }, l[0]), h('span', { class: 'tip-sub' }, l[1])));
+      })) : null
+    ];
   }
+  // 과목 배지: 과목 아이콘 + 이름, 색은 과목 색(.subj-*)을 따른다
+  var SUBJ_ICON = { kor: 'book-open', math: 'sigma', soc: 'globe', sci: 'flask-conical', base: 'layers' };
+  function subjBadge(subj, text) { return h('span', { class: 'subj-badge', html: iconSvg(SUBJ_ICON[subj]) }, text); }
 
   function renderIntro() {
     step = -1; backBtn.hidden = true;
@@ -783,16 +820,16 @@ button { cursor: pointer; }
       post ? h('div', { class: 'card gapcard' },
         gapBars(rows),
         gapList.map(function (g) {
-          return h('div', { class: 'gap' },
-            h('div', { class: 'course-top' }, h('span', { class: 'badge' }, g.title), h('span', { class: 'badge-soft' + (/새로 공부/.test(g.tag) ? ' hot' : '') }, g.tag)),
+          return h('div', { class: 'gap subj-' + g.subj },
+            h('div', { class: 'course-top' }, subjBadge(g.subj, g.title), h('span', { class: 'badge-soft' + (/새로 공부/.test(g.tag) ? ' hot' : '') }, g.tag)),
             h('p', { class: 'why' }, g.why),
             stepCards(g.lines));
         }),
         h('p', { class: 'note', style: 'text-align:left;margin-top:12px' }, '대수, 미적분Ⅰ은 수학Ⅰ, Ⅱ와 거의 같아요. 새로 배울 것 없음.'))
-      : h('div', { class: 'card gapcard' },
-        h('div', { class: 'course-top' }, h('span', { class: 'badge' }, '국어, 수학, 탐구 모두 공통'), h('span', { class: 'badge-soft hot' }, '첫 개정 수능')),
+      : h('div', { class: 'card gapcard subj-base' },
+        h('div', { class: 'course-top' }, subjBadge('base', '국어, 수학, 탐구 모두 공통'), h('span', { class: 'badge-soft hot' }, '첫 개정 수능')),
         h('p', { class: 'why' }, '지금 배우는 과정 그대로가 시험 범위예요. 선택과목이 없어 빈틈이 그대로 드러나요.'),
-        stepCards([[unitName, '여기부터 메우기'], ['전 영역 고르게', '통합사회, 통합과학'], ['평가원 예시 문항', '기출이 없으니 모의고사와 함께']])),
+        stepCards([[unitName, '여기부터 메우기'], ['전 영역 고르게', '통합사회, 통합과학', 'tip'], ['평가원 예시 문항', '기출이 없으니 모의고사와 함께', 'tip']])),
 
       h('div', { class: 'sechead' }, h('span', { class: 'kicker dark' }, '학습 방법'), h('h3', null, '나에게 맞는 공부 방법')),
       h('div', { class: 'card' },
