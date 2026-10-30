@@ -13,7 +13,8 @@
   color-scheme: light;
   --teal-deep: #0A5F5C; --teal: #0E7C77; --teal-bright: #13A89E; --green: #7CC242; --lime: #A5D34A;
   --ink: #1F2325; --ink-soft: #1F2325; --ink-mute: #1F2325;
-  --hot: #F26B3A; --hot-soft: #FFF1EA;
+  /* 강조색: 청록, 연두와 어울리는 따뜻한 골드 한 가지(레퍼런스: 청록 중심 + 따뜻한 포인트 하나). 노랑 위 글자는 진한 청록 */
+  --hot: #FFC845; --hot-deep: #E9A21B; --hot-ink: #0B3B39; --mark: rgba(255, 200, 69, .6);
   --line: #E4EBE8; --line-soft: #EFF4F1; --paper: #F6F8F7;
   --grad-bi: linear-gradient(135deg, #0E7C77 0%, #13A89E 45%, #7CC242 100%);
   --grad-bi-soft: linear-gradient(135deg, #EAF6F4 0%, #F1F9EC 100%);
@@ -107,9 +108,10 @@ button { cursor: pointer; }
 .res-hero h2 { font-size: 42px; font-weight: 900; line-height: 1.15; letter-spacing: -1.2px; margin: 0 0 6px; }
 .res-hero h2 em { background: linear-gradient(120deg, #fff 0%, var(--accent, #A5D34A) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .res-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.res-icon { flex: none; width: 70px; height: 70px; border-radius: 22px; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .32); display: grid; place-items: center; font-size: 38px; line-height: 1; box-shadow: 0 10px 26px rgba(0, 0, 0, .2); }
-.hook { margin-top: 16px; display: flex; align-items: center; gap: 12px; background: var(--hot); color: #fff; border-radius: 14px; padding: 12px 15px; font-size: 16px; font-weight: 900; line-height: 1.35; box-shadow: 0 8px 20px rgba(242, 107, 58, .35); }
-.hook .n { flex: none; min-width: 34px; height: 34px; border-radius: 10px; background: rgba(255, 255, 255, .22); display: grid; place-items: center; font-size: 22px; }
+.res-icon { flex: none; width: 70px; height: 70px; border-radius: 22px; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .32); display: grid; place-items: center; color: var(--accent, #fff); box-shadow: 0 10px 26px rgba(0, 0, 0, .2); }
+.res-icon svg { width: 36px; height: 36px; }
+.hook { margin-top: 16px; display: flex; align-items: center; gap: 12px; background: var(--hot); color: var(--hot-ink); border-radius: 14px; padding: 12px 15px; font-size: 16px; font-weight: 900; line-height: 1.35; box-shadow: 0 8px 20px rgba(233, 162, 27, .35); }
+.hook .n { flex: none; min-width: 34px; height: 34px; border-radius: 10px; background: rgba(11, 59, 57, .12); display: grid; place-items: center; font-size: 22px; }
 .res-hero .one { font-size: 15.5px; opacity: .84; margin: 0 0 16px; line-height: 1.5; }
 .pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .24); border-radius: 999px; padding: 6px 13px; font-size: 14.5px; font-weight: 800; }
@@ -177,9 +179,13 @@ button { cursor: pointer; }
 .basis { margin: 14px 0 0; font-size: 13px; line-height: 1.5; opacity: .9; }
 .why { margin: 6px 0 0; font-size: 15px; line-height: 1.5; font-weight: 700; }
 .why.strong { color: var(--teal-deep); }
-.steps { margin: 10px 0 4px; padding-left: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 8px; }
-.steps li { counter-increment: s; position: relative; padding: 8px 12px 8px 40px; border-radius: 12px; background: rgba(255, 255, 255, .8); border: 1px solid #F0E4B8; font-size: 15px; line-height: 1.55; font-weight: 700; }
-.steps li::before { content: counter(s); position: absolute; left: 12px; top: 10px; width: 22px; height: 22px; border-radius: 50%; background: var(--grad-bi); color: #fff; font-size: 12px; font-weight: 900; display: grid; place-items: center; }
+/* 처방 3단계: 가로 카드 3장, 키워드는 크게 형광펜 강조, 보조 문장은 작게 */
+.steps { margin: 12px 0 4px; padding: 0; list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.steps li { counter-increment: s; display: flex; flex-direction: column; gap: 7px; min-width: 0; padding: 11px 9px 12px; border-radius: 14px; background: #fff; border: 1px solid var(--line); box-shadow: var(--sh-sm); }
+.steps li::before { content: counter(s); width: 22px; height: 22px; border-radius: 50%; background: var(--grad-bi); color: #fff; font-size: 12px; font-weight: 900; display: grid; place-items: center; }
+.steps .kw { font-size: 17px; font-weight: 900; line-height: 1.32; letter-spacing: -.4px; color: var(--ink); word-break: keep-all; }
+.steps .kw span { background: linear-gradient(transparent 56%, var(--mark) 56%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 1px; }
+.steps .sub { font-size: 13px; line-height: 1.45; font-weight: 700; color: var(--ink); opacity: .78; word-break: keep-all; }
 .subjlist { display: flex; flex-direction: column; gap: 10px; }
 .subj { padding: 12px 14px; border-radius: 14px; border: 1.5px solid var(--line); background: #fff; }
 .subj.weak { border-color: #D9EDE3; background: linear-gradient(150deg, #F2FAF7 0%, #F7FCF3 100%); }
@@ -195,10 +201,11 @@ button { cursor: pointer; }
 .chart .track { fill: #E6EDEA; }
 .chart .bar { fill: var(--teal); }
 .chart .bar.na { fill: #C9D6D2; }
-.bars .lbl { font-size: 12px; }
+.bars .lbl { font-size: 14px; }
+.bars .val { font-size: 13px; font-weight: 800; opacity: 1; }
 /* 후킹 강조색(주황): 완전히 새로 공부할 범위, 가장 큰 빈틈 */
-.chart .bar.full { fill: var(--hot); }
-.badge-soft.hot { background: var(--hot); border-color: transparent; color: #fff; box-shadow: 0 4px 12px rgba(242, 107, 58, .3); }
+.chart .bar.full { fill: var(--hot-deep); }
+.badge-soft.hot { background: var(--hot); border-color: transparent; color: var(--hot-ink); box-shadow: 0 4px 12px rgba(233, 162, 27, .3); }
 </style>
 </head>
 <body>
@@ -222,17 +229,19 @@ button { cursor: pointer; }
   var LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwdIfbCHCem_QpL1WsPuMxjh4QYKFEhRxXnq7P4NBnTeb5Pdwq6BGfYbihjGDpkKuaE/exec';
   // 로컬 미리보기(파일 열기, localhost, 127.0.0.1)는 실제 시트에 테스트 기록이 쌓이지 않게 콘솔에만 남긴다.
   var IS_LOCAL = /^(|localhost|127(\.\d+){3}|\[::1\])$|\.(localhost|local|test)$/.test(location.hostname);
-  var VERSION = 'lite-8';
+  var VERSION = 'lite-9';
   var HOME_URL = 'https://247.etoos.com/index.do';
 
-  // 대상: 고3과 N수(2027 수능, 2015 교육과정을 보고 2028 개정 수능을 다시 봄)가 기본. 고2 이하 재학생은 선택과목 문항 없이 최근 모의고사 기준으로 묻는다.
+  // 대상: N수 이상(2015 교육과정 수능을 보고 2028 개정 수능을 다시 봄)과 고3 이하 재학생(2022 개정 과정, 2027년부터 고3도 포함).
+  // 재학생은 선택과목 문항 없이 최근 모의고사 기준으로 묻는다.
   var SUBJECT = { kor: '국어', math: '수학', eng: '영어', inq: '탐구' };
   var GRADE_OPTS = [['12', '1~2등급'], ['34', '3~4등급'], ['56', '5~6등급'], ['79', '7등급 이하'], ['na', '잘 모르겠어요']];
   var GRADE_LABEL = { '12': '1~2등급', '34': '3~4등급', '56': '5~6등급', '79': '7등급 이하', 'na': '등급 모름' };
   var TOOL_OPTS = [['self', '혼자 공부'], ['online', '인강'], ['offline', '현장 강의'], ['tutoring', '1:1 클리닉']];
   var TOOL_LABEL = { self: '혼자 공부', online: '인강', offline: '현장 강의', tutoring: '1:1 클리닉' };
   var SDL_IDS = ['sdl1', 'sdl2', 'sdl3', 'sdl4', 'sdl5'];
-  var SDL_OPTS = [['5', '5점 매우 그렇다'], ['4', '4점 그렇다'], ['3', '3점 보통이다'], ['2', '2점 아니다'], ['1', '1점 전혀 아니다']];
+  // 값(5~1)은 점수 계산과 로그에 그대로 쓰고, 화면에는 점수 표현 없이 말만 보인다.
+  var SDL_OPTS = [['5', '매우 그렇다'], ['4', '그렇다'], ['3', '보통이다'], ['2', '아니다'], ['1', '전혀 아니다']];
 
   // 과목별 빈틈 단원 선택지. 단원 묶음은 V1.1 단원표(04_대시보드/engine.js)를 라이트용으로 줄인 것
   var UNITS = {
@@ -286,15 +295,16 @@ button { cursor: pointer; }
   // 통합사회 영역별 대단원(2022 개정 통합사회1, 2)
   var SOC_AREAS = { '윤리': ['인간, 사회, 환경과 행복', '사회 정의와 불평등(정의론)'], '지리': ['자연환경과 인간', '생활공간과 사회'], '사회문화': ['문화와 다양성', '사회 정의와 불평등(불평등 현상)'], '정치와 법': ['인권 보장과 헌법'], '경제': ['시장 경제와 지속 가능 발전'], '역사': ['세계화와 평화'] };
 
-  // 수능을 본(또는 곧 볼) 고3, N수는 수능 기준, 고2 이하 재학생은 최근 모의고사 기준
+  // N수 이상은 수능 기준, 고3 이하 재학생은 최근 모의고사 기준
   function isPost(a) { return a.status !== 'pre'; }
   function gradePhase(a) { return isPost(a) ? '수능 등급' : '최근 모의고사 등급'; }
   var QUESTIONS = [
-    { id: 'status', phase: '지금 나는', text: '지금 나는 어떤 상황인가요?', hint: '등급과 선택과목을 묻는 기준이 달라져요.', opts: [['post', '고3 또는 N수예요'], ['pre', '고2 이하 재학생이에요']] },
-    { id: 'kor_sel', phase: '수능 선택과목', when: isPost, text: '수능에서 국어는 어떤 선택과목으로 봤나요?', hint: '아직 수능 전이면 마지막 모의평가 기준. 2028 수능에서 새로 공부할 범위를 찾는 데 써요.', opts: [['hwajak', '화법과 작문'], ['eonmae', '언어와 매체'], ['none', '응시하지 않았어요']] },
+    { id: 'status', phase: '지금 나는', text: '지금 나는 어떤 상황인가요?', hint: '등급과 선택과목을 묻는 기준이 달라져요.', opts: [['post', 'N수 이상이에요'], ['pre', '고3 이하예요']] },
+    { id: 'kor_sel', phase: '수능 선택과목', when: isPost, text: '수능에서 국어는 어떤 선택과목으로 봤나요?', hint: '2028 수능에서 새로 공부할 범위를 찾는 데 써요.', opts: [['hwajak', '화법과 작문'], ['eonmae', '언어와 매체'], ['none', '응시하지 않았어요']] },
     { id: 'math_sel', phase: '수능 선택과목', when: isPost, text: '수학은 어떤 선택과목으로 봤나요?', opts: [['prob', '확률과 통계'], ['calc', '미적분'], ['geo', '기하'], ['none', '응시하지 않았어요']] },
-    { id: 'inq_subj', phase: '수능 선택과목', when: isPost, multi: true, max: 2, text: '탐구는 어떤 과목으로 봤나요?', hint: '최대 2과목을 고르고 다음을 누르세요. 안 봤거나 모르면 맨 아래에서 골라요.', opts: TAMGU_OPTS },
-    { id: 'grade_kor', phase: gradePhase, text: function (a) { return isPost(a) ? '수능에서 국어 등급은?' : '최근 모의고사에서 국어 등급은?'; }, hint: function (a) { return isPost(a) ? '아직 수능 전이면 가장 최근 모의평가 기준으로 골라 주세요.' : '대략적으로 골라도 괜찮아요.'; }, opts: GRADE_OPTS },
+    { id: 'inq1', phase: '수능 선택과목', when: isPost, text: '탐구1은 어떤 과목으로 봤나요?', hint: '안 봤거나 모르면 맨 아래에서 골라 주세요.', opts: TAMGU_OPTS },
+    { id: 'inq2', phase: '수능 선택과목', when: function (a) { return isPost(a) && !!TAMGU_BY[a.inq1]; }, text: '탐구2는 어떤 과목으로 봤나요?', hint: '한 과목만 봤으면 맨 아래에서 골라 주세요.', opts: function (a) { return TAMGU.filter(function (r) { return r[0] !== a.inq1; }).map(function (r) { return [r[0], r[1]]; }).concat([['one', '한 과목만 봤어요'], ['na', '잘 모르겠어요']]); } },
+    { id: 'grade_kor', phase: gradePhase, text: function (a) { return isPost(a) ? '수능에서 국어 등급은?' : '최근 모의고사에서 국어 등급은?'; }, hint: function (a) { return isPost(a) ? '가장 최근에 본 수능 기준으로 골라 주세요.' : '대략적으로 골라도 괜찮아요.'; }, opts: GRADE_OPTS },
     { id: 'grade_math', phase: gradePhase, text: '수학 등급은?', opts: GRADE_OPTS },
     { id: 'grade_eng', phase: gradePhase, text: '영어 등급은?', opts: GRADE_OPTS },
     { id: 'grade_inq', phase: gradePhase, when: function (a) { return !isPost(a) || !(a.inq_subj && a.inq_subj[0] === 'none'); }, text: function (a) { return isPost(a) ? '탐구 등급은? (두 과목이면 평균)' : '탐구 등급은? (통합사회, 통합과학 평균)'; }, opts: GRADE_OPTS },
@@ -305,7 +315,7 @@ button { cursor: pointer; }
     { id: 'tool_eng', phase: '공부 방법', text: '영어 공부는 어떤 방법이 가장 효과가 좋았나요?', opts: TOOL_OPTS },
     { id: 'tool_inq', phase: '공부 방법', text: '탐구 공부는 어떤 방법이 가장 효과가 좋았나요?', opts: TOOL_OPTS },
     { id: 'style', phase: '공부 방법', text: '새 단원을 공부할 때 나에게 가장 잘 맞는 방식은 무엇인가요?', opts: [['concept', '개념부터 이해하기'], ['problem', '문제부터 풀어 보기'], ['error', '틀린 문제 다시 보기'], ['memor', '외우고 반복하기']] },
-    { id: 'sdl1', phase: '자기주도역량', text: '나는 학습 목표를 스스로 세우고 그에 맞춰 계획을 짠다.', hint: '1은 전혀 아니다, 5는 매우 그렇다예요.', opts: SDL_OPTS },
+    { id: 'sdl1', phase: '자기주도역량', text: '나는 학습 목표를 스스로 세우고 그에 맞춰 계획을 짠다.', opts: SDL_OPTS },
     { id: 'sdl2', phase: '자기주도역량', text: '나는 세운 계획을 대체로 지켜서 실천한다.', opts: SDL_OPTS },
     { id: 'sdl3', phase: '자기주도역량', text: '나는 공부한 결과를 스스로 점검하고 다음 계획에 반영한다.', opts: SDL_OPTS },
     { id: 'sdl4', phase: '자기주도역량', text: '나는 휴대폰이나 SNS 같은 유혹을 스스로 참을 수 있다.', opts: SDL_OPTS },
@@ -325,11 +335,19 @@ button { cursor: pointer; }
 
   // 학습 유형: 공부 방법 답(혼자 공부, 인강 = 독립 / 현장 강의, 1:1 = 가이드) × 자기주도역량(25점 만점, 18점 이상 = 강)
   // icon, color는 결과 첫 카드의 유형별 강조(원장 피드백: 색이 단조롭고 후킹이 약함)
+  // 유형 아이콘: 이모지 대신 선 아이콘(Lucide v0.460.0, ISC 라이선스)의 경로를 그대로 넣는다.
+  var ICON_PATHS = {
+    compass: '<path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/>',
+    zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+    footprints: '<path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/>',
+    'heart-handshake': '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66"/><path d="m18 15-2-2"/><path d="m15 18-2-2"/>'
+  };
+  function iconSvg(name) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON_PATHS[name] + '</svg>'; }
   var TYPES = {
-    self: { icon: '🚀', color: '#A5D34A', name: '자율주행형', one: '계획부터 실행까지 스스로 굴러가는 타입', traits: ['내 속도로 공부할 때 효율 최고', '자습 몰입이 잘 됨', '방향만 잡으면 빠르게 오름'], method: '자습 중심, 인강은 막히는 단원만. 주 1회 스스로 점검.' },
-    spark: { icon: '⚡', color: '#FFC24D', name: '몰아치기형', one: '이해력은 좋은데 루틴이 흔들리는 타입', traits: ['혼자서도 개념은 잘 잡음', '컨디션 따라 공부량 차이 큼', '시간표가 생기면 확 살아남'], method: '루틴이 먼저. 요일별 과목과 시작 시각 고정, 하루 분량은 작게.' },
-    pace: { icon: '🏃', color: '#6CD4FF', name: '페이스메이커형', one: '설명을 들으면 쭉쭉 따라가는 성실 타입', traits: ['현장 강의 흡수력 최고', '세운 계획은 꾸준히 지킴', '질문할 곳이 가까우면 더 빠름'], method: '강의로 개념, 당일 복습 문제로 굳히기. 바로 질문할 환경 확보.' },
-    care: { icon: '🤝', color: '#FFA3B8', name: '풀케어형', one: '옆에서 잡아 주면 확 달라지는 타입', traits: ['설명 들을 때 이해 최고', '혼자 두면 계획이 무너짐', '매일 점검받으면 공부량 급증'], method: '현장 강의 위주, 매일 점검받는 구조(담임, 1:1 클리닉)부터.' }
+    self: { icon: 'compass', color: '#A5D34A', name: '자율주행형', one: '계획부터 실행까지 스스로 굴러가는 타입', traits: ['내 속도로 공부할 때 효율 최고', '자습 몰입이 잘 됨', '방향만 잡으면 빠르게 오름'], method: '자습 중심, 인강은 막히는 단원만. 주 1회 스스로 점검.' },
+    spark: { icon: 'zap', color: '#FFC24D', name: '몰아치기형', one: '이해력은 좋은데 루틴이 흔들리는 타입', traits: ['혼자서도 개념은 잘 잡음', '컨디션 따라 공부량 차이 큼', '시간표가 생기면 확 살아남'], method: '루틴이 먼저. 요일별 과목과 시작 시각 고정, 하루 분량은 작게.' },
+    pace: { icon: 'footprints', color: '#6CD4FF', name: '페이스메이커형', one: '설명을 들으면 쭉쭉 따라가는 성실 타입', traits: ['현장 강의 흡수력 최고', '세운 계획은 꾸준히 지킴', '질문할 곳이 가까우면 더 빠름'], method: '강의로 개념, 당일 복습 문제로 굳히기. 바로 질문할 환경 확보.' },
+    care: { icon: 'heart-handshake', color: '#FFA3B8', name: '풀케어형', one: '옆에서 잡아 주면 확 달라지는 타입', traits: ['설명 들을 때 이해 최고', '혼자 두면 계획이 무너짐', '매일 점검받으면 공부량 급증'], method: '현장 강의 위주, 매일 점검받는 구조(담임, 1:1 클리닉)부터.' }
   };
   var STYLE_TEXT = {
     concept: '개념서 한 바퀴 뒤 문제로. 문제부터 밀어붙이지 않기.',
@@ -356,17 +374,22 @@ button { cursor: pointer; }
   // 2028 수능(2022 개정 교육과정)에서 새로 공부할 부분. 작년 선택과목으로 정한다.
   // 2028 수능: 국어는 화법과 언어, 독서와 작문, 문학 공통 / 수학은 대수, 미적분Ⅰ, 확률과 통계 공통 / 탐구는 통합사회와 통합과학 공통
   var GAPS = {
-    gram: { title: '국어 언어(문법)', tag: '새로 공부', why: '화작으로 봤다면 문법이 비어 있어요. 2028 국어는 문법 포함 공통.', lines: ['음운 변동부터 (교체, 탈락, 첨가, 축약)', '다음 형태소와 단어, 마지막 문장 구조', '매체는 새로 안 배워도 됨, 화작은 하던 대로'] },
-    kor_none: { title: '국어 전체', tag: '새로 공부', why: '국어를 안 봤다면 2028 국어(화법과 언어, 독서와 작문, 문학) 전체가 처음이에요.', lines: ['문학과 독서 기출 한 회로 현재 위치 확인', '문법(음운, 형태소, 문장)은 개념부터', '매일 지문 2개 + 문법 1단원'] },
-    gram_na: { title: '국어 언어(문법)', tag: '확인 필요', why: '작년 국어 선택과목을 확인하세요. 화작이었다면 문법이 새 범위.', lines: ['화작이었다면 음운 변동부터 시작', '언매였다면 복습만', '2028 국어는 선택 없이 공통'] },
-    prob: { title: '수학 확률과 통계', tag: '새로 공부', why: '미적분, 기하로 봤다면 확통이 비어 있어요. 2028 수학은 확통 포함 공통.', lines: ['경우의 수부터 (순열, 조합)', '다음 확률, 마지막 통계', '미적분, 기하 시간을 확통으로 옮기기'] },
-    math_none: { title: '수학 전체', tag: '새로 공부', why: '수학을 안 봤다면 2028 수학(대수, 미적분Ⅰ, 확률과 통계) 전체가 처음이에요.', lines: ['대수(지수로그, 삼각함수, 수열)부터', '다음 미적분Ⅰ(극한, 미분, 적분)', '확률과 통계는 경우의 수부터 마지막에'] },
-    prob_na: { title: '수학 확률과 통계', tag: '확인 필요', why: '작년 수학 선택과목을 확인하세요. 미적분, 기하였다면 확통이 새 범위.', lines: ['미적분, 기하였다면 경우의 수부터', '확통이었다면 공백 없음', '2028 수학은 대수, 미적분Ⅰ, 확통 공통'] },
-    calc1: { title: '수학 대수, 미적분Ⅰ', tag: '이름만 바뀜', why: '대수는 수학Ⅰ, 미적분Ⅰ은 수학Ⅱ와 거의 같아요.', lines: ['지금 교재 그대로 사용', '선택 없이 공통이라 흔들리던 단원 메우기', '2028은 기출이 없음. 평가원 예시 문항 기준'] },
-    sci: { title: '통합과학', tag: '새로 공부', why: '과탐을 안 봤다면 통합과학 전체가 처음이에요.', lines: ['과학의 기초, 물질과 규칙성부터 (진입 쉬움)', '다음 시스템과 상호작용 → 변화와 다양성 → 환경과 에너지', '물화생지 영역을 매주 바꿔 가며 개념 1단원 + 기출 10문항'] },
-    soc: { title: '통합사회', tag: '새로 공부', why: '사탐을 안 봤다면 통합사회 전체가 처음이에요.', lines: ['통합적 관점, 행복부터 (전체의 틀)', '다음 인권과 헌법 → 시장 경제 → 정의와 불평등', '암기보다 자료 읽기. 단원마다 개념 10개 + 자료 5문항'] },
-    inq_none: { title: '통합사회, 통합과학', tag: '둘 다 새로 공부', why: '탐구를 안 봤다면 두 과목 모두 처음이에요.', lines: ['통합사회는 통합적 관점부터, 통합과학은 과학의 기초부터', '요일을 나눠 한 과목씩 개념 1단원 + 기출 10문항', '2028은 기출이 없음. 교과서 단원 이름부터 외우기'] }
+    gram: { title: '국어 언어(문법)', tag: '새로 공부', why: '화작으로 봤다면 문법이 비어 있어요. 2028 국어는 문법 포함 공통.', lines: [['음운 변동', '교체, 탈락, 첨가, 축약부터'], ['단어와 문장', '형태소와 단어, 이어서 문장 구조'], ['매체는 제외', '새로 안 배워도 됨, 화작은 하던 대로']] },
+    kor_none: { title: '국어 전체', tag: '새로 공부', why: '국어를 안 봤다면 2028 국어(화법과 언어, 독서와 작문, 문학) 전체가 처음이에요.', lines: [['기출 한 회', '문학, 독서로 현재 위치 확인'], ['문법 개념', '음운, 형태소, 문장부터'], ['매일 루틴', '지문 2개 + 문법 1단원']] },
+    gram_na: { title: '국어 언어(문법)', tag: '확인 필요', why: '작년 국어 선택과목을 확인하세요. 화작이었다면 문법이 새 범위.', lines: [['화작이면', '음운 변동부터 시작'], ['언매면', '복습만'], ['선택 없음', '2028 국어는 공통']] },
+    prob: { title: '수학 확률과 통계', tag: '새로 공부', why: '미적분, 기하로 봤다면 확통이 비어 있어요. 2028 수학은 확통 포함 공통.', lines: [['경우의 수', '순열, 조합부터'], ['확률, 통계', '경우의 수 다음 차례로'], ['시간 옮기기', '미적분, 기하 시간을 확통으로']] },
+    math_none: { title: '수학 전체', tag: '새로 공부', why: '수학을 안 봤다면 2028 수학(대수, 미적분Ⅰ, 확률과 통계) 전체가 처음이에요.', lines: [['대수', '지수로그, 삼각함수, 수열부터'], ['미적분Ⅰ', '극한, 미분, 적분'], ['확률과 통계', '경우의 수부터, 마지막에']] },
+    prob_na: { title: '수학 확률과 통계', tag: '확인 필요', why: '작년 수학 선택과목을 확인하세요. 미적분, 기하였다면 확통이 새 범위.', lines: [['미적, 기하면', '경우의 수부터'], ['확통이면', '공백 없음'], ['세 과목 공통', '대수, 미적분Ⅰ, 확통']] },
+    calc1: { title: '수학 대수, 미적분Ⅰ', tag: '이름만 바뀜', why: '대수는 수학Ⅰ, 미적분Ⅰ은 수학Ⅱ와 거의 같아요.', lines: [['교재 그대로', '지금 쓰던 교재 사용'], ['약한 단원', '공통이라 흔들리던 곳 메우기'], ['예시 문항', '기출이 없으니 평가원 기준']] },
+    sci: { title: '통합과학', tag: '새로 공부', why: '과탐을 안 봤다면 통합과학 전체가 처음이에요.', lines: [['과학의 기초', '물질과 규칙성까지 먼저(진입 쉬움)'], ['시스템과 상호작용', '이어서 변화와 다양성, 환경과 에너지'], ['주 1단원', '물화생지 번갈아 개념 + 기출 10문항']] },
+    soc: { title: '통합사회', tag: '새로 공부', why: '사탐을 안 봤다면 통합사회 전체가 처음이에요.', lines: [['통합적 관점', '행복까지 먼저(전체의 틀)'], ['인권과 헌법', '이어서 시장 경제, 정의와 불평등'], ['자료 읽기', '단원마다 개념 10개 + 자료 5문항']] },
+    inq_none: { title: '통합사회, 통합과학', tag: '둘 다 새로 공부', why: '탐구를 안 봤다면 두 과목 모두 처음이에요.', lines: [['첫 단원부터', '통합사회는 통합적 관점, 통합과학은 과학의 기초'], ['요일 나누기', '한 과목씩 개념 1단원 + 기출 10문항'], ['단원 이름', '기출이 없으니 교과서 목차부터']] }
   };
+  // 탐구1, 탐구2 답을 기존 형식(inq_subj 배열: 과목 id 최대 2개, 또는 ['none'], ['na'])으로 합친다. 계산과 로그는 이 값을 쓴다.
+  function syncInq(a) {
+    if (!isPost(a) || !a.inq1) { delete a.inq_subj; return; }
+    a.inq_subj = TAMGU_BY[a.inq1] && TAMGU_BY[a.inq2] ? [a.inq1, a.inq2] : [a.inq1];
+  }
   function inqInfo(a) {
     var ids = (a.inq_subj || []).filter(function (v) { return TAMGU_BY[v]; });
     var taken = ids.map(function (v) { return TAMGU_BY[v]; });
@@ -390,14 +413,15 @@ button { cursor: pointer; }
     if (!covered.length) return kind === 'sci' ? GAPS.sci : GAPS.soc;
     var coveredUnits = covered.map(function (k) { return AREAS[k].join(', '); }).join(', ');
     var missingUnits = missing.map(function (k) { return k + '(' + AREAS[k].join(', ') + ')'; }).join(', ');
+    var order = missing.map(function (k) { return AREAS[k][0].replace(/^.*?의 /, '').replace(/\(.*\)$/, ''); });
     return {
       title: subject, tag: missing.length ? '일부 공백' : '거의 덮임',
       why: takenNames + ' 기준: ' + (missing.length ? missing.join(', ') + ' 영역이 비어 있어요.' : '대부분 익숙한 범위예요.'),
       lines: missing.length ? [
-        '먼저: ' + missing.join(', ') + ' 영역',
-        '순서: ' + missing.map(function (k) { return AREAS[k][0].replace(/^.*?의 /, ''); }).join(' → '),
-        covered.join(', ') + ' 영역은 기출만 확인'
-      ] : ['전 영역 기출 한 회로 점검', '틀린 단원만 개념 복습', '2028은 기출이 없음. 평가원 예시 문항 기준']
+        [missing.length + '개 영역', missing.join(', ') + ' 먼저'],
+        [order[0], order.length > 1 ? '다음 ' + order[1] + (order.length > 2 ? ' 등 ' + (order.length - 1) + '개' : '') : '이 단원만 새로'],
+        ['기출만', covered.join(', ') + ' 영역은 확인만']
+      ] : [['전 영역', '기출 한 회로 점검'], ['틀린 단원', '개념만 복습'], ['예시 문항', '기출이 없으니 평가원 기준']]
     };
   }
   function gaps(a) {
@@ -542,36 +566,63 @@ button { cursor: pointer; }
     });
     return svg;
   }
-  // 2028 공백 비중 가로 막대: 과목마다 새로 공부할 범위가 얼마나 되는지(%). null은 작년 선택과목 모름
+  // 2028 빈틈 막대: 과목마다 '전체 N개 단원 중 M개 (%)'. null은 선택과목을 모를 때
   function gapBars(rows) {
-    var W = 320, rowH = 34, top = 6, left = 78, right = 44, barW = W - left - right;
+    var W = 320, rowH = 46, top = 4, barH = 12;
     var H = top + rows.length * rowH;
-    var svg = s('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'chart bars', role: 'img', 'aria-label': '2028 수능에서 새로 공부할 비중' });
+    var svg = s('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'chart bars', role: 'img', 'aria-label': '2028 수능에서 새로 공부할 단원 수' });
     rows.forEach(function (r, i) {
-      var y = top + i * rowH, h = 14, yb = y + 10;
-      svg.appendChild(s('text', { x: left - 8, y: yb + 11, 'text-anchor': 'end', class: 'lbl' }, r.name));
-      svg.appendChild(s('rect', { x: left, y: yb, width: barW, height: h, rx: 4, class: 'track' }));
-      if (r.v == null) {
-        svg.appendChild(s('rect', { x: left, y: yb, width: barW * 0.5, height: h, rx: 4, class: 'bar na' }));
-        svg.appendChild(s('text', { x: left + barW + 6, y: yb + 11, class: 'val' }, '모름'));
-      } else {
-        if (r.v > 0) svg.appendChild(s('rect', { x: left, y: yb, width: Math.max(8, barW * r.v / 100), height: h, rx: 4, class: 'bar' + (r.v >= 100 ? ' full' : '') }));
-        svg.appendChild(s('text', { x: left + barW + 6, y: yb + 11, class: 'val' }, r.v + '%'));
-      }
+      var y = top + i * rowH, yb = y + 22;
+      svg.appendChild(s('text', { x: 0, y: y + 14, class: 'lbl' }, r.name));
+      svg.appendChild(s('text', { x: W, y: y + 14, 'text-anchor': 'end', class: 'val' },
+        r.v == null ? '선택과목 모름' : '전체 ' + r.total + '개 ' + r.unit + ' 중 ' + r.n + '개 (' + r.v + '%)'));
+      svg.appendChild(s('rect', { x: 0, y: yb, width: W, height: barH, rx: 4, class: 'track' }));
+      if (r.v == null) svg.appendChild(s('rect', { x: 0, y: yb, width: W * 0.5, height: barH, rx: 4, class: 'bar na' }));
+      else if (r.v > 0) svg.appendChild(s('rect', { x: 0, y: yb, width: Math.max(8, W * r.v / 100), height: barH, rx: 4, class: 'bar' + (r.v >= 100 ? ' full' : '') }));
     });
     return svg;
   }
-  // 공백 비중 계산: 문법(화작 100, 언매 0), 확통(미적, 기하 100), 통사(안 본 영역/6), 통과(안 본 영역/4)
+  // 막대에 쓰는 단원 목록(교과 강사 검수 전 초안). 통합사회, 통합과학은 위 영역별 대단원표에서 만든다.
+  var GAP_UNITS = {
+    gram: ['음운', '단어', '문장', '담화', '국어의 역사'],
+    korAll: ['화법과 언어', '독서와 작문', '문학'],
+    prob: ['경우의 수', '확률', '통계'],
+    mathAll: ['지수함수와 로그함수', '삼각함수', '수열', '함수의 극한과 연속', '미분', '적분', '경우의 수', '확률', '통계']
+  };
+  // 영역별 대단원표를 단원 기준으로 뒤집는다. 같은 단원을 두 영역이 나눠 맡으면(괄호) 하나로 합친다.
+  function unitsByName(AREAS) {
+    var out = {};
+    Object.keys(AREAS).forEach(function (area) {
+      AREAS[area].forEach(function (u) { var k = u.replace(/\(.*\)$/, ''); (out[k] = out[k] || []).push(area); });
+    });
+    return out;
+  }
+  function row(name, n, total, unit) { return { name: name, n: n, total: total, unit: unit || '단원', v: Math.round(n / total * 100) }; }
   function gapRows(a) {
     var info = inqInfo(a);
-    var socMissing = Object.keys(SOC_AREAS).filter(function (k) { return info.socAreas.indexOf(k) < 0; }).length;
-    var sciMissing = Object.keys(SCI_AREAS).filter(function (k) { return info.sciAreas.indexOf(k) < 0; }).length;
+    var noInq = info.none && (a.inq_subj || [])[0] === 'none';
+    function inqRow(name, AREAS, covered) {
+      var units = unitsByName(AREAS), names = Object.keys(units);
+      if (info.none) return noInq ? row(name, names.length, names.length) : { name: name, v: null };
+      var missing = names.filter(function (k) { return !units[k].some(function (area) { return covered.indexOf(area) >= 0; }); }).length;
+      return row(name, missing, names.length);
+    }
+    var g = GAP_UNITS;
     return [
-      { name: a.kor_sel === 'none' ? '국어 전체' : '국어 문법', v: (a.kor_sel === 'hwajak' || a.kor_sel === 'none') ? 100 : a.kor_sel === 'eonmae' ? 0 : null },
-      { name: a.math_sel === 'none' ? '수학 전체' : '수학 확통', v: (a.math_sel === 'calc' || a.math_sel === 'geo' || a.math_sel === 'none') ? 100 : a.math_sel === 'prob' ? 0 : null },
-      { name: '통합사회', v: info.none ? ((a.inq_subj || [])[0] === 'none' ? 100 : null) : Math.round(socMissing / 6 * 100) },
-      { name: '통합과학', v: info.none ? ((a.inq_subj || [])[0] === 'none' ? 100 : null) : Math.round(sciMissing / 4 * 100) }
+      a.kor_sel === 'none' ? row('국어 전체', g.korAll.length, g.korAll.length, '과목')
+        : a.kor_sel === 'hwajak' ? row('국어 문법', g.gram.length, g.gram.length)
+        : a.kor_sel === 'eonmae' ? row('국어 문법', 0, g.gram.length) : { name: '국어 문법', v: null },
+      a.math_sel === 'none' ? row('수학 전체', g.mathAll.length, g.mathAll.length)
+        : (a.math_sel === 'calc' || a.math_sel === 'geo') ? row('수학 확통', g.prob.length, g.prob.length)
+        : a.math_sel === 'prob' ? row('수학 확통', 0, g.prob.length) : { name: '수학 확통', v: null },
+      inqRow('통합사회', SOC_AREAS, info.socAreas),
+      inqRow('통합과학', SCI_AREAS, info.sciAreas)
     ];
+  }
+
+  // 처방 3단계를 가로 카드로: 키워드는 크게, 보조 문장은 작게
+  function stepCards(lines) {
+    return h('ol', { class: 'steps' }, lines.map(function (l) { return h('li', null, h('b', { class: 'kw' }, h('span', null, l[0])), h('span', { class: 'sub' }, l[1])); }));
   }
 
   function renderIntro() {
@@ -610,6 +661,7 @@ button { cursor: pointer; }
     var qOpts = typeof q.opts === 'function' ? q.opts(answers) : q.opts;
     var picked = q.multi ? (answers[q.id] || []).slice() : null;
     var nextBtn = q.multi ? h('button', { class: 'btn btn-primary', type: 'button', disabled: '', style: 'margin-top:14px', on: { click: function () { if (picked.length) choose(q, picked.slice(), null); } } }, '다음 →') : null;
+    // 자기주도역량 문항은 번호 동그라미가 점수처럼 읽혀서 숨긴다.
     var opts = qOpts.map(function (o, idx) {
       var on = q.multi ? picked.indexOf(o[0]) >= 0 : answers[q.id] === o[0];
       return h('button', { class: 'opt', type: 'button', 'aria-pressed': String(on), on: { click: function (ev) {
@@ -624,7 +676,7 @@ button { cursor: pointer; }
         }
         ev.currentTarget.parentNode.querySelectorAll('.opt').forEach(function (b, k) { b.setAttribute('aria-pressed', String(picked.indexOf(qOpts[k][0]) >= 0)); });
         if (picked.length) nextBtn.removeAttribute('disabled'); else nextBtn.setAttribute('disabled', '');
-      } } }, h('span', { class: 'num' }, String(idx + 1)), h('span', { class: 'lb' }, o[1]));
+      } } }, qOpts === SDL_OPTS ? null : h('span', { class: 'num' }, String(idx + 1)), h('span', { class: 'lb' }, o[1]));
     });
     show(h('section', { class: 'screen' },
       h('div', { class: 'progress', 'aria-label': '진행률' },
@@ -646,9 +698,12 @@ button { cursor: pointer; }
     answers[q.id] = value;
     // 빈틈 과목을 바꾸면 이전에 고른 단원은 맞지 않으므로 지운다.
     if (q.id === 'weak' && answers.unit && answers.unit.indexOf(value + '_') !== 0) delete answers.unit;
-    if (q.id === 'inq_subj' && value[0] === 'none') delete answers.grade_inq;
+    // 탐구1을 바꾸면 같은 과목이거나 과목이 아닌 답이 된 탐구2는 지운다.
+    if (q.id === 'inq1' && (answers.inq2 === value || !TAMGU_BY[value])) delete answers.inq2;
+    syncInq(answers);
+    if (answers.inq_subj && answers.inq_subj[0] === 'none') delete answers.grade_inq;
     // 재학생으로 바꾸면 앞서 고른 선택과목 답은 쓰지 않으므로 지운다.
-    if (q.id === 'status' && value === 'pre') ['kor_sel', 'math_sel', 'inq_subj'].forEach(function (k) { delete answers[k]; });
+    if (q.id === 'status' && value === 'pre') ['kor_sel', 'math_sel', 'inq1', 'inq2', 'inq_subj'].forEach(function (k) { delete answers[k]; });
     if (btn) btn.parentNode.querySelectorAll('.opt').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
     log('answer', { qid: q.id, value: Array.isArray(value) ? value.join('+') : value, q_no: activeQuestions(answers).indexOf(q) + 1 });
     setTimeout(function () {
@@ -696,7 +751,7 @@ button { cursor: pointer; }
         h('div', { class: 'res-top' }, h('span', null, 'LMCT 학습진단'), h('span', null, today())),
         h('div', { class: 'res-head' },
           h('div', null, h('div', { class: 'kind' }, '나의 학습 유형은'), h('h2', { html: '<em>' + t.name + '</em>' })),
-          h('div', { class: 'res-icon', 'aria-hidden': 'true' }, t.icon)),
+          h('div', { class: 'res-icon', 'aria-hidden': 'true', html: iconSvg(t.icon) })),
         h('p', { class: 'one' }, t.one),
         h('div', { class: 'pills' }, t.traits.map(function (s) { return h('span', { class: 'pill' }, s); })),
         h('div', { class: 'axis' },
@@ -724,16 +779,13 @@ button { cursor: pointer; }
           return h('div', { class: 'gap' },
             h('div', { class: 'course-top' }, h('span', { class: 'badge' }, g.title), h('span', { class: 'badge-soft' + (/새로 공부/.test(g.tag) ? ' hot' : '') }, g.tag)),
             h('p', { class: 'why' }, g.why),
-            h('ol', { class: 'steps' }, g.lines.map(function (s) { return h('li', null, s); })));
+            stepCards(g.lines));
         }),
         h('p', { class: 'note', style: 'text-align:left;margin-top:12px' }, '대수, 미적분Ⅰ은 수학Ⅰ, Ⅱ와 거의 같아요. 새로 배울 것 없음.'))
       : h('div', { class: 'card gapcard' },
         h('div', { class: 'course-top' }, h('span', { class: 'badge' }, '국어, 수학, 탐구 모두 공통'), h('span', { class: 'badge-soft hot' }, '첫 개정 수능')),
         h('p', { class: 'why' }, '지금 배우는 과정 그대로가 시험 범위예요. 선택과목이 없어 빈틈이 그대로 드러나요.'),
-        h('ol', { class: 'steps' },
-          h('li', null, unitName + '부터 메우기'),
-          h('li', null, '통합사회, 통합과학은 전 영역 고르게'),
-          h('li', null, '기출이 없으니 평가원 예시 문항과 모의고사 기준'))),
+        stepCards([[unitName, '여기부터 메우기'], ['전 영역 고르게', '통합사회, 통합과학'], ['평가원 예시 문항', '기출이 없으니 모의고사와 함께']])),
 
       h('div', { class: 'sechead' }, h('span', { class: 'kicker dark' }, '학습 방법'), h('h3', null, '나에게 맞는 공부 방법')),
       h('div', { class: 'card' },
