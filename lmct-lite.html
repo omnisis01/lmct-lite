@@ -220,7 +220,9 @@ button { cursor: pointer; }
 
   // 구글 시트 Apps Script 웹 앱 주소. 비워 두면 콘솔에만 기록한다.
   var LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwdIfbCHCem_QpL1WsPuMxjh4QYKFEhRxXnq7P4NBnTeb5Pdwq6BGfYbihjGDpkKuaE/exec';
-  var VERSION = 'lite-7';
+  // 로컬 미리보기(파일 열기, localhost, 127.0.0.1)는 실제 시트에 테스트 기록이 쌓이지 않게 콘솔에만 남긴다.
+  var IS_LOCAL = /^(|localhost|127(\.\d+){3}|\[::1\])$|\.(localhost|local|test)$/.test(location.hostname);
+  var VERSION = 'lite-8';
   var HOME_URL = 'https://247.etoos.com/index.do';
 
   // 대상: 고3과 N수(2027 수능, 2015 교육과정을 보고 2028 개정 수능을 다시 봄)가 기본. 고2 이하 재학생은 선택과목 문항 없이 최근 모의고사 기준으로 묻는다.
@@ -447,7 +449,7 @@ button { cursor: pointer; }
 
   function log(event, data) {
     var payload = Object.assign({}, common, { event: event, ts: new Date().toISOString(), t_ms: Date.now() - t0 }, data || {});
-    if (!LOG_ENDPOINT) { console.info('[LMCT-lite log]', payload); return; }
+    if (!LOG_ENDPOINT || IS_LOCAL) { console.info('[LMCT-lite log]', payload); return; }
     // text/plain이라야 Apps Script로 보낼 때 CORS 사전 요청이 생기지 않는다.
     var body = JSON.stringify(payload);
     var sent = false;
@@ -776,14 +778,29 @@ button { cursor: pointer; }
     else toast('복사하지 못했어요');
   }
 
-  var REGIONS = ['서울', '인천/경기', '대전/세종/충청', '강원', '부산/대구/경상', '광주/전라', '제주', '아직 모름'];
+  // 희망 지점(2026-10-29 사용자 제공 목록, 받은 순서 유지). 지점을 고르면 지역(region)도 함께 기록해서 지점별, 지역별로 나눠 볼 수 있게 한다.
+  var BRANCH_GROUPS = [
+    ['서울', ['대치', '강북', '노량진', '마포', '목동', '목동오목교', '서울강동', '서울강서', '서울광진', '서울대점', '서울도봉', '서울성동', '서울성북', '서울송파', '은평서대문']],
+    ['인천/경기', ['광명', '다산', '김포', '동탄', '부천', '분당정자', '수원시청', '수원영통', '수원정자', '안산', '용인수지', '의정부', '일산동구', '일산서구', '파주', '평택', '하남', '인천부평', '인천송도', '인천인하대', '인천청라']],
+    ['강원', ['원주', '춘천']],
+    ['대전/세종/충청', ['대전둔산', '천안', '청주']],
+    ['광주/전라', ['광주남구', '광주동구', '광주북구', '광주수완', '목포', '익산']],
+    ['부산/대구/경상', ['대구달서', '대구수성 1관', '대구수성 2관', '부산교대', '부산대', '부산북구', '부산서면', '부산해운대', '울산남구', '진주', '창원']],
+    ['제주', ['제주']],
+    ['기숙학원', ['안성기숙', '이천기숙', '독학기숙']]
+  ];
+  var BRANCH_UNKNOWN = '아직 모름';
+  var BRANCH_REGION = {};
+  BRANCH_GROUPS.forEach(function (g) { g[1].forEach(function (b) { BRANCH_REGION[b] = g[0]; }); });
   function renderLead() {
     backBtn.hidden = false;
     step = QUESTIONS.length + 1;
     var mode = '';
     var name = h('input', { class: 'input', type: 'text', id: 'f-name', autocomplete: 'name', maxlength: '20', placeholder: '학생 이름' });
     var phone = h('input', { class: 'input', type: 'tel', id: 'f-phone', autocomplete: 'tel', inputmode: 'numeric', maxlength: '13', placeholder: '010-0000-0000' });
-    var region = h('select', { class: 'input', id: 'f-region' }, h('option', { value: '' }, '희망 지역을 골라 주세요'), REGIONS.map(function (r) { return h('option', { value: r }, r); }));
+    var branch = h('select', { class: 'input', id: 'f-branch' }, h('option', { value: '' }, '희망 지점을 골라 주세요'),
+      BRANCH_GROUPS.map(function (g) { return h('optgroup', { label: g[0] }, g[1].map(function (b) { return h('option', { value: b }, b); })); }),
+      h('option', { value: BRANCH_UNKNOWN }, BRANCH_UNKNOWN));
     var segBtns = ['통학', '기숙', '아직 모름'].map(function (m) {
       return h('button', { type: 'button', 'aria-pressed': 'false', on: { click: function (ev) {
         mode = m; segBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b === ev.currentTarget)); });
@@ -803,22 +820,22 @@ button { cursor: pointer; }
       var digits = phone.value.replace(/\D/g, '');
       var msg = !name.value.trim() ? '이름을 적어 주세요.'
         : !/^01[016789]\d{7,8}$/.test(digits) ? '휴대폰 번호를 확인해 주세요.'
-        : !region.value ? '희망 지역을 골라 주세요.'
+        : !branch.value ? '희망 지점을 골라 주세요.'
         : !agree.checked ? '개인정보 수집과 이용에 동의해 주세요.' : '';
       if (msg) { err.textContent = msg; err.hidden = false; postHeight(); return; }
       submit.disabled = true;
-      log('lead', { name: name.value.trim(), phone: digits, region: region.value, mode: mode || '아직 모름', consent: true, type: result.type, course: '' });
+      log('lead', { name: name.value.trim(), phone: digits, branch: branch.value, region: BRANCH_REGION[branch.value] || BRANCH_UNKNOWN, mode: mode || '아직 모름', consent: true, type: result.type, course: '' });
       leadSent = true;
       renderThanks();
     } } },
       h('div', { class: 'field' }, h('label', { for: 'f-name' }, '이름'), name),
       h('div', { class: 'field' }, h('label', { for: 'f-phone' }, '휴대폰 번호'), phone),
-      h('div', { class: 'field' }, h('label', { for: 'f-region' }, '희망 지역'), region),
+      h('div', { class: 'field' }, h('label', { for: 'f-branch' }, '희망 지점'), branch),
       h('div', { class: 'field' }, h('span', { class: 'lbl' }, '희망 형태'), h('div', { class: 'seg' }, segBtns)),
       h('details', { class: 'consent' },
         h('summary', null, '개인정보 수집과 이용 안내 (필수)'),
         h('ul', null,
-          h('li', null, '수집 항목: 이름, 휴대폰 번호, 희망 지역과 형태, 진단 응답'),
+          h('li', null, '수집 항목: 이름, 휴대폰 번호, 희망 지점과 형태, 진단 응답'),
           h('li', null, '목적: 학습 상담 연락과 정밀진단 안내'),
           h('li', null, '보유 기간: 상담 완료 후 1년, 이후 파기'),
           h('li', null, '동의하지 않을 수 있으며, 이 경우 상담 신청이 어려워요.'))),
