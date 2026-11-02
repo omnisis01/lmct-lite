@@ -150,6 +150,16 @@ button { cursor: pointer; }
 .actions .two { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 /* 결과 이미지: 모달 대신 버튼 바로 아래에 펼친다(247 페이지 iframe 안에서도 보이도록) */
 .shot { margin-top: 13px; }
+/* 결과 중간 입력(lite-10) */
+.gate { border: 2px solid var(--hot); }
+.gate-event { margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; background: #FFF8E1; border: 1px dashed #E2B23C; font-size: 14.5px; font-weight: 800; }
+.gate-list { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
+.gate-list li { display: grid; grid-template-columns: 22px 1fr; column-gap: 9px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--paper); }
+.gate-list li b { font-size: 15.5px; font-weight: 900; }
+.gate-list li span:last-child { grid-column: 2; font-size: 13.5px; font-weight: 700; }
+.gate-ico { grid-row: span 2; width: 20px; height: 20px; color: var(--teal); }
+.gate-ico svg { width: 20px; height: 20px; display: block; }
+.who { margin: 0; padding: 11px 14px; border-radius: 12px; background: var(--paper); font-size: 16px; }
 .shot img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); margin: 4px 0 12px; }
 .shot .hint { margin: 10px 0 0; font-size: 14.5px; text-align: center; }
 .note { margin: 0; font-size: 14.5px; color: var(--ink-mute); text-align: center; line-height: 1.55; }
@@ -252,7 +262,7 @@ button { cursor: pointer; }
   var LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwdIfbCHCem_QpL1WsPuMxjh4QYKFEhRxXnq7P4NBnTeb5Pdwq6BGfYbihjGDpkKuaE/exec';
   // 로컬 미리보기(파일 열기, localhost, 127.0.0.1)는 실제 시트에 테스트 기록이 쌓이지 않게 콘솔에만 남긴다.
   var IS_LOCAL = /^(|localhost|127(\.\d+){3}|\[::1\])$|\.(localhost|local|test)$/.test(location.hostname);
-  var VERSION = 'lite-9';
+  var VERSION = 'lite-10';
   var HOME_URL = 'https://247.etoos.com/index.do';
 
   // 대상: N수 이상(2015 교육과정 수능을 보고 2028 개정 수능을 다시 봄)과 고3 이하 재학생(2022 개정 과정, 2027년부터 고3도 포함).
@@ -360,6 +370,7 @@ button { cursor: pointer; }
   // icon, color는 결과 첫 카드의 유형별 강조(원장 피드백: 색이 단조롭고 후킹이 약함)
   // 유형 아이콘: 이모지 대신 선 아이콘(Lucide v0.460.0, ISC 라이선스)의 경로를 그대로 넣는다.
   var ICON_PATHS = {
+    lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
     compass: '<path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/>',
     zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
     footprints: '<path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/>',
@@ -520,6 +531,8 @@ button { cursor: pointer; }
   var step = -1;
   var result = null;
   var leadSent = false;
+  // 결과 중간에서 받은 이름과 휴대폰(lite-10). 한 번 받으면 다시 하기, 로고로 처음부터 해도 다시 묻지 않는다.
+  var gate = null;
   var finishTimer = 0;
 
   function h(tag, attrs) {
@@ -804,8 +817,7 @@ button { cursor: pointer; }
     var rows = post ? gapRows(answers) : [];
     var gapCount = rows.filter(function (r) { return r.v == null || r.v > 0; }).length;
 
-    show(h('section', { class: 'screen' },
-      h('div', { class: 'res-hero', style: '--accent:' + t.color },
+    var hero = h('div', { class: 'res-hero', style: '--accent:' + t.color },
         h('div', { class: 'res-top' }, h('span', null, 'LMCT 학습진단'), h('span', null, today())),
         h('div', { class: 'res-head' },
           h('div', null, h('div', { class: 'kind' }, '나의 학습 유형은'), h('h2', { html: '<em>' + t.name + '</em>' })),
@@ -817,8 +829,11 @@ button { cursor: pointer; }
           h('div', { class: 'axis-track' }, h('span', { style: 'width:' + Math.max(6, sdlPct) + '%' })),
           h('p', { class: 'axis-note' }, h('b', null, result.sdl + '점, ' + band.name + '.'), ' ' + band.tip)),
         h('div', { class: 'hook' }, h('span', { class: 'n' }, post ? String(gapCount) : '!'), h('span', null, post ? (gapCount ? '2028 수능에서 새로 공부할 부분 ' + gapCount + '곳. 아래에서 확인하세요' : '2028 수능 새 범위 공백이 거의 없어요') : '가장 큰 빈틈은 ' + weak + '. 아래에서 처방을 확인하세요')),
-        h('p', { class: 'basis' }, '근거: 혼자 공부, 인강 ' + result.indepCount + '/' + result.toolCount + ' (' + (result.independent ? '독립형' : '가이드형') + '), 자기주도역량 ' + result.sdl + '/25')),
+        h('p', { class: 'basis' }, '근거: 혼자 공부, 인강 ' + result.indepCount + '/' + result.toolCount + ' (' + (result.independent ? '독립형' : '가이드형') + '), 자기주도역량 ' + result.sdl + '/25'));
+    // 히어로 카드까지만 먼저 보여 주고, 나머지는 이름과 휴대폰을 받은 뒤에 연다(lite-10).
+    if (!gate) { show(h('section', { class: 'screen' }, hero, gateCard(post, gapCount, weak))); return; }
 
+    show(h('section', { class: 'screen' }, hero,
       h('div', { class: 'card' },
         h('h3', { class: 'card-head' }, '한눈에 보기'),
         h('p', { class: 'card-sub' }, (post ? '수능 등급' : '최근 모의고사 등급') + '과 자기주도역량'),
@@ -1039,12 +1054,74 @@ button { cursor: pointer; }
   var BRANCH_UNKNOWN = '아직 모름';
   var BRANCH_REGION = {};
   BRANCH_GROUPS.forEach(function (g) { g[1].forEach(function (b) { BRANCH_REGION[b] = g[0]; }); });
+  // 결과 중간 입력: 이벤트 참여 + 이름, 휴대폰. 이벤트 내용(경품, 기간, 발표)은 확정 전 자리 표시.
+  function gateCard(post, gapCount, weak) {
+    var name = h('input', { class: 'input', type: 'text', id: 'g-name', autocomplete: 'name', maxlength: '20', placeholder: '학생 이름' });
+    var phone = phoneInput('g-phone');
+    var agree = h('input', { type: 'checkbox', id: 'g-agree' });
+    var err = h('p', { class: 'err', role: 'alert', hidden: '' });
+    var submit = h('button', { class: 'btn btn-primary', type: 'submit' }, '이벤트 참여하고 전체 결과 보기');
+    var locked = [
+      ['한눈에 보기', '등급과 자기주도역량 레이더'],
+      post ? ['2028 수능에서 새로 공부할 부분', gapCount ? gapCount + '곳과 무엇부터 할지' : '과목별 확인'] : ['2028 수능 준비', weak + ' 빈틈부터 메우는 순서'],
+      ['결과 이미지 저장, 공유', '친구에게 보내기']
+    ];
+    var form = h('form', { class: 'form', novalidate: '', on: { submit: function (ev) {
+      ev.preventDefault();
+      var digits = phone.value.replace(/\D/g, '');
+      var msg = !name.value.trim() ? '이름을 적어 주세요.'
+        : !/^01[016789]\d{7,8}$/.test(digits) ? '휴대폰 번호를 확인해 주세요.'
+        : !agree.checked ? '개인정보 수집과 이용에 동의해 주세요.' : '';
+      if (msg) { err.textContent = msg; err.hidden = false; postHeight(); return; }
+      submit.disabled = true;
+      gate = { name: name.value.trim(), phone: digits };
+      log('gate', { name: gate.name, phone: gate.phone, consent: true, type: result.type });
+      renderResult();
+      // 히어로 다음, 방금 열린 내용으로 내려 준다.
+      var next = app.querySelector('.res-hero');
+      if (next && next.nextElementSibling) try { next.nextElementSibling.scrollIntoView({ block: 'start' }); } catch (e) {}
+    } } },
+      h('div', { class: 'field' }, h('label', { for: 'g-name' }, '이름'), name),
+      h('div', { class: 'field' }, h('label', { for: 'g-phone' }, '휴대폰 번호'), phone),
+      h('details', { class: 'consent' },
+        h('summary', null, '개인정보 수집과 이용 안내 (필수)'),
+        h('ul', null,
+          h('li', null, '수집 항목: 이름, 휴대폰 번호, 진단 응답'),
+          h('li', null, '목적: 진단 결과 제공, 이벤트 참여와 당첨 안내, 학습 상담 연락'),
+          h('li', null, '보유 기간: 수집일로부터 1년, 이후 파기'),
+          h('li', null, '동의하지 않을 수 있으며, 이 경우 전체 결과와 이벤트 참여가 어려워요.'))),
+      h('label', { class: 'check', for: 'g-agree' }, agree, '개인정보 수집과 이용에 동의합니다.'),
+      err,
+      submit);
+    return h('div', { class: 'card gate' },
+      h('span', { class: 'badge-soft hot' }, '이벤트'),
+      h('h3', { class: 'card-head', style: 'margin-top:10px;font-size:21px' }, '이벤트 참여하고 전체 결과 확인하기'),
+      h('p', { class: 'card-sub' }, '여기서부터의 내용은 이름과 휴대폰 번호를 입력하시면 확인할 수 있어요.'),
+      h('p', { class: 'gate-event' }, '[이벤트 내용 자리: 경품, 기간, 당첨 발표 방법 확정 후 넣기]'),
+      h('ul', { class: 'gate-list' }, locked.map(function (l) {
+        return h('li', null, h('span', { class: 'gate-ico', 'aria-hidden': 'true', html: iconSvg('lock') }), h('b', null, l[0]), h('span', null, l[1]));
+      })),
+      form);
+  }
+
+  // 휴대폰 입력: 숫자만 받고 010-0000-0000 모양으로 맞춘다.
+  function phoneInput(id) {
+    var phone = h('input', { class: 'input', type: 'tel', id: id, autocomplete: 'tel', inputmode: 'numeric', maxlength: '13', placeholder: '010-0000-0000' });
+    phone.addEventListener('input', function () {
+      var d = phone.value.replace(/\D/g, '').slice(0, 11);
+      phone.value = d.length > 7 ? d.slice(0, 3) + '-' + d.slice(3, d.length - 4) + '-' + d.slice(-4) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d;
+    });
+    return phone;
+  }
+
   function renderLead() {
     backBtn.hidden = false;
     step = QUESTIONS.length + 1;
     var mode = '';
     var name = h('input', { class: 'input', type: 'text', id: 'f-name', autocomplete: 'name', maxlength: '20', placeholder: '학생 이름' });
-    var phone = h('input', { class: 'input', type: 'tel', id: 'f-phone', autocomplete: 'tel', inputmode: 'numeric', maxlength: '13', placeholder: '010-0000-0000' });
+    var phone = phoneInput('f-phone');
+    // 결과 중간에서 이미 받았으면 이름과 휴대폰은 다시 묻지 않고, 희망 지점과 형태만 받는다.
+    if (gate) { name.value = gate.name; phone.value = gate.phone.slice(0, 3) + '-' + gate.phone.slice(3, gate.phone.length - 4) + '-' + gate.phone.slice(-4); }
     var branch = h('select', { class: 'input', id: 'f-branch' }, h('option', { value: '' }, '희망 지점을 골라 주세요'),
       BRANCH_GROUPS.map(function (g) { return h('optgroup', { label: g[0] }, g[1].map(function (b) { return h('option', { value: b }, b); })); }),
       h('option', { value: BRANCH_UNKNOWN }, BRANCH_UNKNOWN));
@@ -1056,11 +1133,6 @@ button { cursor: pointer; }
     var agree = h('input', { type: 'checkbox', id: 'f-agree' });
     var err = h('p', { class: 'err', role: 'alert', hidden: '' });
     var submit = h('button', { class: 'btn btn-primary', type: 'submit' }, '상담 신청하기 →');
-
-    phone.addEventListener('input', function () {
-      var d = phone.value.replace(/\D/g, '').slice(0, 11);
-      phone.value = d.length > 7 ? d.slice(0, 3) + '-' + d.slice(3, d.length - 4) + '-' + d.slice(-4) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d;
-    });
 
     var form = h('form', { class: 'form', novalidate: '', on: { submit: function (ev) {
       ev.preventDefault();
@@ -1075,14 +1147,15 @@ button { cursor: pointer; }
       leadSent = true;
       renderThanks();
     } } },
-      h('div', { class: 'field' }, h('label', { for: 'f-name' }, '이름'), name),
-      h('div', { class: 'field' }, h('label', { for: 'f-phone' }, '휴대폰 번호'), phone),
+      gate ? h('p', { class: 'who' }, h('b', null, gate.name), ' · ' + phone.value) : null,
+      gate ? null : h('div', { class: 'field' }, h('label', { for: 'f-name' }, '이름'), name),
+      gate ? null : h('div', { class: 'field' }, h('label', { for: 'f-phone' }, '휴대폰 번호'), phone),
       h('div', { class: 'field' }, h('label', { for: 'f-branch' }, '희망 지점'), branch),
       h('div', { class: 'field' }, h('span', { class: 'lbl' }, '희망 형태'), h('div', { class: 'seg' }, segBtns)),
       h('details', { class: 'consent' },
         h('summary', null, '개인정보 수집과 이용 안내 (필수)'),
         h('ul', null,
-          h('li', null, '수집 항목: 이름, 휴대폰 번호, 희망 지점과 형태, 진단 응답'),
+          h('li', null, gate ? '수집 항목: 희망 지점과 형태 (이름, 휴대폰 번호는 앞에서 받은 것을 씀)' : '수집 항목: 이름, 휴대폰 번호, 희망 지점과 형태, 진단 응답'),
           h('li', null, '목적: 학습 상담 연락과 정밀진단 안내'),
           h('li', null, '보유 기간: 상담 완료 후 1년, 이후 파기'),
           h('li', null, '동의하지 않을 수 있으며, 이 경우 상담 신청이 어려워요.'))),
