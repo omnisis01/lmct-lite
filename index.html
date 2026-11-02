@@ -228,6 +228,7 @@ button { cursor: pointer; }
 .chart .dot.na { fill: #fff; stroke: var(--teal); stroke-dasharray: 2 2; }
 .chart .lbl { font-size: 12px; font-weight: 800; fill: var(--ink); }
 .chart .val { font-size: 11px; font-weight: 700; fill: var(--ink); opacity: .85; }
+.chart .sub { font-size: 10.5px; font-weight: 700; fill: var(--ink); opacity: .75; }
 .chart .track { fill: #E6EDEA; }
 .chart .bar { fill: var(--teal); }
 .chart .bar.na { fill: #C9D6D2; }
@@ -630,9 +631,9 @@ button { cursor: pointer; }
   }
   // 등급 구간을 0~100 점수로 (레이더용). 모름은 null
   var GRADE_SCORE = { '12': 90, '34': 70, '56': 45, '79': 25 };
-  // 과목별 현재 위치 레이더: 국어, 수학, 영어, 탐구, 자기주도력
+  // 과목별 현재 위치 레이더: 국어, 수학, 영어, 탐구, 공부체력(자기주도역량)
   function radarChart(items) {
-    // 왼쪽 축 이름(자기주도력)이 잘리지 않도록 좌우 여백을 넉넉히 둔다
+    // 왼쪽 축 이름(공부체력)이 잘리지 않도록 좌우 여백을 넉넉히 둔다
     var W = 380, H = 300, cx = 190, cy = 150, R = 100, n = items.length;
     var svg = s('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'chart radar', role: 'img', 'aria-label': '과목별 현재 위치 레이더' });
     var ang = function (i) { return -Math.PI / 2 + i * 2 * Math.PI / n; };
@@ -651,7 +652,9 @@ button { cursor: pointer; }
       var lq = pt(i, R + 26);
       var anchor = Math.abs(Math.cos(ang(i))) < 0.2 ? 'middle' : (Math.cos(ang(i)) > 0 ? 'start' : 'end');
       svg.appendChild(s('text', { x: lq[0].toFixed(1), y: (lq[1] - 4).toFixed(1), 'text-anchor': anchor, class: 'lbl' }, it.name));
-      svg.appendChild(s('text', { x: lq[0].toFixed(1), y: (lq[1] + 12).toFixed(1), 'text-anchor': anchor, class: 'val' }, it.label));
+      // 축 이름 아래 한 줄 설명(공부체력 아래 '(자기주도역량)')이 있으면 값은 한 줄 더 내려 쓴다.
+      if (it.sub) svg.appendChild(s('text', { x: lq[0].toFixed(1), y: (lq[1] + 11).toFixed(1), 'text-anchor': anchor, class: 'sub' }, it.sub));
+      svg.appendChild(s('text', { x: lq[0].toFixed(1), y: (lq[1] + (it.sub ? 26 : 12)).toFixed(1), 'text-anchor': anchor, class: 'val' }, it.label));
     });
     return svg;
   }
@@ -890,7 +893,7 @@ button { cursor: pointer; }
           { name: '수학', v: GRADE_SCORE[answers.grade_math] || null, label: GRADE_LABEL[answers.grade_math || 'na'] },
           { name: '영어', v: GRADE_SCORE[answers.grade_eng] || null, label: GRADE_LABEL[answers.grade_eng || 'na'] },
           { name: '탐구', v: GRADE_SCORE[answers.grade_inq] || null, label: answers.grade_inq ? GRADE_LABEL[answers.grade_inq] : '안 봄' },
-          { name: '자기주도력', v: sdlPct, label: result.sdl + '/25' }
+          { name: '공부체력', sub: '(자기주도역량)', v: sdlPct, label: result.sdl + '/25' }
         ]));
     // 캐릿 방식: 다음 카드 첫 부분이 흐려지며 끊기고, 물결선 아래에서 이름과 휴대폰을 받는다.
     if (!gate) {
