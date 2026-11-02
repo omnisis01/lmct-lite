@@ -32,7 +32,7 @@ button { cursor: pointer; }
 
 .shell { max-width: 600px; margin: 0 auto; padding: 0 16px 48px; }
 .topbar { position: sticky; top: 0; z-index: 40; background: rgba(255, 255, 255, .92); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); margin: 0 -16px; padding: 11px 16px; display: flex; align-items: center; gap: 10px; }
-.brand { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.brand { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: none; border: 0; padding: 0; margin: 0; text-align: left; color: inherit; }
 .brand .logo { display: flex; align-items: baseline; gap: 5px; font-weight: 900; letter-spacing: -.5px; }
 .brand .logo b { font-size: 25px; color: var(--ink); }
 .brand .logo span { font-size: 25px; color: var(--teal); }
@@ -148,6 +148,10 @@ button { cursor: pointer; }
 
 .actions { display: flex; flex-direction: column; gap: 9px; }
 .actions .two { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+/* 결과 이미지: 모달 대신 버튼 바로 아래에 펼친다(247 페이지 iframe 안에서도 보이도록) */
+.shot { margin-top: 13px; }
+.shot img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); margin: 4px 0 12px; }
+.shot .hint { margin: 10px 0 0; font-size: 14.5px; text-align: center; }
 .note { margin: 0; font-size: 14.5px; color: var(--ink-mute); text-align: center; line-height: 1.55; }
 
 .form { display: flex; flex-direction: column; gap: 11px; }
@@ -230,10 +234,10 @@ button { cursor: pointer; }
 <body>
 <div class="shell">
   <header class="topbar">
-    <div class="brand">
+    <button class="brand" id="home" type="button" aria-label="LMCT 학습진단 첫 화면으로">
       <div class="logo"><b>ETOOS</b><span>247</span></div>
       <div class="sys">이투스247학원<b>LMCT 학습진단</b></div>
-    </div>
+    </button>
     <button class="back" id="back" type="button" hidden>이전</button>
   </header>
   <main id="app" aria-live="polite"></main>
@@ -516,6 +520,7 @@ button { cursor: pointer; }
   var step = -1;
   var result = null;
   var leadSent = false;
+  var finishTimer = 0;
 
   function h(tag, attrs) {
     var el = document.createElement(tag);
@@ -756,6 +761,16 @@ button { cursor: pointer; }
     }, 220);
   }
 
+  // 로고: 언제든 첫 화면으로. 문항을 푸는 중이면 고른 답이 지워진다고 먼저 묻는다.
+  document.getElementById('home').addEventListener('click', function () {
+    if (step === -1) return;
+    if (step >= 0 && step < QUESTIONS.length && Object.keys(answers).length && !window.confirm('첫 화면으로 갈까요? 지금까지 고른 답은 지워져요.')) return;
+    log('cta', { value: 'logo' });
+    clearTimeout(finishTimer);
+    answers = {}; t0 = Date.now();
+    renderIntro();
+  });
+
   backBtn.addEventListener('click', function () {
     if (step === QUESTIONS.length + 1) { backBtn.hidden = true; renderResult(); }
     else if (step > 0 && nextIndex(step, -1) >= 0) goTo(nextIndex(step, -1));
@@ -771,7 +786,7 @@ button { cursor: pointer; }
     show(h('section', { class: 'loading screen' },
       h('div', { class: 'spinner', 'aria-hidden': 'true' }),
       h('span', null, '답변을 분석하고 있어요')));
-    setTimeout(renderResult, 1300);
+    finishTimer = setTimeout(renderResult, 1300);
   }
 
   function renderResult() {
@@ -835,11 +850,14 @@ button { cursor: pointer; }
         h('div', { class: 'blur', 'aria-hidden': 'true' }, h('div', { style: 'width:92%' }), h('div', { style: 'width:70%' }), h('div', { style: 'width:84%' })),
         h('div', { class: 'over' }, h('b', null, '정밀진단에서 열려요'), h('span', null, '상담 신청 시 전 단원 빈틈 지도까지'))),
       h('div', { class: 'actions' },
-        h('button', { class: 'btn btn-primary', type: 'button', on: { click: function () { log('cta', { value: 'consult' }); renderLead(); } } }, leadSent ? '상담 신청 완료' : '무료 상담 신청하고 정밀진단 받기'),
+        h('button', { class: 'btn btn-primary', type: 'button', on: { click: function () { log('cta', { value: 'consult' }); renderLead(); } } }, leadSent ? '상담 신청 완료' : '무료 상담 신청하고 전문가와 함께 정밀진단 받기'),
         h('div', { class: 'two' },
           h('button', { class: 'btn btn-ghost', type: 'button', on: { click: share } }, '결과 공유하기'),
-          h('a', { class: 'btn btn-ghost', href: HOME_URL, target: '_top', rel: 'noopener', on: { click: function () { log('cta', { value: 'home' }); } } }, '247 둘러보기')),
-        h('button', { class: 'btn btn-ghost', type: 'button', on: { click: function () { log('cta', { value: 'retry' }); answers = {}; t0 = Date.now(); renderIntro(); } } }, '다시 하기')),
+          h('button', { class: 'btn btn-ghost', type: 'button', on: { click: showImage } }, '이미지 저장')),
+        h('div', { class: 'two' },
+          h('a', { class: 'btn btn-ghost', href: HOME_URL, target: '_top', rel: 'noopener', on: { click: function () { log('cta', { value: 'home' }); } } }, '247 둘러보기'),
+          h('button', { class: 'btn btn-ghost', type: 'button', on: { click: function () { log('cta', { value: 'retry' }); answers = {}; t0 = Date.now(); renderIntro(); } } }, '다시 하기'))),
+      h('div', { id: 'shot' }),
       h('p', { class: 'foot' }, '더 정확한 코스안내는 가까운 247 지점 상담과 정밀진단(LMTI, LMAT)를 이용해 보세요.')
     ));
     if (leadSent) app.querySelector('.btn-primary').disabled = true;
@@ -850,10 +868,161 @@ button { cursor: pointer; }
     var url = HOME_URL;
     try { var u = new URL(location.href); u.search = ''; u.searchParams.set('utm_source', 'share'); url = u.toString(); } catch (e) {}
     var text = '나는 ' + TYPES[result.type].name + '! 이투스247 LMCT 학습진단으로 2028 수능 공백 찾기';
-    if (navigator.share) { navigator.share({ title: '이투스247 LMCT 학습진단', text: text, url: url }).catch(function () {}); return; }
-    var done = function () { toast('링크를 복사했어요'); };
-    if (navigator.clipboard) navigator.clipboard.writeText(text + ' ' + url).then(done, function () { toast('복사하지 못했어요'); });
-    else toast('복사하지 못했어요');
+    var copy = function () { copyText(text + ' ' + url, '링크를 복사했어요'); };
+    // 247 페이지 iframe 안에서는 공유 창이 막힐 수 있어(NotAllowedError) 그때는 링크 복사로 넘어간다. 사용자가 닫은 경우(AbortError)는 그대로 둔다.
+    if (navigator.share) { navigator.share({ title: '이투스247 LMCT 학습진단', text: text, url: url }).catch(function (e) { if (!e || e.name !== 'AbortError') copy(); }); return; }
+    copy();
+  }
+
+  function copyText(text, okMsg) {
+    var fail = function () { toast('복사하지 못했어요'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(function () { toast(okMsg); }, legacy); return; }
+    legacy();
+    function legacy() {
+      try {
+        var ta = h('textarea', { readonly: '', style: 'position:fixed;top:0;left:0;opacity:0' });
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        var ok = document.execCommand('copy'); ta.remove();
+        if (ok) toast(okMsg); else fail();
+      } catch (e) { fail(); }
+    }
+  }
+
+  // ---- 결과 이미지 (canvas로 직접 그림, 외부 라이브러리 없음) ----
+  // 1080x1350(4:5). 화면 캡처 대신 요약 카드를 그려서 기기, 글꼴, iframe과 상관없이 같은 결과가 나온다.
+  var shotUrl = '';
+  function showImage() {
+    log('cta', { value: 'image' });
+    var box = document.getElementById('shot');
+    box.replaceChildren(h('div', { class: 'card shot' }, h('p', { class: 'note' }, '이미지를 만들고 있어요')));
+    drawResult().then(function (blob) {
+      if (shotUrl) URL.revokeObjectURL(shotUrl);
+      shotUrl = URL.createObjectURL(blob);
+      // 한글 파일 이름은 일부 브라우저에서 'download'로 바뀌어 영문으로 둔다.
+      var name = 'LMCT_result_' + today().replace(/\./g, '') + '.png';
+      var file = null;
+      try { file = new File([blob], name, { type: 'image/png' }); } catch (e) {}
+      var canShareFile = !!(file && navigator.canShare && navigator.canShare({ files: [file] }));
+      box.replaceChildren(h('div', { class: 'card shot' },
+        h('h3', { class: 'card-head' }, '결과 이미지'),
+        h('img', { src: shotUrl, alt: '나의 LMCT 학습진단 결과: ' + TYPES[result.type].name, width: '1080', height: '1350' }),
+        h('div', { class: 'actions' },
+          h('div', { class: canShareFile ? 'two' : '' },
+            h('a', { class: 'btn btn-primary', href: shotUrl, download: name, on: { click: function () { log('cta', { value: 'image_save' }); } } }, '이미지 저장'),
+            canShareFile ? h('button', { class: 'btn btn-ghost', type: 'button', on: { click: function () {
+              log('cta', { value: 'image_share' });
+              navigator.share({ files: [file], title: '이투스247 LMCT 학습진단' }).catch(function () {});
+            } } }, '이미지 공유') : null)),
+        h('p', { class: 'hint' }, '저장이 안 되면 이미지를 길게 눌러 저장하세요.')));
+      postHeight();
+      try { box.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+    }, function () {
+      box.replaceChildren();
+      toast('이미지를 만들지 못했어요');
+    });
+  }
+
+  function drawResult() {
+    var W = 1080, H = 1350, P = 64;
+    var c = document.createElement('canvas'); c.width = W; c.height = H;
+    var x = c.getContext('2d');
+    var t = TYPES[result.type];
+    var FONT = "'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+    var f = function (w, px) { return w + ' ' + px + 'px ' + FONT; };
+    var fonts = document.fonts && document.fonts.load ? Promise.all([document.fonts.load(f(900, 40)), document.fonts.load(f(700, 40))]).catch(function () {}) : Promise.resolve();
+    return fonts.then(function () { return loadIcon(t.icon); }).then(function (icon) {
+      function rr(x0, y0, w, h0, r) { x.beginPath(); x.moveTo(x0 + r, y0); x.arcTo(x0 + w, y0, x0 + w, y0 + h0, r); x.arcTo(x0 + w, y0 + h0, x0, y0 + h0, r); x.arcTo(x0, y0 + h0, x0, y0, r); x.arcTo(x0, y0, x0 + w, y0, r); x.closePath(); }
+      function text(str, tx, ty, font, color, align) { x.font = font; x.fillStyle = color; x.textAlign = align || 'left'; x.textBaseline = 'alphabetic'; x.fillText(str, tx, ty); return x.measureText(str).width; }
+      function glow(gx, gy, r, color) { var g = x.createRadialGradient(gx, gy, 0, gx, gy, r); g.addColorStop(0, color); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(gx - r, gy - r, r * 2, r * 2); }
+
+      // 배경
+      x.fillStyle = '#F6F8F7'; x.fillRect(0, 0, W, H);
+
+      // 위: 유형 카드 (결과 화면 상단과 같은 색)
+      var hy = P, hh = 620;
+      x.save(); rr(P, hy, W - P * 2, hh, 44); x.clip();
+      var g = x.createLinearGradient(P, hy, W - P, hy + hh); g.addColorStop(0, '#0A5F5C'); g.addColorStop(.55, '#0E7C77'); g.addColorStop(1, '#127F6E');
+      x.fillStyle = g; x.fillRect(P, hy, W - P * 2, hh);
+      glow(W - P - 40, hy + 40, 300, 'rgba(124,194,66,.5)');
+      glow(P + 20, hy + hh, 280, 'rgba(19,168,158,.45)');
+      var L = P + 56, R = W - P - 56;
+      text('LMCT 학습진단', L, hy + 82, f(800, 30), 'rgba(255,255,255,.82)');
+      text(today(), R, hy + 82, f(700, 30), 'rgba(255,255,255,.82)', 'right');
+      text('나의 학습 유형은', L, hy + 178, f(700, 38), 'rgba(255,255,255,.9)');
+      var tg = x.createLinearGradient(L, 0, L + 520, 0); tg.addColorStop(0, '#C6F07E'); tg.addColorStop(1, '#7CC242');
+      // 유형 이름이 길면(페이스메이커형) 아이콘과 겹치지 않게 글자를 줄인다.
+      var nameMax = R - 150 - 28 - L, namePx = 104;
+      x.font = f(900, namePx);
+      while (namePx > 64 && x.measureText(t.name).width > nameMax) { namePx -= 4; x.font = f(900, namePx); }
+      text(t.name, L, hy + 290, f(900, namePx), tg);
+      if (icon) {
+        x.fillStyle = 'rgba(255,255,255,.14)'; rr(R - 150, hy + 150, 150, 150, 34); x.fill();
+        x.drawImage(icon, R - 150 + 33, hy + 150 + 33, 84, 84);
+      }
+      text(t.one, L, hy + 360, f(700, 34), '#fff');
+      // 특징 3줄
+      var py = hy + 400;
+      t.traits.forEach(function (tr) {
+        x.font = f(700, 29);
+        var w = x.measureText(tr).width + 76;
+        x.fillStyle = 'rgba(255,255,255,.14)'; rr(L, py, w, 56, 28); x.fill();
+        x.fillStyle = '#A5D34A'; x.beginPath(); x.arc(L + 30, py + 28, 7, 0, Math.PI * 2); x.fill();
+        text(tr, L + 52, py + 38, f(700, 29), '#fff');
+        py += 66;
+      });
+      x.restore();
+
+      // 아래: 2028 빈틈 요약
+      var cy = hy + hh + 36, ch = H - cy - 150;
+      x.fillStyle = '#fff'; rr(P, cy, W - P * 2, ch, 40); x.fill();
+      x.strokeStyle = '#E4EBE8'; x.lineWidth = 2; x.stroke();
+      var post = isPost(answers);
+      text(post ? '2028 수능에서 새로 공부할 부분' : '2028 수능, 이렇게 준비해요', L, cy + 76, f(900, 40), '#0A5F5C');
+      if (post) {
+        var COLORS = { kor: '#B8325A', math: '#2563EB', soc: '#A1459C', sci: '#5B9A2E' };
+        var rows = gapRows(answers), ry = cy + 124, rowH = (ch - 150) / rows.length, bw = R - L;
+        rows.forEach(function (r) {
+          text(r.name, L, ry + 28, f(800, 32), '#1F2325');
+          text(r.v == null ? '선택과목 모름' : r.n + '개 / 전체 ' + r.total + '개', R, ry + 28, f(800, 30), '#1F2325', 'right');
+          x.fillStyle = '#EFF4F1'; rr(L, ry + 44, bw, 16, 8); x.fill();
+          if (r.v == null) { x.fillStyle = '#C9D3D0'; rr(L, ry + 44, bw * .5, 16, 8); x.fill(); }
+          else if (r.v > 0) { x.fillStyle = COLORS[r.subj]; rr(L, ry + 44, Math.max(16, bw * r.v / 100), 16, 8); x.fill(); }
+          ry += rowH;
+        });
+      } else {
+        var unitId = answers.unit || (answers.weak + '_na');
+        var unitRow = unitsFor(answers).filter(function (u) { return u[0] === unitId; })[0];
+        // 단원을 '잘 모르겠어요'로 고르면 과목 이름으로 대신한다.
+        var unitName = unitRow && !/_na$/.test(unitId) ? unitRow[1] : SUBJECT[answers.weak] + ' 전반';
+        text('가장 큰 빈틈', L, cy + 160, f(700, 32), '#1F2325');
+        var unitPx = 52; x.font = f(900, unitPx);
+        while (unitPx > 34 && x.measureText(unitName).width > R - L) { unitPx -= 2; x.font = f(900, unitPx); }
+        text(unitName, L, cy + 230, f(900, unitPx), '#0E7C77');
+        text('국어, 수학, 탐구 모두 공통인 첫 개정 수능.', L, cy + 310, f(700, 30), '#1F2325');
+        text('지금 배우는 과정 그대로가 시험 범위예요.', L, cy + 356, f(700, 30), '#1F2325');
+      }
+
+      // 맨 아래: 브랜드
+      var by = H - 72;
+      var bw1 = text('ETOOS', P + 8, by, f(900, 44), '#1F2325');
+      text('247', P + 8 + bw1 + 10, by, f(900, 44), '#0E7C77');
+      text('이투스247학원 LMCT 학습진단', W - P - 8, by - 8, f(800, 28), '#1F2325', 'right');
+
+      return new Promise(function (resolve, reject) {
+        if (c.toBlob) c.toBlob(function (b) { b ? resolve(b) : reject(); }, 'image/png');
+        else reject();
+      });
+    });
+  }
+
+  // 유형 아이콘(선 아이콘 SVG)을 흰색 이미지로. 실패하면 아이콘 없이 그린다.
+  function loadIcon(name) {
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { resolve(null); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconSvg(name).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" ').replace('currentColor', '#ffffff'));
+    });
   }
 
   // 희망 지점(2026-10-29 사용자 제공 목록, 받은 순서 유지). 지점을 고르면 지역(region)도 함께 기록해서 지점별, 지역별로 나눠 볼 수 있게 한다.
