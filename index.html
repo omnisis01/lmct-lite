@@ -150,15 +150,23 @@ button { cursor: pointer; }
 .actions .two { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 /* 결과 이미지: 모달 대신 버튼 바로 아래에 펼친다(247 페이지 iframe 안에서도 보이도록) */
 .shot { margin-top: 13px; }
-/* 결과 중간 입력(lite-10) */
-.gate { border: 2px solid var(--hot); }
-.gate-event { margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; background: #FFF8E1; border: 1px dashed #E2B23C; font-size: 14.5px; font-weight: 800; }
-.gate-list { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
-.gate-list li { display: grid; grid-template-columns: 22px 1fr; column-gap: 9px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--paper); }
-.gate-list li b { font-size: 15.5px; font-weight: 900; }
-.gate-list li span:last-child { grid-column: 2; font-size: 13.5px; font-weight: 700; }
-.gate-ico { grid-row: span 2; width: 20px; height: 20px; color: var(--teal); }
-.gate-ico svg { width: 20px; height: 20px; display: block; }
+/* 결과 중간 입력(lite-10): 캐릿 방식. 다음 카드가 흐려지며 끊기고, 물결선, 도장, 혼잣말 제목 */
+.peek { position: relative; max-height: 190px; overflow: hidden; pointer-events: none; user-select: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent 100%); mask-image: linear-gradient(to bottom, #000 35%, transparent 100%); }
+.peek .card { margin-bottom: 0; }
+.wave { color: var(--hot-deep); margin: 6px 0 22px; }
+.wave svg { display: block; width: 100%; height: 16px; }
+.gate { text-align: center; }
+.stamp { width: 84px; height: 84px; margin: 0 auto 14px; border-radius: 50%; background: var(--hot); color: var(--hot-ink); display: grid; place-content: center; transform: rotate(-10deg);
+  box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--hot), 0 8px 18px rgba(233, 162, 27, .35); font-weight: 900; line-height: 1.1; }
+.stamp span:first-child { font-size: 17px; letter-spacing: .06em; }
+.stamp span:last-child { font-size: 12.5px; }
+.gate-title { margin: 0 0 10px; font-size: 23px; font-weight: 900; line-height: 1.38; letter-spacing: -.6px; }
+.gate-title span { display: block; color: var(--ink); }
+.gate-title em { display: block; font-style: normal; color: var(--teal); }
+.gate-sub { margin: 0 0 12px; font-size: 15.5px; font-weight: 700; line-height: 1.55; }
+.gate-event { margin: 0 0 14px; padding: 10px 12px; border-radius: 12px; background: #FFF8E1; border: 1px dashed #E2B23C; font-size: 14.5px; font-weight: 800; }
+.gate .card { text-align: left; border: 2px solid var(--hot); }
 .who { margin: 0; padding: 11px 14px; border-radius: 12px; background: var(--paper); font-size: 16px; }
 .shot img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); margin: 4px 0 12px; }
 .shot .hint { margin: 10px 0 0; font-size: 14.5px; text-align: center; }
@@ -370,7 +378,6 @@ button { cursor: pointer; }
   // icon, color는 결과 첫 카드의 유형별 강조(원장 피드백: 색이 단조롭고 후킹이 약함)
   // 유형 아이콘: 이모지 대신 선 아이콘(Lucide v0.460.0, ISC 라이선스)의 경로를 그대로 넣는다.
   var ICON_PATHS = {
-    lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
     compass: '<path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/>',
     zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
     footprints: '<path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/>',
@@ -831,10 +838,8 @@ button { cursor: pointer; }
         h('div', { class: 'hook' }, h('span', { class: 'n' }, post ? String(gapCount) : '!'), h('span', null, post ? (gapCount ? '2028 수능에서 새로 공부할 부분 ' + gapCount + '곳. 아래에서 확인하세요' : '2028 수능 새 범위 공백이 거의 없어요') : '가장 큰 빈틈은 ' + weak + '. 아래에서 처방을 확인하세요')),
         h('p', { class: 'basis' }, '근거: 혼자 공부, 인강 ' + result.indepCount + '/' + result.toolCount + ' (' + (result.independent ? '독립형' : '가이드형') + '), 자기주도역량 ' + result.sdl + '/25'));
     // 히어로 카드까지만 먼저 보여 주고, 나머지는 이름과 휴대폰을 받은 뒤에 연다(lite-10).
-    if (!gate) { show(h('section', { class: 'screen' }, hero, gateCard(post, gapCount, weak))); return; }
 
-    show(h('section', { class: 'screen' }, hero,
-      h('div', { class: 'card' },
+    var overview = h('div', { class: 'card' },
         h('h3', { class: 'card-head' }, '한눈에 보기'),
         h('p', { class: 'card-sub' }, (post ? '수능 등급' : '최근 모의고사 등급') + '과 자기주도역량'),
         radarChart([
@@ -843,7 +848,18 @@ button { cursor: pointer; }
           { name: '영어', v: GRADE_SCORE[answers.grade_eng] || null, label: GRADE_LABEL[answers.grade_eng || 'na'] },
           { name: '탐구', v: GRADE_SCORE[answers.grade_inq] || null, label: answers.grade_inq ? GRADE_LABEL[answers.grade_inq] : '안 봄' },
           { name: '자기주도력', v: sdlPct, label: result.sdl + '/25' }
-        ])),
+        ]));
+    // 캐릿 방식: 다음 카드 첫 부분이 흐려지며 끊기고, 물결선 아래에서 이름과 휴대폰을 받는다.
+    if (!gate) {
+      show(h('section', { class: 'screen' }, hero,
+        h('div', { class: 'peek', 'aria-hidden': 'true', inert: '' }, overview),
+        h('div', { class: 'wave', 'aria-hidden': 'true', html: '<svg viewBox="0 0 320 16" preserveAspectRatio="none"><path d="M0 8 Q 10 0 20 8 T 40 8 T 60 8 T 80 8 T 100 8 T 120 8 T 140 8 T 160 8 T 180 8 T 200 8 T 220 8 T 240 8 T 260 8 T 280 8 T 300 8 T 320 8" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>' }),
+        gateCard(post, gapCount, weak)));
+      return;
+    }
+
+    show(h('section', { class: 'screen' }, hero,
+      overview,
 
       h('div', { class: 'sechead' }, h('span', { class: 'kicker dark' }, '개정 수능 대비'), h('h3', null, post ? '2028 수능에서 새로 공부할 부분' : '2028 수능, 이렇게 준비해요')),
       post ? h('div', { class: 'card gapcard' },
@@ -1060,12 +1076,7 @@ button { cursor: pointer; }
     var phone = phoneInput('g-phone');
     var agree = h('input', { type: 'checkbox', id: 'g-agree' });
     var err = h('p', { class: 'err', role: 'alert', hidden: '' });
-    var submit = h('button', { class: 'btn btn-primary', type: 'submit' }, '이벤트 참여하고 전체 결과 보기');
-    var locked = [
-      ['한눈에 보기', '등급과 자기주도역량 레이더'],
-      post ? ['2028 수능에서 새로 공부할 부분', gapCount ? gapCount + '곳과 무엇부터 할지' : '과목별 확인'] : ['2028 수능 준비', weak + ' 빈틈부터 메우는 순서'],
-      ['결과 이미지 저장, 공유', '친구에게 보내기']
-    ];
+    var submit = h('button', { class: 'btn btn-primary', type: 'submit' }, '전체 결과 보기');
     var form = h('form', { class: 'form', novalidate: '', on: { submit: function (ev) {
       ev.preventDefault();
       var digits = phone.value.replace(/\D/g, '');
@@ -1093,15 +1104,12 @@ button { cursor: pointer; }
       h('label', { class: 'check', for: 'g-agree' }, agree, '개인정보 수집과 이용에 동의합니다.'),
       err,
       submit);
-    return h('div', { class: 'card gate' },
-      h('span', { class: 'badge-soft hot' }, '이벤트'),
-      h('h3', { class: 'card-head', style: 'margin-top:10px;font-size:21px' }, '이벤트 참여하고 전체 결과 확인하기'),
-      h('p', { class: 'card-sub' }, '여기서부터의 내용은 이름과 휴대폰 번호를 입력하시면 확인할 수 있어요.'),
+    return h('div', { class: 'gate' },
+      h('div', { class: 'stamp', 'aria-hidden': 'true' }, h('span', null, 'EVENT'), h('span', null, '무료 공개')),
+      h('h3', { class: 'gate-title' }, h('span', null, '\u2018앗! 여기서부터 진짜 필요한 내용인데\u2019'), h('em', null, '이벤트 참여하고 전체 결과 보기')),
+      h('p', { class: 'gate-sub' }, post && gapCount ? '2028 수능에서 새로 공부할 부분 ' + gapCount + '곳과 무엇부터 할지, 이름과 휴대폰 번호만 남기면 바로 열려요.' : weak + ' 빈틈부터 메우는 순서까지, 이름과 휴대폰 번호만 남기면 바로 열려요.'),
       h('p', { class: 'gate-event' }, '[이벤트 내용 자리: 경품, 기간, 당첨 발표 방법 확정 후 넣기]'),
-      h('ul', { class: 'gate-list' }, locked.map(function (l) {
-        return h('li', null, h('span', { class: 'gate-ico', 'aria-hidden': 'true', html: iconSvg('lock') }), h('b', null, l[0]), h('span', null, l[1]));
-      })),
-      form);
+      h('div', { class: 'card' }, form));
   }
 
   // 휴대폰 입력: 숫자만 받고 010-0000-0000 모양으로 맞춘다.
