@@ -1122,6 +1122,71 @@ button { cursor: pointer; }
   var BRANCH_UNKNOWN = '아직 모름';
   var BRANCH_REGION = {};
   BRANCH_GROUPS.forEach(function (g) { g[1].forEach(function (b) { BRANCH_REGION[b] = g[0]; }); });
+  // 지점 연락처(2026-10-14 지점 데이터, 사용자 제공): [전화, 홈페이지, 주소]. 상담 신청을 마치면 고른 지점으로 바로 전화하거나 홈페이지로 갈 수 있게 한다.
+  var BRANCH_INFO = {
+    '원주': ['033-761-0247', 'https://wonju247.etoos.com', '강원 원주시 남원로 570(개운동) 이투스247'],
+    '춘천': ['033-262-0247', 'https://chuncheon247.etoos.com', '강원 춘천시 동내면 춘천순환로 131 3층 중 우측'],
+    '광명': ['02-898-0247', 'https://gwangmyeong247.etoos.com', '경기 광명시 범안로 1039 8층(하안동)'],
+    '김포': ['031-983-0247', 'https://gimpo247.etoos.com', '경기 김포시 김포한강4로 162 한강메트로 6층 김포이투스247'],
+    '다산': ['031-552-0247', 'https://dasan247.etoos.com', '경기 남양주시 다산중앙로 105-8 901호~903호(다산동)'],
+    '독학기숙': ['031-766-0247', 'https://dokhakgisuk247.etoos.com', '경기 광주시 초월읍 두둘기길 68-21 이투스247 독학기숙학원'],
+    '동탄': ['031-8003-0247', 'https://dongtan247.etoos.com', '경기 화성시 동탄반석로 134 7층(반송동)'],
+    '부천': ['032-438-0247', 'https://bucheon247.etoos.com', '경기 부천시 길주로 181 3층 301호(중동)'],
+    '분당정자': ['031-705-0247', 'https://bundang247.etoos.com', '경기 성남시 분당구 성남대로 381 2층 201,202호(정자동,폴라리스빌딩)'],
+    '수원시청': ['031-223-0247', 'https://sicheong247.etoos.com', '경기 수원시 권선구 효원로266번길 25 3층(권선동, 우덕빌딩)'],
+    '수원영통': ['031-245-0247', 'https://suwon247.etoos.com', '경기 수원시 영통구 봉영로 1605 모던타운 7층 (영통동 959-1)'],
+    '수원정자': ['031-271-0247', 'https://jungja247.etoos.com', '경기 수원시 장안구 정자천로173번길 11-7 효신빌딩 6층,이투스247수원정자학원'],
+    '안산': ['031-402-0247', 'https://ansan247.etoos.com', '경기 안산시 단원구 광덕대로 130 폴리타운 A동 801, 802호'],
+    '안성기숙': ['031-674-0247', 'https://anseong247.etoos.com', '경기 안성시 삼죽면 국사봉로 246-14 (기솔리)'],
+    '용인수지': ['031-265-0247', 'https://yongin247.etoos.com', '경기 용인시 수지구 문정로7번길 8 202호 일부(풍덕천동,창진빌딩)'],
+    '의정부': ['031-837-0247', 'https://uijeongbu247.etoos.com', '경기 의정부시 평화로 385(호원동) 4층'],
+    '이천기숙': ['031-567-0247', 'https://icheon247.etoos.com', '경기 이천시 마장면 이장로 115-10(이치리)'],
+    '인천부평': ['032-527-0247', 'https://bupyeong247.etoos.com', '인천 부평구 부평대로 90 10층 1001호'],
+    '인천송도': ['032-833-0247', 'https://songdo247.etoos.com', '인천 연수구 해돋이로152번길 35퍼스트프라자 801,802,803호(송도동)'],
+    '인천인하대': ['032-887-0247', 'https://inhadae247.etoos.com', '인천 미추홀구 용정공원로83번길 59 11층'],
+    '인천청라': ['032-567-0247', 'https://cheongna247.etoos.com', '인천 서구 중봉대로 588(청라동) 8층 804호,805호'],
+    '일산동구': ['031-903-0247', 'https://ilsandonggu247.etoos.com', '경기 고양시 일산동구 일산로 226 3층'],
+    '일산서구': ['031-907-0247', 'https://ilsan247.etoos.com', '경기 고양시 일산서구 중앙로 1419 5층(주엽동)'],
+    '평택': ['031-654-0247', 'https://pyeongtaek247.etoos.com', '경기 평택시 평택5로20번길 39 6층(합정동)'],
+    '하남': ['031-794-0247', 'https://hanam247.etoos.com', '경기 하남시 미사강변중앙로 214 901호, 902호, 903호, 904호(망월동, 레이크 더 타워)'],
+    '대구달서': ['053-631-2247', 'https://dalseo247.etoos.com', '대구 달서구 월배로 219 4층(상인동 72-3)'],
+    '대구수성 1관': ['053-742-0247', 'https://daegu247.etoos.com', '대구 수성구 달구벌대로 2538 2층(범어동)'],
+    '대구수성 2관': ['053-423-0247', 'https://suseong247.etoos.com', '대구 중구 달구벌대로 2166(대봉동)'],
+    '부산교대': ['051-501-0247', 'https://bnue247.etoos.com', '부산 연제구 중앙대로 1197 6층 (거제동, 에스티빌딩)'],
+    '부산대': ['051-515-0247', 'https://busandae247.etoos.com', '부산 금정구 금강로 252-1 4층 401호'],
+    '부산북구': ['051-363-0247', 'https://busanbukgu247.etoos.com', '부산 북구 금곡대로303번길 12 601호'],
+    '부산서면': ['051-817-0247', 'https://busanjingu247.etoos.com', '부산광역시 부산진구 동천로 24번길 16 이투스247학원'],
+    '부산해운대': ['051-747-0247', 'https://haeundae247.etoos.com', '부산 해운대구 센텀2로 29(우동) 1401호'],
+    '울산남구': ['052-260-0247', 'https://ulsannamgu247.etoos.com', '울산 남구 문수로 339 6층'],
+    '진주': ['055-757-0247', 'https://jinju247.etoos.com', '경남 진주시 진주대로 964 3층(칠암동)'],
+    '창원': ['055-266-0247', 'https://changwon247.etoos.com', '경남 창원시 성산구 원이대로682번길 14 1001호'],
+    '강북': ['02-942-0247', 'https://gangbuk247.etoos.com', '서울특별시 노원구 노원로236 주식회사 생각의틀 이투스247강북학원'],
+    '노량진': ['02-3280-0247', 'https://noryangjin247.etoos.com', '서울 동작구 노량진로 104 4층(노량진동 41-9)'],
+    '대치': ['02-566-0247', 'https://daechi247.etoos.com', '서울 강남구 역삼로 432 1층 101호, 2층 201호(대치동, 루가빌딩)'],
+    '마포': ['02-704-0247', 'https://mapo247.etoos.com', '서울 마포구 백범로 107 2, 3, 4층'],
+    '목동': ['02-892-0247', 'https://mokdong247.etoos.com', '서울 양천구 목동로 183 3층(신정동)'],
+    '목동오목교': ['02-2651-0247', 'https://omokgyo247.etoos.com', '서울 양천구 목동동로 73 1301~1304호(신정동, 양지빌딩 ll)'],
+    '서울강동': ['02-477-0247', 'https://gangdong247.etoos.com', '서울 강동구 양재대로 1543 6층(천호동, 진주빌딩)'],
+    '서울강서': ['02-2666-0247', 'https://gangseo247.etoos.com', '서울 강서구 강서로 348(내발산동,우장산힐스테이트아파트)207호'],
+    '서울광진': ['02-456-0247', 'https://gwangjin247.etoos.com', '서울 광진구 아차산로 471 202호(구의동, CS PLAZA)'],
+    '서울대점': ['02-882-0247', 'https://seouluniv247.etoos.com', '서울 관악구 남부순환로 1730 청운빌딩4층'],
+    '서울도봉': ['02-992-0247', 'https://dobong247.etoos.com', '서울 도봉구 도봉로 524 하버드빌딩 5층'],
+    '서울성동': ['02-2294-0247', 'https://seongdong247.etoos.com', '서울 성동구 왕십리로 410 2층(하왕십리동 1070)'],
+    '서울성북': ['02-921-0247', 'https://seongbuk247.etoos.com', '서울 성북구 동소문로 125(동선동4가) 13층'],
+    '서울송파': ['02-419-0247', 'https://songpa247.etoos.com', '서울 송파구 백제고분로 354 4층, 5층1호(석촌동)'],
+    '은평서대문': ['02-356-0247', 'https://eunpyung247.etoos.com', '서울 은평구 서오릉로 196 구산빌딩 4층 (갈현동 498-4)'],
+    '광주남구': ['062-716-0247', 'https://gwangjunamgu247.etoos.com', '광주 남구 대남대로 181 2,3층(주월동)'],
+    '광주동구': ['062-236-0247', 'https://gwangjudonggu247.etoos.com', '광주 동구 서석로 87 2,3층(대의동)'],
+    '광주북구': ['062-524-7247', 'https://gwangjubukgu247.etoos.com', '광주 북구 북문대로 27 7층(운암동 96-2)'],
+    '광주수완': ['062-710-0247', 'https://gwangjusuwan247.etoos.com', '광주 광산구 임방울대로 325 5층'],
+    '목포': ['061-282-0247', 'https://mokpo247.etoos.com', '전남 무안군 삼향읍 남악2로22번길 30 215호,216호(뉴캐슬주상복합아파트)'],
+    '익산': ['063-723-2247', 'https://iksan247.etoos.com', '전북 익산시 하나로 440(어양동) 3층 302호'],
+    '제주': ['064-727-0247', 'https://jeju247.etoos.com', '제주특별자치도 제주시 승천로 71 3층 (아라2동 3001-9)'],
+    '대전둔산': ['042-488-0247', 'https://daejeon247.etoos.com', '대전 서구 둔산남로 127(둔산동 1510)'],
+    '천안': ['041-556-0247', 'https://cheonan247.etoos.com', '충남 천안시 서북구 번영로 100(불당동) 9층 901호'],
+    '청주': ['043-234-0247', 'https://cheongju247.etoos.com', '충북 청주시 흥덕구 대농로 70 801호(복대동)']
+  };
+  var leadBranch = '';
   // 고3 이하 리포트(lite-10): 남은 기간과 시기별 할 일, 통합사회·통합과학 빈틈 영역, 가장 큰 빈틈 단원
   var STYLE_NAME = { concept: '개념부터 이해하는 나', problem: '문제부터 푸는 나', error: '틀린 문제 다시 보는 나', memor: '외우고 반복하는 나' };
   function planLines(months) {
@@ -1252,6 +1317,7 @@ button { cursor: pointer; }
       submit.disabled = true;
       log('lead', { name: name.value.trim(), phone: digits, branch: branch.value, region: BRANCH_REGION[branch.value] || BRANCH_UNKNOWN, mode: mode || '아직 모름', consent: true, type: result.type, course: '' });
       leadSent = true;
+      leadBranch = branch.value;
       renderThanks();
     } } },
       gate ? h('p', { class: 'who' }, h('b', null, gate.name), ' · ' + phone.value) : null,
@@ -1281,14 +1347,20 @@ button { cursor: pointer; }
 
   function renderThanks() {
     backBtn.hidden = true;
+    var info = BRANCH_INFO[leadBranch];
     step = QUESTIONS.length + 2;
     show(h('section', { class: 'screen' },
       h('div', { class: 'card', style: 'margin-top:14px' },
         h('span', { class: 'phase' }, '신청 완료'),
         h('h2', { class: 'card-head', style: 'font-size:21px' }, '상담 신청이 접수됐어요'),
-        h('p', { class: 'card-sub' }, '영업일 기준 1~2일 안에 연락드릴게요. 그동안 이투스247학원을 둘러보세요.'),
-        h('div', { class: 'actions' },
-          h('a', { class: 'btn btn-primary', href: HOME_URL, target: '_top', rel: 'noopener', on: { click: function () { log('cta', { value: 'home' }); } } }, '이투스247 홈으로'),
+        info
+          ? h('p', { class: 'card-sub' }, '영업일 기준 1~2일 안에 연락드릴게요. 바로 상담하고 싶으면 이투스247 ' + leadBranch + '에 전화하거나 홈페이지를 보세요.')
+          : h('p', { class: 'card-sub' }, '영업일 기준 1~2일 안에 연락드릴게요. 그동안 이투스247학원을 둘러보세요.'),
+        info ? h('p', { class: 'who' }, h('b', null, '이투스247 ' + leadBranch), h('br'), info[2]) : null,
+        h('div', info ? { class: 'actions', style: 'margin-top:12px' } : { class: 'actions' },
+          info ? h('a', { class: 'btn btn-primary', href: 'tel:' + info[0].replace(/\D/g, ''), on: { click: function () { log('cta', { value: 'tel' }); } } }, '전화 상담 ' + info[0]) : null,
+          info ? h('a', { class: 'btn btn-ghost', href: info[1], target: '_blank', rel: 'noopener', on: { click: function () { log('cta', { value: 'site' }); } } }, leadBranch + ' 홈페이지 보기') : null,
+          info ? null : h('a', { class: 'btn btn-primary', href: HOME_URL, target: '_top', rel: 'noopener', on: { click: function () { log('cta', { value: 'home' }); } } }, '이투스247 홈으로'),
           h('button', { class: 'btn btn-ghost', type: 'button', on: { click: renderResult } }, '내 결과 다시 보기')))
     ));
   }
