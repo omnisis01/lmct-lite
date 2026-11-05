@@ -354,7 +354,7 @@ button { cursor: pointer; }
     var examYear = schoolYear() + row[2], d = new Date();
     return { examYear: examYear, suneung: examYear + 1, months: Math.max(0, (examYear - d.getFullYear()) * 12 + (10 - d.getMonth())) };
   }
-  var AREA_NONE = [['none', '자신 없는 영역이 없어요'], ['na', '잘 모르겠어요']];
+  var AREA_NONE = [['none', '모두 자신 있어요'], ['na', '잘 모르겠어요']];
   // 통합사회, 통합과학은 2028 수능부터. 올해 수능(지금 고3)을 보는 학생에게는 묻지 않는다.
   function takesIntegrated(a) { var ex = examOf(a.year); return !isPost(a) && (!ex || ex.suneung >= 2028); }
   // 자가 체크 결과로 만든 빈틈 막대(고3 이하). 답하지 않았거나 모르면 null
@@ -1225,7 +1225,7 @@ button { cursor: pointer; }
           // 공부 전략 띠는 두 과목에 같으므로 마지막 카드에만 붙인다.
           stepCards(r.areas.slice(0, 3).map(function (k) { return [label(k), AREAS[k].join(', ')]; }).concat(i === weakRows.length - 1 ? [['평가원 예시 문항', '기출이 없으니 모의고사와 함께', 'tip']] : [])));
       }),
-      known.length && !weakRows.length ? h('p', { class: 'note', style: 'text-align:left;margin-top:12px' }, '자신 없는 영역이 없다고 골랐어요. 평가원 예시 문항으로 실제 실력을 확인해 보세요.') : null));
+      known.length && !weakRows.length ? h('p', { class: 'note', style: 'text-align:left;margin-top:12px' }, '모두 자신 있다고 골랐어요. 평가원 예시 문항으로 실제 실력을 확인해 보세요.') : null));
     var subj = answers.weak === 'kor' || answers.weak === 'math' ? answers.weak : 'base';
     out.push(h('div', { class: 'card gapcard subj-' + subj },
       h('div', { class: 'course-top' }, subjBadge(subj, SUBJECT[answers.weak] + ' 가장 큰 빈틈'), h('span', { class: 'badge-soft hot' }, '여기부터')),
